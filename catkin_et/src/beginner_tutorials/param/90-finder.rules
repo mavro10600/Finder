@@ -1,0 +1,1 @@
+ACTION=="add", KERNEL=="ttyACM[0-9]*" ATTRS{idVendor}=="0x1cbe", ATTRS{idProduct}=="", ATTRS{manufacturer}=="Texas Instruments" SYMLINK+="arm_stellaris"

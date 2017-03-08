@@ -6,6 +6,7 @@
 #include <tf/transform_broadcaster.h>
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float64.h>
 #include <std_msgs/Empty.h>
 
 #include <Servo.h>
@@ -55,6 +56,8 @@ ros::NodeHandle nh;
 sensor_msgs::JointState joint_state;
 geometry_msgs::TransformStamped t;
 tf::TransformBroadcaster broadcaster;
+//std_msgs::Int16 rolly,pitchy,basey,shouldery,elbowy,yawy;
+std_msgs::Float64 rolly,pitchy,basey,shouldery,elbowy,yawy;
 
 ////////////////////////////
 //Time update variables
@@ -103,13 +106,19 @@ char *joints_names[]={"base_rotation",
                         "pitch_rotation",
                         "yaw_rotation",
                         "gripper_rotation"};
-double  joints_position[7],
-        joints_velocity[7],
-        joints_effort[7];
+double  joints_position[7];
+        //joints_velocity[7],
+        //joints_effort[7];
 
 ////////////////////////////////////////////
 //Publicadores a ROS y subscribers
-ros::Publisher joint_state_publisher("joint_states", &joint_state); 
+//ros::Publisher joint_state_publisher("joint_states", &joint_state); 
+ros::Publisher base_now("base",&basey);
+ros::Publisher roll_now("roll",&rolly);
+ros::Publisher pitch_now("pitch",&pitchy);
+ros::Publisher shoulder_now("shoulder",&shouldery);
+ros::Publisher elbow_now("elbow",&elbowy);
+ros::Publisher yaw_now("yaw",&yawy);
 
 ros::Subscriber<std_msgs::Int16> base_out_sub("base_out", base_out_cb);
 ros::Subscriber<std_msgs::Int16> shoulder_out_sub("shoulder_out", shoulder_out_cb);
@@ -149,7 +158,7 @@ void setup() {
   //Serial.begin(57600);//cuando se ve en el ide de arduino
   roboclaw.begin(38400);
   rc.begin(38400);
-  Serial.begin(115200);
+  //Serial.begin(115200);
   
   SetupEncoders();
   SetupMotors();
@@ -164,6 +173,10 @@ void SetupEncoders()
   
   uint8_t mode=129;
   roboclaw.SetM1EncoderMode(address,mode);
+
+
+  uint8_t mode1=0;
+  rc.SetM1EncoderMode(address,mode1);
   
   ///Encoders de cuadratura
 }
@@ -176,6 +189,9 @@ void SetupMotors()
   base.attach(PD_3);
   roboclaw.SetM1VelocityPID(address,Kd,Kp,Ki,qpps);
   roboclaw.SetM1PositionPID(address,Kp,Ki,Kd,kiMax,deadzone,mini,maxi);
+  rc.SetM1VelocityPID(address,Kd,Kp,Ki,qpps);
+  rc.SetM1PositionPID(address,Kp,Ki,Kd,kiMax,deadzone,mini,maxi);
+
 }
 
 void SetupReset()
@@ -191,7 +207,13 @@ void SetupReset()
   //Rosserial tf
   nh.initNode();
 
-  nh.advertise(joint_state_publisher);
+  nh.advertise(base_now);
+  nh.advertise(roll_now);
+  nh.advertise(pitch_now);
+  nh.advertise(shoulder_now);
+  nh.advertise(elbow_now);
+  nh.advertise(yaw_now);
+  
   joint_state.header.frame_id = "";
   joint_state.name_length     = 7;
   joint_state.velocity_length = 7;
@@ -199,8 +221,8 @@ void SetupReset()
   joint_state.effort_length   = 7; 
   joint_state.name     =  joints_names;
   joint_state.position =  joints_position;
-  joint_state.velocity =  joints_velocity;
-  joint_state.effort   =  joints_effort;
+ // joint_state.velocity =  joints_velocity;
+  //joint_state.effort   =  joints_effort;
 
   nh.subscribe(base_out_sub);
   nh.subscribe(shoulder_out_sub);
@@ -215,13 +237,13 @@ void SetupReset()
   }
 
 void loop() {
-  nh.spinOnce();
-  
-unsigned long milisNow = millis();
-  // 20 Hz operation
-  if (milisNow - milisLast >= 100) {
 
-    milisLast = milisNow;
+  
+  unsigned long milisNow = millis();
+  // 20 Hz operation
+  //if (milisNow - milisLast >= 100) {
+
+ //   milisLast = milisNow;
 
     // Check for timeOut condition, if yes set desired speeds to 0 and raise the timedOut flag
       // to set mode as PWM until next message is received (default timeOut as used in ROS, 5000 ms)
@@ -235,12 +257,18 @@ unsigned long milisNow = millis();
         gripper_out = 0;
         timedOut = true;
                                             }
-       */                                     
-  //BASE.writeMicroseconds(base_out);
+       */                         
   Update_Motors();
   Update_Encoders();
- 
-  }
+  base_now.publish(&basey);
+  roll_now.publish(&rolly);
+ // shoulder_now.publish(&shouldery);
+  //elbow_now.publish(&elbowy);
+  pitch_now.publish(&pitchy);
+  //yaw_now.publish(&yawy);
+  
+  nh.spinOnce(); 
+  
 }
 
 
@@ -255,19 +283,15 @@ void Reset()
 void Update_Encoders()
 {
   displaySpeed_Base();
-  displaySpeed_R1();
+ // displaySpeed_R1();
   displaySpeed_R2();
-  displaySpeed_Servo();
-  
-  joint_state.header.stamp =  nh.now();
-  joint_state_publisher.publish(&joint_state);
-
+ // displaySpeed_Servo();
 }
 
 void displaySpeed_Base()
 {
-  joints_position[0]=ENCBASE.read();
-  return ;//usando la biblioteca de  jacob leer el objeto del encoder
+  basey.data=ENCBASE.read();
+  //return ;//usando la biblioteca de  jacob leer el objeto del encoder
 }
 void displaySpeed_R1(void)
 {
@@ -291,39 +315,44 @@ void displaySpeed_R1(void)
 
 void displaySpeed_R2(void)
 {
+  uint8_t depth1,depth2,depth3,depth4;
+  
   uint8_t status1,status2,status3,status4;
   bool valid1,valid2,valid3,valid4;
-  int32_t enc1 = rc.ReadEncM1(address, &status1, &valid1);
+  int32_t enc3 = rc.ReadEncM1(address, &status1, &valid1);
   int32_t speed1 = rc.ReadSpeedM1(address, &status2, &valid2);
-  int32_t enc2 = rc.ReadEncM2(address, &status3, &valid3);
+  int32_t enc4 = rc.ReadEncM2(address, &status3, &valid3);
   int32_t speed2 = rc.ReadSpeedM2(address, &status4, &valid4);
   float angulo3;
   float angulo4;
   if(valid1){//debe estar en radianes!!
-  angulo3=2*3.1416/2048*enc1;//conversion de ticks a radianes
-  joints_position[3] = enc1;
+  angulo3=2*3.1416/2048*enc3;//conversion de ticks a radianes
+  rolly.data = float(enc3);
   }
   if(valid4){//debe estar en radianes!!
-  angulo4=2*3.1416/2048*enc1;//conversion de ticks a radianes
-  joints_position[4] = enc2;
+  angulo4=2*3.1416/2048*enc4;//conversion de ticks a radianes
+  pitchy.data=enc4;
   }
+  //rc.ReadBuffers(address,depth3,depth4);
 }
 
 void displaySpeed_Servo()
 {
-return;
+//return;
 }
 
 void Update_Motors()
 {
-BASE.write(base_out);
+//BASE.write(base_out);
 base.writeMicroseconds(base_out);
-uint8_t depth1,depth2,depth3,depth4;
-roboclaw.SpeedAccelDeccelPositionM1(address,0,0,0,shoulder_out,1);
-roboclaw.SpeedAccelDeccelPositionM1(address,0,0,0,elbow_out,1);
-rc.SpeedAccelDeccelPositionM1(address,0,0,0,0,1);
-rc.SpeedAccelDeccelPositionM1(address,0,0,0,pitch_out,1);
-roboclaw.ReadBuffers(address,depth1,depth2);
-rc.ReadBuffers(address,depth1,depth2);
+//uint8_t depth1,depth2,depth3,depth4;
+//roboclaw.SpeedAccelDeccelPositionM1(address,0,0,0,shoulder_out,1);
+//roboclaw.SpeedAccelDeccelPositionM2(address,0,0,0,elbow_out,1);
+//rc.SpeedAccelDeccelPositionM1(address,0,0,0,roll_out,1);
+//rc.SpeedAccelDeccelPositionM2(address,0,0,0,pitch_out,1);
+//roboclaw.ReadBuffers(address,depth1,depth2);
+//rc.ReadBuffers(address,depth3,depth4);
+rc.ForwardBackwardM1(address,roll_out);
+rc.ForwardBackwardM2(address,pitch_out);
 }
 

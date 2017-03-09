@@ -56,8 +56,8 @@ ros::NodeHandle nh;
 sensor_msgs::JointState joint_state;
 geometry_msgs::TransformStamped t;
 tf::TransformBroadcaster broadcaster;
-//std_msgs::Int16 rolly,pitchy,basey,shouldery,elbowy,yawy;
-std_msgs::Float64 rolly,pitchy,basey,shouldery,elbowy,yawy;
+std_msgs::Int16 rolly,pitchy,basey,shouldery,elbowy,yawy;
+//std_msgs::Float64 rolly,pitchy,basey,shouldery,elbowy,yawy;
 
 ////////////////////////////
 //Time update variables
@@ -74,10 +74,10 @@ bool timedOut=false;
 ///In fromROS
 
 int base_out=1500;
-int shoulder_out=0;
-int elbow_out=0;
-int roll_out= 0;
-int pitch_out = 0;
+int shoulder_out=64;
+int elbow_out=64;
+int roll_out= 64;
+int pitch_out = 64;
 int yaw_out = 0;
 int gripper_out = 0;
 
@@ -156,8 +156,11 @@ RoboClaw rc(&Serial3,10000);
 void setup() {
   //Open Serial and roboclaw serial ports
   //Serial.begin(57600);//cuando se ve en el ide de arduino
-  roboclaw.begin(38400);
+  /*roboclaw.begin(38400);
   rc.begin(38400);
+*/
+  roboclaw.begin(115200);
+  rc.begin(115200);
   //Serial.begin(115200);
   
   SetupEncoders();
@@ -173,10 +176,12 @@ void SetupEncoders()
   
   uint8_t mode=129;
   roboclaw.SetM1EncoderMode(address,mode);
+  roboclaw.SetM2EncoderMode(address,mode);
 
 
   uint8_t mode1=0;
   rc.SetM1EncoderMode(address,mode1);
+  rc.SetM2EncoderMode(address,mode1);
   
   ///Encoders de cuadratura
 }
@@ -258,14 +263,20 @@ void loop() {
         timedOut = true;
                                             }
        */                         
+  uint8_t status1,status2,status3,status4;
+  bool valid1,valid2,valid3,valid4;
   Update_Motors();
+  
+  //int32_t enc1 = roboclaw.ReadEncM1(address, &status1, &valid1);
+  //int32_t speed1 = roboclaw.ReadSpeedM1(address, &status2, &valid2);
+  //int32_t enc2 = roboclaw.ReadEncM2(address, &status3, &valid3);
   Update_Encoders();
   base_now.publish(&basey);
   roll_now.publish(&rolly);
- // shoulder_now.publish(&shouldery);
-  //elbow_now.publish(&elbowy);
-  pitch_now.publish(&pitchy);
-  //yaw_now.publish(&yawy);
+  shoulder_now.publish(&shouldery);
+  elbow_now.publish(&elbowy);
+ // pitch_now.publish(&pitchy);
+ // yaw_now.publish(&yawy);
   
   nh.spinOnce(); 
   
@@ -283,7 +294,7 @@ void Reset()
 void Update_Encoders()
 {
   displaySpeed_Base();
- // displaySpeed_R1();
+  displaySpeed_R1();
   displaySpeed_R2();
  // displaySpeed_Servo();
 }
@@ -298,19 +309,22 @@ void displaySpeed_R1(void)
   uint8_t status1,status2,status3,status4;
   bool valid1,valid2,valid3,valid4;
   int32_t enc1 = roboclaw.ReadEncM1(address, &status1, &valid1);
-  int32_t speed1 = roboclaw.ReadSpeedM1(address, &status2, &valid2);
+  //int32_t speed1 = roboclaw.ReadSpeedM1(address, &status2, &valid2);
   int32_t enc2 = roboclaw.ReadEncM2(address, &status3, &valid3);
-  int32_t speed2 = roboclaw.ReadSpeedM2(address, &status4, &valid4);
+  //int32_t speed2 = roboclaw.ReadSpeedM2(address, &status4, &valid4);
   float angulo1;
   float angulo2;
   if(valid1){//debe estar en radianes!!
-  angulo1=2*3.1416/2048*enc1;
-  joints_position[1] = angulo1;
+  //angulo1=2*3.1416/2048*enc1;
+  //joints_position[1] = enc1;
+  shouldery.data=enc1;
   }
   if(valid3){//debe estar en radianes!!
-  angulo2=2*3.1416/2048*enc1;
-  joints_position[2] = angulo2;
+  //angulo2=2*3.1416/2048*enc1;
+  //joints_position[2] = enc2;
+  elbowy.data=enc2; 
   }
+  
 }
 
 void displaySpeed_R2(void)
@@ -320,9 +334,9 @@ void displaySpeed_R2(void)
   uint8_t status1,status2,status3,status4;
   bool valid1,valid2,valid3,valid4;
   int32_t enc3 = rc.ReadEncM1(address, &status1, &valid1);
-  int32_t speed1 = rc.ReadSpeedM1(address, &status2, &valid2);
+  //int32_t speed1 = rc.ReadSpeedM1(address, &status2, &valid2);
   int32_t enc4 = rc.ReadEncM2(address, &status3, &valid3);
-  int32_t speed2 = rc.ReadSpeedM2(address, &status4, &valid4);
+  //int32_t speed2 = rc.ReadSpeedM2(address, &status4, &valid4);
   float angulo3;
   float angulo4;
   if(valid1){//debe estar en radianes!!
@@ -352,6 +366,8 @@ base.writeMicroseconds(base_out);
 //rc.SpeedAccelDeccelPositionM2(address,0,0,0,pitch_out,1);
 //roboclaw.ReadBuffers(address,depth1,depth2);
 //rc.ReadBuffers(address,depth3,depth4);
+roboclaw.ForwardBackwardM1(address,shoulder_out);
+roboclaw.ForwardBackwardM2(address,elbow_out);
 rc.ForwardBackwardM1(address,roll_out);
 rc.ForwardBackwardM2(address,pitch_out);
 }

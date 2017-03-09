@@ -7,3 +7,4 @@
 SUBDIRS(gtest)
 SUBDIRS(rosserial_tivac)
 SUBDIRS(beginner_tutorials)
+SUBDIRS(teleoperation)

@@ -119,6 +119,7 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   INCLUDE("/home/mavro/Finder/catkin_et/build/gtest/cmake_install.cmake")
   INCLUDE("/home/mavro/Finder/catkin_et/build/rosserial_tivac/cmake_install.cmake")
   INCLUDE("/home/mavro/Finder/catkin_et/build/beginner_tutorials/cmake_install.cmake")
+  INCLUDE("/home/mavro/Finder/catkin_et/build/teleoperation/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 

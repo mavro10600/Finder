@@ -42,8 +42,35 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			roll_out.data=round(64+50*joy->axes[3]);
 			if(joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
 			roll_out.data=64;
+		}			
+			
+	if(shoulder_out.data > 127)
+		shoulder_out.data = 127;
+	else{
+		if(shoulder_out.data <= 0)
+			shoulder_out.data = 0;
+		else
+			if(joy->axes[1]>0.1) 
+			shoulder_out.data=round(64+50*joy->axes[1]);
+			if(joy->axes[1]<-0.1) 
+			shoulder_out.data=round(64+50*joy->axes[1]);
+			if(joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
+			shoulder_out.data=64;
 		}
-	
+
+	if(elbow_out.data > 127)
+		elbow_out.data = 127;
+	else{
+		if(elbow_out.data <= 0)
+			elbow_out.data = 0;
+		else
+			if(joy->axes[4]>0.2) 
+			elbow_out.data=round(64+50*joy->axes[4]);
+			if(joy->axes[4]<-0.2) 
+			elbow_out.data=round(64+50*joy->axes[4]);
+			if(joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			elbow_out.data=64;
+		}
 }
 int main(int argc, char **argv){
 	std::cout << "Iniciallizing teleoperation FinDER node"<< std::endl;
@@ -62,6 +89,9 @@ int main(int argc, char **argv){
 	std::cout << "starting publishing joy data"<<std::endl;
 	base_out.data = 1500;
 	roll_out.data=64;
+	shoulder_out.data = 64;
+	elbow_out.data=64;
+
 	while(ros::ok()){
 		//Publishing desired angles 
 		base_pub.publish(base_out);

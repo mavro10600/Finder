@@ -1,8 +1,8 @@
-prefix=/home/mavro/Finder/catkin_et/install
+prefix=/home/mavro/Finder/Finder/catkin_et/install
 
 Name: beginner_tutorials
 Description: Description of beginner_tutorials
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/mavro/Finder/catkin_et/install/lib 
+Libs: -L/home/mavro/Finder/Finder/catkin_et/install/lib 
 Requires: 

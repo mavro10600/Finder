@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mavro/Finder/catkin_et/src
+CMAKE_SOURCE_DIR = /home/mavro/Finder/Finder/catkin_et/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mavro/Finder/catkin_et/build
+CMAKE_BINARY_DIR = /home/mavro/Finder/Finder/catkin_et/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -79,16 +79,6 @@ install/local: preinstall
 install/local/fast: install/local
 .PHONY : install/local/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: install/strip
-.PHONY : install/strip/fast
-
 # Special rule for the target list_install_components
 list_install_components:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
@@ -120,14 +110,14 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/mavro/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/mavro/Finder/catkin_et/build/CMakeFiles /home/mavro/Finder/catkin_et/build/teleoperation/CMakeFiles/progress.marks
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mavro/Finder/catkin_et/build/CMakeFiles 0
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/mavro/Finder/Finder/catkin_et/build/CMakeFiles /home/mavro/Finder/Finder/catkin_et/build/teleoperation/CMakeFiles/progress.marks
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mavro/Finder/Finder/catkin_et/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/clean
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/clean
 .PHONY : clean
 
 # The main clean target
@@ -136,22 +126,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/preinstall
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/preinstall
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/mavro/Finder/catkin_et/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/rule
 .PHONY : teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -160,12 +150,12 @@ diagnostic_msgs_generate_messages_cpp: teleoperation/CMakeFiles/diagnostic_msgs_
 
 # fast build rule for target.
 diagnostic_msgs_generate_messages_cpp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_cpp.dir/build
 .PHONY : diagnostic_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/rule
 .PHONY : teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -174,12 +164,12 @@ diagnostic_msgs_generate_messages_lisp: teleoperation/CMakeFiles/diagnostic_msgs
 
 # fast build rule for target.
 diagnostic_msgs_generate_messages_lisp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_lisp.dir/build
 .PHONY : diagnostic_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
 .PHONY : teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -188,12 +178,12 @@ diagnostic_msgs_generate_messages_py: teleoperation/CMakeFiles/diagnostic_msgs_g
 
 # fast build rule for target.
 diagnostic_msgs_generate_messages_py/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/diagnostic_msgs_generate_messages_py.dir/build
 .PHONY : diagnostic_msgs_generate_messages_py/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
 .PHONY : teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -202,12 +192,12 @@ geometry_msgs_generate_messages_cpp: teleoperation/CMakeFiles/geometry_msgs_gene
 
 # fast build rule for target.
 geometry_msgs_generate_messages_cpp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
 .PHONY : geometry_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
 .PHONY : teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -216,12 +206,12 @@ geometry_msgs_generate_messages_lisp: teleoperation/CMakeFiles/geometry_msgs_gen
 
 # fast build rule for target.
 geometry_msgs_generate_messages_lisp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
 .PHONY : geometry_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
 .PHONY : teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -230,12 +220,12 @@ geometry_msgs_generate_messages_py: teleoperation/CMakeFiles/geometry_msgs_gener
 
 # fast build rule for target.
 geometry_msgs_generate_messages_py/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
 .PHONY : geometry_msgs_generate_messages_py/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/joint_state_publisher.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/joint_state_publisher.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/joint_state_publisher.dir/rule
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/rule
 
 # Convenience name for target.
@@ -244,12 +234,12 @@ joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/rule
 
 # fast build rule for target.
 joint_state_publisher/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/build
 .PHONY : joint_state_publisher/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
 .PHONY : teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -258,12 +248,12 @@ sensor_msgs_generate_messages_cpp: teleoperation/CMakeFiles/sensor_msgs_generate
 
 # fast build rule for target.
 sensor_msgs_generate_messages_cpp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
 .PHONY : sensor_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
 .PHONY : teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -272,12 +262,12 @@ sensor_msgs_generate_messages_lisp: teleoperation/CMakeFiles/sensor_msgs_generat
 
 # fast build rule for target.
 sensor_msgs_generate_messages_lisp/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
 .PHONY : sensor_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
 .PHONY : teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -286,12 +276,12 @@ sensor_msgs_generate_messages_py: teleoperation/CMakeFiles/sensor_msgs_generate_
 
 # fast build rule for target.
 sensor_msgs_generate_messages_py/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make teleoperation/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
 .PHONY : sensor_msgs_generate_messages_py/fast
 
 # Convenience name for target.
 teleoperation/CMakeFiles/teleoperation_node.dir/rule:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/teleoperation_node.dir/rule
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f CMakeFiles/Makefile2 teleoperation/CMakeFiles/teleoperation_node.dir/rule
 .PHONY : teleoperation/CMakeFiles/teleoperation_node.dir/rule
 
 # Convenience name for target.
@@ -300,7 +290,7 @@ teleoperation_node: teleoperation/CMakeFiles/teleoperation_node.dir/rule
 
 # fast build rule for target.
 teleoperation_node/fast:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/build
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/build
 .PHONY : teleoperation_node/fast
 
 src/joint_state_publisher.o: src/joint_state_publisher.cpp.o
@@ -308,7 +298,7 @@ src/joint_state_publisher.o: src/joint_state_publisher.cpp.o
 
 # target to build an object file
 src/joint_state_publisher.cpp.o:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o
 .PHONY : src/joint_state_publisher.cpp.o
 
 src/joint_state_publisher.i: src/joint_state_publisher.cpp.i
@@ -316,7 +306,7 @@ src/joint_state_publisher.i: src/joint_state_publisher.cpp.i
 
 # target to preprocess a source file
 src/joint_state_publisher.cpp.i:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i
 .PHONY : src/joint_state_publisher.cpp.i
 
 src/joint_state_publisher.s: src/joint_state_publisher.cpp.s
@@ -324,7 +314,7 @@ src/joint_state_publisher.s: src/joint_state_publisher.cpp.s
 
 # target to generate assembly for a file
 src/joint_state_publisher.cpp.s:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/joint_state_publisher.dir/build.make teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s
 .PHONY : src/joint_state_publisher.cpp.s
 
 src/teleoperation_node.o: src/teleoperation_node.cpp.o
@@ -332,7 +322,7 @@ src/teleoperation_node.o: src/teleoperation_node.cpp.o
 
 # target to build an object file
 src/teleoperation_node.cpp.o:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.o
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.o
 .PHONY : src/teleoperation_node.cpp.o
 
 src/teleoperation_node.i: src/teleoperation_node.cpp.i
@@ -340,7 +330,7 @@ src/teleoperation_node.i: src/teleoperation_node.cpp.i
 
 # target to preprocess a source file
 src/teleoperation_node.cpp.i:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.i
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.i
 .PHONY : src/teleoperation_node.cpp.i
 
 src/teleoperation_node.s: src/teleoperation_node.cpp.s
@@ -348,7 +338,7 @@ src/teleoperation_node.s: src/teleoperation_node.cpp.s
 
 # target to generate assembly for a file
 src/teleoperation_node.cpp.s:
-	cd /home/mavro/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.s
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(MAKE) -f teleoperation/CMakeFiles/teleoperation_node.dir/build.make teleoperation/CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.s
 .PHONY : src/teleoperation_node.cpp.s
 
 # Help Target
@@ -366,7 +356,6 @@ help:
 	@echo "... geometry_msgs_generate_messages_py"
 	@echo "... install"
 	@echo "... install/local"
-	@echo "... install/strip"
 	@echo "... joint_state_publisher"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
@@ -392,6 +381,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/mavro/Finder/catkin_et/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

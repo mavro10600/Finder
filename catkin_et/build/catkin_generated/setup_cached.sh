@@ -7,4 +7,5 @@
 # new environment variables
 
 # modified environment variables
-export PWD="/home/mavro/Finder/catkin_et/build"
+export PWD="/home/mavro/Finder/Finder/catkin_et/build"
+export ROS_PACKAGE_PATH="/home/mavro/Finder/catkin_et/src:/home/mavro/Finder/Finder/catkin_et/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks"

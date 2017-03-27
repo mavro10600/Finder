@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mavro/Finder/catkin_et/src
+CMAKE_SOURCE_DIR = /home/mavro/Finder/Finder/catkin_et/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mavro/Finder/catkin_et/build
+CMAKE_BINARY_DIR = /home/mavro/Finder/Finder/catkin_et/build
 
 # Utility rule file for std_msgs_generate_messages_py.
 
@@ -56,10 +56,10 @@ beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/build: std_msgs_
 .PHONY : beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/build
 
 beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/clean:
-	cd /home/mavro/Finder/catkin_et/build/beginner_tutorials && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/mavro/Finder/Finder/catkin_et/build/beginner_tutorials && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/clean
 
 beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/depend:
-	cd /home/mavro/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mavro/Finder/catkin_et/src /home/mavro/Finder/catkin_et/src/beginner_tutorials /home/mavro/Finder/catkin_et/build /home/mavro/Finder/catkin_et/build/beginner_tutorials /home/mavro/Finder/catkin_et/build/beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mavro/Finder/Finder/catkin_et/src /home/mavro/Finder/Finder/catkin_et/src/beginner_tutorials /home/mavro/Finder/Finder/catkin_et/build /home/mavro/Finder/Finder/catkin_et/build/beginner_tutorials /home/mavro/Finder/Finder/catkin_et/build/beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : beginner_tutorials/CMakeFiles/std_msgs_generate_messages_py.dir/depend
 

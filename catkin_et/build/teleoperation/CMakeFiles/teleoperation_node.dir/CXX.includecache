@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/mavro/Finder/catkin_et/src/teleoperation/src/teleoperation_node.cpp
+/home/mavro/Finder/Finder/catkin_et/src/teleoperation/src/teleoperation_node.cpp
 ros/ros.h
 -
 sensor_msgs/Joy.h

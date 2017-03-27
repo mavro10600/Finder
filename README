@@ -1,1 +1,19 @@
 //readme de mavro
+//hola
+//procedimiento para usar el workspace de ROS:
+Primero, en la carpeta build, en el archivo Makefile
+cambiamos la ruta de source dir y de binary dir
+
+# The top-level source directory on which CMake was run.
+CMAKE_SOURCE_DIR = /home/mavro/Finder/Finder/catkin_et/src
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = /home/mavro/Finder/Finder/catkin_et/build
+
+Luego, vamos a la carpeta catkin_et, y ejecutamos el comando:
+
+$ catkin_make -DCMAKE_BUILD_TYPE=Release
+
+Luego 
+
+$ source ./devel/setup.bash

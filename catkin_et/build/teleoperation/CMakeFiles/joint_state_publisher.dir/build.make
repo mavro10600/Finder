@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mavro/Finder/catkin_et/src
+CMAKE_SOURCE_DIR = /home/mavro/Finder/Finder/catkin_et/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mavro/Finder/catkin_et/build
+CMAKE_BINARY_DIR = /home/mavro/Finder/Finder/catkin_et/build
 
 # Include any dependencies generated for this target.
 include teleoperation/CMakeFiles/joint_state_publisher.dir/depend.make
@@ -50,18 +50,18 @@ include teleoperation/CMakeFiles/joint_state_publisher.dir/progress.make
 include teleoperation/CMakeFiles/joint_state_publisher.dir/flags.make
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o: teleoperation/CMakeFiles/joint_state_publisher.dir/flags.make
-teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o: /home/mavro/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/mavro/Finder/catkin_et/build/CMakeFiles $(CMAKE_PROGRESS_1)
+teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o: /home/mavro/Finder/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/mavro/Finder/Finder/catkin_et/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o"
-	cd /home/mavro/Finder/catkin_et/build/teleoperation && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o -c /home/mavro/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp
+	cd /home/mavro/Finder/Finder/catkin_et/build/teleoperation && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o -c /home/mavro/Finder/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i"
-	cd /home/mavro/Finder/catkin_et/build/teleoperation && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/mavro/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp > CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i
+	cd /home/mavro/Finder/Finder/catkin_et/build/teleoperation && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/mavro/Finder/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp > CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.i
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s"
-	cd /home/mavro/Finder/catkin_et/build/teleoperation && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/mavro/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp -o CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s
+	cd /home/mavro/Finder/Finder/catkin_et/build/teleoperation && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/mavro/Finder/Finder/catkin_et/src/teleoperation/src/joint_state_publisher.cpp -o CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.s
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o.requires:
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o.requires
@@ -79,41 +79,41 @@ joint_state_publisher_OBJECTS = \
 # External object files for target joint_state_publisher
 joint_state_publisher_EXTERNAL_OBJECTS =
 
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/build.make
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libroscpp.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_signals.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole_log4cxx.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole_backend_interface.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/liblog4cxx.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_regex.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libroscpp_serialization.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librostime.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libxmlrpcpp.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libcpp_common.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_system.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_thread.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
-/home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher"
-	cd /home/mavro/Finder/catkin_et/build/teleoperation && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/joint_state_publisher.dir/link.txt --verbose=$(VERBOSE)
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/build.make
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libroscpp.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_signals.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole_log4cxx.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librosconsole_backend_interface.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/liblog4cxx.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_regex.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libroscpp_serialization.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/librostime.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libxmlrpcpp.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /opt/ros/indigo/lib/libcpp_common.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_system.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libboost_thread.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libpthread.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
+/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher: teleoperation/CMakeFiles/joint_state_publisher.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher"
+	cd /home/mavro/Finder/Finder/catkin_et/build/teleoperation && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/joint_state_publisher.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-teleoperation/CMakeFiles/joint_state_publisher.dir/build: /home/mavro/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher
+teleoperation/CMakeFiles/joint_state_publisher.dir/build: /home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/joint_state_publisher
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/build
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/requires: teleoperation/CMakeFiles/joint_state_publisher.dir/src/joint_state_publisher.cpp.o.requires
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/requires
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/clean:
-	cd /home/mavro/Finder/catkin_et/build/teleoperation && $(CMAKE_COMMAND) -P CMakeFiles/joint_state_publisher.dir/cmake_clean.cmake
+	cd /home/mavro/Finder/Finder/catkin_et/build/teleoperation && $(CMAKE_COMMAND) -P CMakeFiles/joint_state_publisher.dir/cmake_clean.cmake
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/clean
 
 teleoperation/CMakeFiles/joint_state_publisher.dir/depend:
-	cd /home/mavro/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mavro/Finder/catkin_et/src /home/mavro/Finder/catkin_et/src/teleoperation /home/mavro/Finder/catkin_et/build /home/mavro/Finder/catkin_et/build/teleoperation /home/mavro/Finder/catkin_et/build/teleoperation/CMakeFiles/joint_state_publisher.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mavro/Finder/Finder/catkin_et/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mavro/Finder/Finder/catkin_et/src /home/mavro/Finder/Finder/catkin_et/src/teleoperation /home/mavro/Finder/Finder/catkin_et/build /home/mavro/Finder/Finder/catkin_et/build/teleoperation /home/mavro/Finder/Finder/catkin_et/build/teleoperation/CMakeFiles/joint_state_publisher.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : teleoperation/CMakeFiles/joint_state_publisher.dir/depend
 

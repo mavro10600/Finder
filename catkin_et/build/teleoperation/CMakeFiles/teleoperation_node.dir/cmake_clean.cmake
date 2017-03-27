@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/teleoperation_node.dir/src/teleoperation_node.cpp.o"
-  "/home/mavro/Finder/catkin_et/devel/lib/teleoperation/teleoperation_node.pdb"
-  "/home/mavro/Finder/catkin_et/devel/lib/teleoperation/teleoperation_node"
+  "/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/teleoperation_node.pdb"
+  "/home/mavro/Finder/Finder/catkin_et/devel/lib/teleoperation/teleoperation_node"
 )
 
 # Per-language clean rules from dependency scanning.

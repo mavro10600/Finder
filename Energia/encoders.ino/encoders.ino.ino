@@ -8,16 +8,24 @@ Servo motDer_Back;
 Servo motIzq_Back;
 
 Messenger Messenger_Handler = Messenger();
+/*
+ * 
+ *    PD_7 ---------------PD_6
+ *         ---------------
+ *         ---------------
+ *    PF_4-------     ----PC_7
+ *        -----------------
+ * 
+*/
+#define pinEncIzq PD_7
+#define pinEncDer PC_7
+#define pinEncIzq_Back PF_4
+#define pinEncDer_Back PD_6
 
-#define pinEncIzq PD_6
-#define pinEncDer PD_7
-#define pinEncIzq_Back PD_8
-//#define pinEncDer_Back PC_7
-
-#define pinMotIzq PA_6
-#define pinMotDer PA_7
-#define pinMotIzq_Back PB_4
-#define pinMotDer_Back PA_5
+#define pinMotIzq PA_5
+#define pinMotDer PA_6
+#define pinMotIzq_Back PA_7
+#define pinMotDer_Back PB_4
 
 #define RESET_PIN PB_2
 volatile bool EncIzqSet;

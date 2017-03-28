@@ -1,9 +1,9 @@
 <launch>
-	<rosparam param="base_width">0.3</rosparam>
+	<rosparam param="base_width">0.46</rosparam>
 	<rosparam param="ticks_meter">14865</rosparam>
 	
 	<node name="launchpad_node" pkg="beginner_tutorials" type="launchpad_node.py">
-		<rosparam command="load" file="$(find beginner_tutorials)/param/board_config.yaml"/>
+		
 	</node>
 	
 <node name="lpid_velocity" pkg="beginner_tutorials" type="pid_control.py" output="screen">
@@ -21,7 +21,7 @@
       <rosparam param="timeout_ticks">4</rosparam>
       <rosparam param="rolling_pts">5</rosparam>
 
-</node>
+</node>,
 	
 	<node name="rpid_velocity" pkg="beginner_tutorials" type="pid_control.py" output="screen">
       <remap from="wheel" to="rwheel"/>

@@ -105,7 +105,7 @@ void setup() {
   //Open Serial and roboclaw serial ports
   Serial.begin(115200);//cuando se ve en el ide de arduino
 
-  roboclaw.begin(115200);
+  roboclaw.begin(38400);
   
   rc.begin(115200);
   

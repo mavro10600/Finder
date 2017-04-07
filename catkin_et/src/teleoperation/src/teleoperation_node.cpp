@@ -91,6 +91,7 @@ int main(int argc, char **argv){
 	roll_out.data=64;
 	shoulder_out.data = 64;
 	elbow_out.data=64;
+	pitch_out.data=64;
 
 	while(ros::ok()){
 		//Publishing desired angles 

@@ -89,8 +89,9 @@ int main(int argc, char **argv){
 	std::cout << "starting publishing joy data"<<std::endl;
 	base_out.data = 1500;
 	roll_out.data=64;
-	shoulder_out.data = 1500;
+	shoulder_out.data = 64;
 	elbow_out.data=64;
+	pitch_out=64;
 
 	while(ros::ok()){
 		//Publishing desired angles 

@@ -46,7 +46,7 @@ class Launchpad_Class(object):
 		self._Second_Since_Last_Update=0
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
-		port=rospy.get_param("~port","/dev/ttyACM0")
+		port=rospy.get_param("~port","/dev/stellaris_arm")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 #########################################
@@ -58,12 +58,12 @@ class Launchpad_Class(object):
 #publisher y suscribers
 
 		
-		self._SerialPublisher=rospy.Publisher('serial',String,queue_size=10)
+		self._SerialPublisher=rospy.Publisher('serial_arm',String,queue_size=10)
 		self.deltat=0
 		self.lastUpdate=0
-		self._Shoulder_Encoder=rospy.Publisher('shoulder',Int64,queue_size=10)
+		self._Shoulder_Encoder=rospy.Publisher('shoulder',Int64,queue_size=5)
 		self._Base_Encoder=rospy.Publisher('base',Int64,queue_size=10)
-		self._Elbow_Encoder=rospy.Publisher('elbow',Int64,queue_size=10)
+		self._Elbow_Encoder=rospy.Publisher('elbow',Int64,queue_size=5)
 		self._Roll_Encoder=rospy.Publisher('roll',Int64,queue_size=10)
 		self._Pitch_Encoder=rospy.Publisher('pitch',Int64,queue_size=10)
 		self._Yaw_Encoder=rospy.Publisher('yaw',Int64,queue_size=10)

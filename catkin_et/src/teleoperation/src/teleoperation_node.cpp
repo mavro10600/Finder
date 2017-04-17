@@ -27,11 +27,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			base_out.data = 1000;
 		else
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(joy->axes[0]>0.1) 
+			if(joy->axes[0]>0.2) 
 			base_out.data=round(1700+scale*joy->axes[0]);
-			if(joy->axes[0]<-0.1) 
+			if(joy->axes[0]<-0.2) 
 			base_out.data=round(1300+scale*joy->axes[0]);
-			if(joy->axes[0]<=0.1 && joy->axes[0]>=-0.1) 
+			if(joy->axes[0]<=0.2 && joy->axes[0]>=-0.2) 
 			base_out.data=1500;
 			//else
 			//base_out.data=1500;
@@ -43,11 +43,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(roll_out.data <= 0)
 			roll_out.data = 0;
 		else
-			if(!joy->buttons[5] && joy->axes[3]>0.1) 
-			roll_out.data=round(64+25*joy->axes[3]);
-			if(!joy->buttons[5] && joy->axes[3]<-0.1) 
-			roll_out.data=round(64+25*joy->axes[3]);
-			if(!joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			if(!joy->buttons[5] && joy->axes[3]>0.2) 
+			roll_out.data=round(64+18*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<-0.2) 
+			roll_out.data=round(64+18*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
 			roll_out.data=64;
 		}
 
@@ -57,11 +57,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(pitch_out.data <= 0)
 			pitch_out.data = 0;
 		else
-			if(joy->buttons[5] && joy->axes[3]>0.1) 
+			if(joy->buttons[5] && joy->axes[3]>0.2) 
 			pitch_out.data=round(64+25*joy->axes[3]);
-			if(joy->buttons[5] && joy->axes[3]<-0.1) 
+			if(joy->buttons[5] && joy->axes[3]<-0.2) 
 			pitch_out.data=round(64+25*joy->axes[3]);
-			if(joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			if(joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
 			pitch_out.data=64;
 		}			
 			

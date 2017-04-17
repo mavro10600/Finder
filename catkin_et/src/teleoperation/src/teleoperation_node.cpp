@@ -2,6 +2,13 @@
 #include <sensor_msgs/Joy.h>
 #include <std_msgs/Int16.h>
 #include <math.h>  
+//Definicion de los botones y ejes del control de Xbox
+//lalalalalala
+#define Abutton joy->buttons[0]
+#define Bbutton joy->buttons[1]
+#define Xbutton joy->buttons[2]
+#define Ybutton joy->buttons[3]
+
 std_msgs::Int16 base_out,
 				shoulder_out,
 				elbow_out,
@@ -36,12 +43,26 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(roll_out.data <= 0)
 			roll_out.data = 0;
 		else
-			if(joy->axes[3]>0.1) 
-			roll_out.data=round(64+50*joy->axes[3]);
-			if(joy->axes[3]<-0.1) 
-			roll_out.data=round(64+50*joy->axes[3]);
-			if(joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			if(!joy->buttons[5] && joy->axes[3]>0.1) 
+			roll_out.data=round(64+25*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<-0.1) 
+			roll_out.data=round(64+25*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
 			roll_out.data=64;
+		}
+
+		if(pitch_out.data > 127)
+		pitch_out.data = 127;
+	else{
+		if(pitch_out.data <= 0)
+			pitch_out.data = 0;
+		else
+			if(joy->buttons[5] && joy->axes[3]>0.1) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5] && joy->axes[3]<-0.1) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			pitch_out.data=64;
 		}			
 			
 	if(shoulder_out.data > 127)
@@ -71,6 +92,22 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			if(joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
 			elbow_out.data=64;
 		}
+	//agregado recien
+	if(Xbutton == 1)
+		gripper_out.data = 3;
+	else
+		if(Ybutton == 1)
+			gripper_out.data = -3;
+		else	
+			gripper_out.data = 0;
+
+	if(Abutton == 1)
+		yaw_out.data = 3;
+	else
+		if(Bbutton == 1)
+			yaw_out.data = -3;
+		else	
+			yaw_out.data = 0;
 }
 int main(int argc, char **argv){
 	std::cout << "Iniciallizing teleoperation FinDER node"<< std::endl;

@@ -1,8 +1,0 @@
-prefix=/home/mavro/Finder/catkin_et/install
-
-Name: rosserial_tivac
-Description: Description of rosserial_tivac
-Version: 0.7.5
-Cflags: 
-Libs: -L/home/mavro/Finder/catkin_et/install/lib 
-Requires: 

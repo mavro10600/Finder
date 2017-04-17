@@ -1,2 +1,0 @@
-beginner_tutorials:teleoperation
--DCATKIN_DEVEL_PREFIX=/home/mavro/Finder/Finder/catkin_et/devel -DCMAKE_INSTALL_PREFIX=/home/mavro/Finder/Finder/catkin_et/install -G Unix Makefiles

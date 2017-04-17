@@ -36,12 +36,26 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(roll_out.data <= 0)
 			roll_out.data = 0;
 		else
-			if(joy->axes[3]>0.1) 
-			roll_out.data=round(64+50*joy->axes[3]);
-			if(joy->axes[3]<-0.1) 
-			roll_out.data=round(64+50*joy->axes[3]);
-			if(joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			if(!joy->buttons[5] && joy->axes[3]>0.1) 
+			roll_out.data=round(64+25*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<-0.1) 
+			roll_out.data=round(64+25*joy->axes[3]);
+			if(!joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
 			roll_out.data=64;
+		}
+
+		if(pitch_out.data > 127)
+		pitch_out.data = 127;
+	else{
+		if(pitch_out.data <= 0)
+			pitch_out.data = 0;
+		else
+			if(joy->buttons[5] && joy->axes[3]>0.1) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5] && joy->axes[3]<-0.1) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			pitch_out.data=64;
 		}			
 			
 	if(shoulder_out.data > 127)
@@ -89,8 +103,9 @@ int main(int argc, char **argv){
 	std::cout << "starting publishing joy data"<<std::endl;
 	base_out.data = 1500;
 	roll_out.data=64;
-	shoulder_out.data = 1500;
+	shoulder_out.data = 64;
 	elbow_out.data=64;
+	pitch_out.data=64;
 
 	while(ros::ok()){
 		//Publishing desired angles 

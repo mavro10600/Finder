@@ -1,0 +1,12 @@
+controller_list:
+  - name: fake_arm_controller
+    joints:
+      - base_rotation
+      - shoulder_rotation
+      - elbow_rotation
+      - roll_rotation
+      - pitch_rotation
+      - roll_rotation_2
+  - name: fake_gripper_controller
+    joints:
+      - gripper_rotation

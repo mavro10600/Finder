@@ -71,9 +71,6 @@ int main(int argc, char** argv) {
     joint_state.name[9] = "roll_rotation_2";
     joint_state.name[10] = "gripper_rotation";
 
-	for(int i = 0; i < 11; i++){
-    	joint_state.position[i] = 0;
-	}
 
     while (ros::ok()) {
         //update joint_state
@@ -81,7 +78,7 @@ int main(int argc, char** argv) {
         //send the joint state
         joint_state_publisher.publish(joint_state);
         loop_rate.sleep();
-        ros::spin();
+        ros::spinOnce();
     }
 
     return 0;

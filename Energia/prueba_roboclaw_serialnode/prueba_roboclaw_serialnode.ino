@@ -107,7 +107,7 @@ void setup() {
 
   roboclaw.begin(38400);
   
-  rc.begin(115200);
+  rc.begin(38400);
   
   SetupEncoders();
   

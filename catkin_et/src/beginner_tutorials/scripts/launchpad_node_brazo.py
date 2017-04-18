@@ -64,8 +64,8 @@ class Launchpad_Class(object):
 		self._Shoulder_Encoder=rospy.Publisher('shoulder',Int64,queue_size=5)
 		self._Base_Encoder=rospy.Publisher('base',Int64,queue_size=10)
 		self._Elbow_Encoder=rospy.Publisher('elbow',Int64,queue_size=5)
-		self._Roll_Encoder=rospy.Publisher('roll',Int64,queue_size=10)
-		self._Pitch_Encoder=rospy.Publisher('pitch',Int64,queue_size=10)
+		self._Roll_Encoder=rospy.Publisher('roll',Int64,queue_size=5)
+		self._Pitch_Encoder=rospy.Publisher('pitch',Int64,queue_size=5)
 		self._Yaw_Encoder=rospy.Publisher('yaw',Int64,queue_size=10)
 		self._Gripper_Encoder=rospy.Publisher('gripper',Int64,queue_size=10)		
 								

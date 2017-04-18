@@ -1,0 +1,12 @@
+			0	90	
+base :		2960	4095
+
+shoulder:	580		1000
+
+elbow:		257		1770
+
+roll:
+
+pitch:
+
+

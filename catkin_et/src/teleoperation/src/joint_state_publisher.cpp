@@ -4,6 +4,9 @@
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/JointState.h>
 sensor_msgs::JointState joint_state;
+double basex2=4095,basey2=3.1416/2,basex1=2960;
+double shoulderx2=1000,shouldery2=3.1416/2,shoulderx1=580;
+double elbowx2=1311,elbowy2=3.1416/2,elbowx1=1770;
 void rf_flipper_cb(const std_msgs::Int64::ConstPtr& flipper){
 	joint_state.position[0] = flipper->data;
 }
@@ -17,13 +20,13 @@ void lb_flipper_cb(const std_msgs::Int64::ConstPtr& flipper){
 	joint_state.position[3] = flipper->data;
 }
 void baseCallback(const std_msgs::Int64::ConstPtr& base){
-	joint_state.position[4] = base->data;
+	joint_state.position[4] = basey2*((base->data)/(basex2-basex1)-basex1/(basex2-basex1));
 }
 void shoulderCallback(const std_msgs::Int64::ConstPtr& shoulder){
-	joint_state.position[5] = shoulder->data;
+	joint_state.position[5] = shouldery2*((shoulder->data)/(shoulderx2-shoulderx1)-shoulderx1/(shoulderx2-shoulderx1));
 }
 void elbowCallback(const std_msgs::Int64::ConstPtr& elbow){
-	joint_state.position[6] = elbow->data;
+	joint_state.position[6] = -(elbowy2*((elbow->data)/(elbowx2-elbowx1)-elbowx1/(elbowx2-elbowx1)));
 }
 void rollCallback(const std_msgs::Int64::ConstPtr& roll){
 	joint_state.position[7] = roll->data;

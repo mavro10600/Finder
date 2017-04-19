@@ -10,3 +10,12 @@ roll:
 pitch:
 
 
+Ahora, repaso de regresion lineal:
+y=mx+b
+
+donde y esta en radianes es decir 0-Pi/2
+
+(x-x1)/(x2-x1)=(y-y1)/(y2-y1)
+
+Base:  (x-2960)/(4094-2960)=(y)/(Pi/2), y=(2/(4094-2960)*Pi)x-(2960)
+

@@ -79,6 +79,10 @@ class Launchpad_Class(object):
 		self.yaw_out=rospy.Subscriber('yaw_out',Int16,self._Update_Yaw)
 		self.gripper_out=rospy.Subscriber('gripper_out',Int16,self._Update_Gripper)		
 		
+		
+##############################################
+#defino las rutinas de actulizacion del publicador
+
 	def _Update_Base(self,base_out):
 		self.base_pos=base_out.data
 		rospy.loginfo(base_out.data)
@@ -121,6 +125,8 @@ class Launchpad_Class(object):
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 	
+#################################################
+#la rutina _HandleRececivedLine es el que toma los valores de los encoders dela stellaris y lo convierte en los topicos a publicar 
 	
 	def _HandleReceivedLine(self,line):	
 		self._Counter=self._Counter+1
@@ -151,6 +157,8 @@ class Launchpad_Class(object):
 				rospy.logwarn(lineParts)
 				pass
 
+###################################################
+#
 	def _WriteSerial(self,message):
 		self._SerialPublisher.publish(String(str(self._Counter)+", out:"+message))
 		self._SerialDataGateway.Write(message)
@@ -175,6 +183,9 @@ class Launchpad_Class(object):
 		a=1
 	def SendSpeed(self):
 		a=3
+
+#######################################################
+###funcion principal "main" 
 	
 if __name__=='__main__':
 	rospy.init_node('launchpad_ros',anonymous=True)

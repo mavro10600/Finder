@@ -17,7 +17,11 @@ std_msgs::Int16 base_out,
 				yaw_out,
 				gripper_out;
 int scale = 100;
-
+/*
+Esta funcion es la principal, al usar el joystick, lo que se deberia de hacer ahora es incluir los topicos de la base y switchear entre dos modos de uso
+quizas hay que replantear la progrmamcion orientada a objetos para que sea más pequeña esta función, ya que sigue creciendo. aunque primero solo hayq ue definir 
+las instrucciones así, de maera directa, y luego repensar la programacion orientada a objetos
+*/
 
 void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 	if(base_out.data > 2000)
@@ -109,6 +113,8 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		else	
 			yaw_out.data = 0;
 }
+
+//Función principal
 int main(int argc, char **argv){
 	std::cout << "Iniciallizing teleoperation FinDER node"<< std::endl;
 	ros::init(argc,argv,"teleoperation_finder");

@@ -1,3 +1,7 @@
+/******
+Este programa toma 
+*****************/
+
 #include <ros/ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Int64.h>
@@ -41,6 +45,8 @@ void yawCallback(const std_msgs::Int64::ConstPtr& yaw){
 void gripperCallback(const std_msgs::Int64::ConstPtr& gripper){
 	joint_state.position[10] = gripper->data;
 }
+
+///parte principal del programa, se difinen los suscriptores de los valores de los encoders, y se definen las fnunciones donde se mapean los valores del encoder a valores en radianes
 int main(int argc, char** argv) {
     ros::init(argc, argv, "joint_state_publisher");
     ros::NodeHandle n;

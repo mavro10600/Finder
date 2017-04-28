@@ -13,3 +13,4 @@ stubs/
 **/*~
 **/**~
 **.pyc
+./catkin_et/src/finder_description/urdf.rviz

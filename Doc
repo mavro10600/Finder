@@ -1,0 +1,49 @@
+Documentación del repositorio
+
+La carpeta llamada Energia tiene las bibliotecas necesarias para compilar los programas en la subcarpeta libraries, se tienen las bibliotecas para usar el dinamixel, para leer los encoders, la biblioteca Messenger es bastante importante.
+Además están los programas que se crearon en pruebas para generar el programa final. 
+
+encoders.ino
+	Este programa controla la base, es decir las ruedas de la actual 		base móvil, son cuatro ruedas y cuatro encoders optoelectronicos y 		controladores Talon, este es el programa base para hacer el nuevo 		programa para usar los OSMC y las roboclaw de los bracitos.Tomando 		como referencia el programa prueba_roboclaw_serial_node
+encoders_prueba_ros
+	este programa se uso para debuggeo del programa  encoders.ino, ya 		que ese funciona con la biblioteca Messenger y para ver si estas 		enviando bien los valores de los encoders, este programa tiene una 		funcion de ReadSerial que permite usar el Monitor serial de 	Energia.
+
+prueba_roboclaw
+	Es un programa básico para probar la conexion de dos roboclaw por serial a una stellaris, unicamente haciendo un request de la version del firmware de la roboclaw
+	
+prueba_roboclaw_ros
+	Este programa fue una primera version deun programa de control para el brazo, usando rosserial, sin embargo, es muuuuyyy lento, y la conexión es inestable, se traba mucho, y no permite usar en tiempo real el brazo. Sin embargo en su momento funcionó, quizás alguien que tenga tiempo puede revisar el programa y enconrar si moviendo algun parámetro se puede mejorar este problema. Yo, sospecho que es de sincronización de instrucciones. Actualmente se usa el programa prueba _roboclaw_serialnode que usa la biblioteca Messenger para funcionar, actualmente funciona bastante bien
+
+prueba_robocaw_ros_1tarjeta
+	Este programa fue de debuggeo para el programa prueba_roboclaw_ros, actualmente no funciona bien
+
+prueba_roboclaw_serialnode
+	Este programa usa la biblioteca messenger para enviar todo por Serial, sin utilizar Rosserial, enla laptop, se usa otro programa en Python llamado launchpad_node_brazo que usa a su vez otra biblioteca llamada SerialDataGateway que permite convertir la comuncación serial de la Stellaris en tópicos de Ros y a su ves convertir tópicos a instrucciones para los controladores de los motores (roboclaw)
+	
+	
+catkin_et
+
+Esta carpeta, es la de los programas de control usando ROS en la laptop
+En /src/beginner_tutorials/scripts :
+Los programas mas importantes son:
+
+launchpad_node.py
+Este programa convierte los mensajes Seriales de la launchpad de la base a topicos en ROS y se suscribe a otros topicos de velocidad para convertirlos en comandos de control para los controladores Talon de la base, hayq ue modificarlo, junto con encoders.ino para la nueva base.
+
+launchpad_node_brazo.py
+Hace lo mismo que el programa anterior, pero va con el programa prueba roboclaw_serial_node. Actualmente funciona bien
+
+tele.py
+Este programa hace el control teleoperado de la base, usando el teclado
+
+
+/src/teleoperation/src
+encoders_values.txt
+Este documento sirve para los valores de mapeo de los encoder lineales, se usa en el programa joint_state_publisher_node.cpp para convertir los valores de los encoders a radianes
+
+joint_state_ublisher.cpp
+Este progrma convierte los topicos de los encoders a valores en radianes, necesarios para la simulacion en rviz
+
+teleoperation_node.cpp
+Este programa sirve para hacer el control usando el control de xbox360.
+

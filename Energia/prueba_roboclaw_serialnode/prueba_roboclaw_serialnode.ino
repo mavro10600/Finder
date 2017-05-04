@@ -128,8 +128,8 @@ void SetupEncoders()
 
 
   uint8_t mode1=0;
-  rc.SetM1EncoderMode(address,mode1);
-  rc.SetM2EncoderMode(address,mode1);
+  rc.SetM1EncoderMode(address,0);
+  rc.SetM2EncoderMode(address,0);
   
   ///Encoders de cuadratura
 }
@@ -305,7 +305,7 @@ void displaySpeed_R2(void)
   //angulo3=2*3.1416/2048*enc3;//conversion de ticks a radianes
   roll = enc3;
   }
-  if(valid4){//debe estar en radianes!!
+  if(valid3){//debe estar en radianes!!
   //angulo4=2*3.1416/2048*enc4;//conversion de ticks a radianes
   pitch=enc4;
   }

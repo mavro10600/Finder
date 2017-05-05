@@ -162,9 +162,6 @@ void loop() {
   Read_From_Serial();
   Update_Time();
   Update_Motors();  
-  //int32_t enc1 = roboclaw.ReadEncM1(address, &status1, &valid1);
-  //int32_t speed1 = roboclaw.ReadSpeedM1(address, &status2, &valid2);
-  //int32_t enc2 = roboclaw.ReadEncM2(address, &status3, &valid3);
   Update_Encoders();
   
 }
@@ -309,7 +306,6 @@ void displaySpeed_R2(void)
   //angulo4=2*3.1416/2048*enc4;//conversion de ticks a radianes
   pitch=enc4;
   }
-  //rc.ReadBuffers(address,depth3,depth4);
 }
 
 void displaySpeed_Servo()
@@ -324,13 +320,6 @@ void Update_Motors()
 {
 //BASE.write(base_out);
 base.writeMicroseconds(base_out);
-//uint8_t depth1,depth2,depth3,depth4;
-//roboclaw.SpeedAccelDeccelPositionM1(address,0,0,0,shoulder_out,1);
-//roboclaw.SpeedAccelDeccelPositionM2(address,0,0,0,elbow_out,1);
-//rc.SpeedAccelDeccelPositionM1(address,0,0,0,roll_out,1);
-//rc.SpeedAccelDeccelPositionM2(address,0,0,0,pitch_out,1);
-//roboclaw.ReadBuffers(address,depth1,depth2);
-//rc.ReadBuffers(address,depth3,depth4);
 roboclaw.ForwardBackwardM1(address,shoulder_out);
 roboclaw.ForwardBackwardM2(address,elbow_out);
 rc.ForwardBackwardM1(address,roll_out);

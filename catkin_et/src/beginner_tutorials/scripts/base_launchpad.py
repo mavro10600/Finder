@@ -31,12 +31,13 @@ class Launchpad_Class(object):
 		
 		self._right_encoder_value=0
 		self._right_wheel_speed=0
-		
+		self._flipper1_wheel_speed=0		
+
 		self._LastUpdate_Microsec=0
 		self._Second_Since_Last_Update=0
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
-		port=rospy.get_param("~port","/dev/ttyACM1")
+		port=rospy.get_param("~port","/dev/ttyACM2")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 #########################################
@@ -55,20 +56,27 @@ class Launchpad_Class(object):
 		
 		self._left_motor_speed=rospy.Subscriber('left_out',Int16,self._Update_Left_Speed)
 		self._right_motor_speed=rospy.Subscriber('right_out',Int16,self._Update_Right_Speed)
-		
+		self._flipper1_speed=rospy.Subscriber('flipper1_out',Int16,self._Update_Flipper1_Speed)
 		
 	def _Update_Left_Speed(self,left_speed):
 		self._left_wheel_speed=left_speed.data
 		rospy.loginfo(left_speed.data)
-		speed_message='s %d %d \r' %(int(self._left_wheel_speed),int(self._right_wheel_speed))	
+		speed_message='s %d %d %d %d %d %d \r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),64,64,64)	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Right_Speed(self,right_speed):
 		self._right_wheel_speed=right_speed.data
 		rospy.loginfo(right_speed.data)
-		speed_message='s %d %d \r' %(int(self._left_wheel_speed),int(self._right_wheel_speed))	
+		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),64,64,64)	
 		self._WriteSerial(speed_message)
 		
+
+	def _Update_Flipper1_Speed(self,flipper1_speed):
+                self._flipper1_wheel_speed=flipper1_speed.data
+                rospy.loginfo(flipper1_speed.data)
+                speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),64,64,64)
+                self._WriteSerial(speed_message)
+
 	def _HandleReceivedLine(self,line):	
 		self._Counter=self._Counter+1
 		self._SerialPublisher.publish(String(str(self._Counter)+", in:"+line))
@@ -79,7 +87,11 @@ class Launchpad_Class(object):
 				if(lineParts[0]=='e'):
 					self._left_encoder_value=long(lineParts[1])
 					self._right_encoder_value=long(lineParts[2])					
-					
+					self._left_encoder_value=long(lineParts[3])
+					self._right_encoder_value=long(lineParts[4])					
+					self._left_encoder_value=long(lineParts[5])
+					self._right_encoder_value=long(lineParts[6])					
+
 					self._Left_Encoder.publish(self._left_encoder_value)
 					self._Right_Encoder.publish(self._right_encoder_value)					
 			except:

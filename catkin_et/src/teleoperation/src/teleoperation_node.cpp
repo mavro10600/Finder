@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32.h>
 #include <math.h>  
 //Definicion de los botones y ejes del control de Xbox
 //lalalalalala
@@ -16,7 +17,14 @@ std_msgs::Int16 base_out,
 				pitch_out,
 				yaw_out,
 				gripper_out;
+				flipper1_out;
+				flipper2_out;
+				flipper3_out;
+				flipper4_out;
+				
 int scale = 100;
+
+
 /*
 Esta funcion es la principal, al usar el joystick, lo que se deberia de hacer ahora es incluir los topicos de la base y switchear entre dos modos de uso
 quizas hay que replantear la progrmamcion orientada a objetos para que sea más pequeña esta función, ya que sigue creciendo. aunque primero solo hayq ue definir 
@@ -31,11 +39,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			base_out.data = 1000;
 		else
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(joy->axes[0]>0.2) 
+			if(joy->buttons[5] && joy->axes[0]>0.2) 
 			base_out.data=round(1700+scale*joy->axes[0]);
-			if(joy->axes[0]<-0.2) 
+			if(joy->buttons[5] && joy->axes[0]<-0.2) 
 			base_out.data=round(1300+scale*joy->axes[0]);
-			if(joy->axes[0]<=0.2 && joy->axes[0]>=-0.2) 
+			if(joy->buttons[4] && joy->axes[0]<=0.2 && joy->axes[0]>=-0.2) 
 			base_out.data=1500;
 			//else
 			//base_out.data=1500;
@@ -75,11 +83,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(shoulder_out.data <= 0)
 			shoulder_out.data = 0;
 		else
-			if(joy->axes[1]>0.1) 
+			if(joy->buttons[4] && joy->axes[1]>0.1) 
 			shoulder_out.data=round(64+50*joy->axes[1]);
-			if(joy->axes[1]<-0.1) 
+			if(joy->buttons[4] && joy->axes[1]<-0.1) 
 			shoulder_out.data=round(64+50*joy->axes[1]);
-			if(joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
+			if(joy->buttons[4] && joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
 			shoulder_out.data=64;
 		}
 
@@ -89,11 +97,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(elbow_out.data <= 0)
 			elbow_out.data = 0;
 		else
-			if(joy->axes[4]>0.2) 
+			if(joy->buttons[4] && joy->axes[4]>0.2) 
 			elbow_out.data=round(64+50*joy->axes[4]);
-			if(joy->axes[4]<-0.2) 
+			if(joy->buttons[4] && joy->axes[4]<-0.2) 
 			elbow_out.data=round(64+50*joy->axes[4]);
-			if(joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			if(joy->buttons[4] && joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
 			elbow_out.data=64;
 		}
 	//agregado recien
@@ -128,6 +136,10 @@ int main(int argc, char **argv){
 					pitch_pub 	= n.advertise<std_msgs::Int16>("pitch_out",10),
 					yaw_pub		= n.advertise<std_msgs::Int16>("yaw_out",10),
 					gripper_pub	= n.advertise<std_msgs::Int16>("gripper_out",10);
+					flipper1_pub	= n.advertise<std_msgs::Int16>("flipper1_out",10);
+					flipper2_pub	= n.advertise<std_msgs::Int16>("flipper2_out",10);
+					flipper3_pub	= n.advertise<std_msgs::Int16>("flipper3_out",10);
+					flipper4_pub	= n.advertise<std_msgs::Int16>("flipper4_out",10);
 	ros::Rate loop_rate(10);
 	std::cout << "starting publishing joy data"<<std::endl;
 	base_out.data = 1500;
@@ -135,7 +147,10 @@ int main(int argc, char **argv){
 	shoulder_out.data = 64;
 	elbow_out.data=64;
 	pitch_out.data=64;
-
+	flipper1_out.data=64;
+	flipper2_out.data=64;
+	flipper3_out.data=64;
+	flipper4_out.data=64;
 	while(ros::ok()){
 		//Publishing desired angles 
 		base_pub.publish(base_out);
@@ -145,6 +160,10 @@ int main(int argc, char **argv){
 		pitch_pub.publish(pitch_out);
 		yaw_pub.publish(yaw_out);
 		gripper_pub.publish(gripper_out);
+		flipper1_pub.publish(flipper1_out);
+		flipper2_pub.publish(flipper2_out);
+		flipper3_pub.publish(flipper3_out);
+		flipper4_pub.publish(flipper4_out);
 
 		ros::spinOnce();
 		loop_rate.sleep();

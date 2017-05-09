@@ -71,10 +71,10 @@ float SecondsSinceLastUpdate=0;
 // Valores de control a los motores
 int left_out=0;
 int right_out=0;
-int flipper1_out=0;
-int flipper2_out=0;
-int flipper3_out=0;
-int flipper4_out=0;
+int flipper1_out=64;
+int flipper2_out=64;
+int flipper3_out=64;
+int flipper4_out=64;
 
 ///////////////////////////////////////////////////////////////////
 //Variables de los encoders
@@ -202,10 +202,10 @@ void Set_Speed()
 {
     left_out=Messenger_Handler.readLong();
     right_out=Messenger_Handler.readLong();
-    //flipper1_out=Messenger_Handler.readLong();
-    //flipper2_out=Messenger_Handler.readLong();
-    //flipper3_out=Messenger_Handler.readLong();
-    //flipper4_out=Messenger_Handler.readLong();
+    flipper1_out=Messenger_Handler.readLong();
+    flipper2_out=Messenger_Handler.readLong();
+    flipper3_out=Messenger_Handler.readLong();
+    flipper4_out=Messenger_Handler.readLong();
     
 }
 
@@ -235,14 +235,14 @@ void Update_Encoders()
   Serial.print(left_lec);
   Serial.print("\t");
   Serial.print(right_lec);
-  //Serial.print("\t");
-  //Serial.print(flip1_lec);
-  //Serial.print("\t");
-  //Serial.print(flip2_lec);
-  //Serial.print("\t");
-  //Serial.print(flip3_lec);
-  //Serial.print("\t");
- // Serial.print(flip4_lec);
+  Serial.print("\t");
+  Serial.print(flip1_lec);
+  Serial.print("\t");
+  Serial.print(flip2_lec);
+  Serial.print("\t");
+  Serial.print(flip3_lec);
+  Serial.print("\t");
+  Serial.print(flip4_lec);
   Serial.print("\n");
 }
 

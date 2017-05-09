@@ -8,7 +8,7 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 <robot name="finder"  xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<!-- Macro para "mandar llamar" a las mallas *.obj -->
-    <xacro:macro name="default_geometry" params="cad_dir:=package://finder_description/meshes_light cad_file extension:=obj">
+    <xacro:macro name="default_geometry" params="cad_dir:=package://finder_description/mallas cad_file extension:=obj">
         <geometry>
 	<!-- Typically, STL/DAE/OBJ model units are in mm, but RViz units are in m, hence models must be scaled down by 1000-->
             <mesh filename="${cad_dir}/${cad_file}.${extension}" scale="0.001 0.001 0.001"/>
@@ -103,16 +103,16 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 
 <!--////////////// brazos laterales del chasis ////////////////////-->
 	<!-- brazo frontal derecho chasis -->
-	<xacro:lateral_arms name="right_front_arm" cad_name="brazo_der_frontal_v2" origin="0.3264 0.30255 -0.0629"/>
+	<xacro:lateral_arms name="right_front_arm" cad_name="brazo_der_frontal" origin="0.3264 0.30255 -0.0629"/>
 
 	<!-- brazo frontal izquierdo chasis -->
-	<xacro:lateral_arms name="left_front_arm" cad_name="brazo_izq_frontal_v2" origin="-0.3264 0.30255 -0.0629"/>
+	<xacro:lateral_arms name="left_front_arm" cad_name="brazo_izq_frontal" origin="-0.3264 0.30255 -0.0629"/>
 
 	<!-- brazo trasero derecho chasis -->
-	<xacro:lateral_arms name="right_back_arm" cad_name="brazo_der_trasero_v2" origin="0.3264 -0.30255 -0.0629"/>
+	<xacro:lateral_arms name="right_back_arm" cad_name="brazo_der_trasero" origin="0.3264 -0.30255 -0.0629"/>
 
 	<!-- brazo trasero izquierdo chasis -->
-	<xacro:lateral_arms name="left_back_arm" cad_name="brazo_izq_trasero_v2" origin="-0.3264 -0.30255 -0.0629"/>
+	<xacro:lateral_arms name="left_back_arm" cad_name="brazo_izq_trasero" origin="-0.3264 -0.30255 -0.0629"/>
 
 <!--///////////////// Brazo 6GDL + Gripper//////////////////-->
 
@@ -168,7 +168,8 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 <!--////////////////////// elbow link /////////////////////////////////////-->
 	<link name = "elbow">
 		<visual>
-			<origin xyz= "0 -0.4192 -0.027"/>
+			<!--origin xyz= "0 -0.4192 -0.027"/-->
+			<origin xyz= "0 -0.668 -0.027"/>
 			<xacro:default_geometry cad_file = "codo"/>	
 		</visual>
 		<collision>

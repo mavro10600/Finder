@@ -37,6 +37,20 @@ las instrucciones así, de maera directa, y luego repensar la programacion orien
 
 void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 
+			
+	if(flipper1_out.data > 127)
+		flipper1_out.data = 127;
+	else{
+		if(flipper1_out.data <= 0)
+			flipper1_out.data = 0;
+		else
+			if(joy->buttons[4] && joy->buttons[5] &&joy->axes[4]>0.1) 
+			flipper1_out.data=round(64+50*joy->axes[4]);
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[4]<-0.1) 
+			flipper1_out.data=round(64+50*joy->axes[4]);
+			if(joy->buttons[4] &&  joy->buttons[5] &&joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			flipper1_out.data=64;
+		}			
 	
 	if(left_out.data > 100 || right_out.data>100)
 		{left_out.data = 100;
@@ -137,11 +151,11 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(elbow_out.data <= 0)
 			elbow_out.data = 0;
 		else
-			if(joy->buttons[4] && joy->axes[4]>0.2) 
+			if(joy->buttons[4] && !joy->buttons[5] &&joy->axes[4]>0.2) 
 			elbow_out.data=round(64+50*joy->axes[4]);
-			if(joy->buttons[4] && joy->axes[4]<-0.2) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[4]<-0.2) 
 			elbow_out.data=round(64+50*joy->axes[4]);
-			if(joy->buttons[4] && joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			if(joy->buttons[4] && !joy->buttons[5] &&  joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
 			elbow_out.data=64;
 		}
 	//agregado recien

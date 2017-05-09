@@ -39,9 +39,10 @@ Loop
 
 
 //(pinpwm1,pinpwm2,umbral, maxpwmsense)
-OSMCClass LEFT(5,3,2,1,127);
-OSMCClass RIGHT(9,6,2,1,127);
-
+//OSMCClass LEFT(5,3,2,1,127);
+//OSMCClass RIGHT(9,6,4,1,127);
+OSMCClass LEFT(PB_5,PB_0,PB_1,1,127);
+OSMCClass RIGHT(PE_5,PB_4,PA_5,1,127);
 //(clk,dO,pROG)
 //(AS5043,CSn,input_min,input_max,output_max_abs_sense)
 AS5043Class AS5043obj(13,12,11);
@@ -123,6 +124,8 @@ void SetupEncoders()
 
 void SetupMotors()
 {
+  pinMode(PB_1, OUTPUT);
+  pinMode(PA_5, OUTPUT);
   LEFT.begin();
   RIGHT.begin();
 }
@@ -199,10 +202,10 @@ void Set_Speed()
 {
     left_out=Messenger_Handler.readLong();
     right_out=Messenger_Handler.readLong();
-    flipper1_out=Messenger_Handler.readLong();
-    flipper2_out=Messenger_Handler.readLong();
-    flipper3_out=Messenger_Handler.readLong();
-    flipper4_out=Messenger_Handler.readLong();
+    //flipper1_out=Messenger_Handler.readLong();
+    //flipper2_out=Messenger_Handler.readLong();
+    //flipper3_out=Messenger_Handler.readLong();
+    //flipper4_out=Messenger_Handler.readLong();
     
 }
 
@@ -227,28 +230,20 @@ void Update_Encoders()
  flip3_lec=ENCFLIP3.read();
  flip4_lec=ENCFLIP4.read();
  
- int lec_v=analogRead(A3);
- int lec_a1=analogRead(A2);
- int msg_v=1000*((5.*lec_v)/1024.)/(0.06369);
- int mot_a=1000*((5.*lec_a1)/1024.)/(0.01830)+1000*(5.*(lec_a1)/1024/(0.0183));
  Serial.print("e");
   Serial.print("\t");
   Serial.print(left_lec);
   Serial.print("\t");
   Serial.print(right_lec);
-  Serial.print("\t");
-  Serial.print(flip1_lec);
-  Serial.print("\t");
-  Serial.print(flip2_lec);
-  Serial.print("\t");
-  Serial.print(flip3_lec);
-  Serial.print("\t");
-  Serial.print(flip4_lec);
-  Serial.print("\t");
-  Serial.print(lec_v);
-  Serial.print("\t");
-  Serial.print(lec_a1);
-  Serial.print("\t");
+  //Serial.print("\t");
+  //Serial.print(flip1_lec);
+  //Serial.print("\t");
+  //Serial.print(flip2_lec);
+  //Serial.print("\t");
+  //Serial.print(flip3_lec);
+  //Serial.print("\t");
+ // Serial.print(flip4_lec);
+  Serial.print("\n");
 }
 
 

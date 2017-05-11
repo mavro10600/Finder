@@ -37,6 +37,9 @@ las instrucciones así, de maera directa, y luego repensar la programacion orien
 
 void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Rutinas que mueven los flippers
 			
 	if(flipper1_out.data > 127)
 		flipper1_out.data = 127;
@@ -44,31 +47,144 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 		if(flipper1_out.data <= 0)
 			flipper1_out.data = 0;
 		else
-			if(joy->buttons[4] && joy->buttons[5] &&joy->axes[4]>0.1) 
-			flipper1_out.data=round(64+50*joy->axes[4]);
-			if(joy->buttons[4] && joy->buttons[5] && joy->axes[4]<-0.1) 
-			flipper1_out.data=round(64+50*joy->axes[4]);
-			if(joy->buttons[4] &&  joy->buttons[5] &&joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[0]>0.1) 
+			flipper1_out.data=round(64+50*joy->axes[0]);
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[0]<-0.1) 
+			flipper1_out.data=round(64+50*joy->axes[0]);
+			if(joy->buttons[4] &&  joy->buttons[5] && joy->axes[0]<=0.1 && joy->axes[0]>=-0.1) 
 			flipper1_out.data=64;
 		}			
-	
-	if(left_out.data > 100 || right_out.data>100)
-		{left_out.data = 100;
-		right_out.data=100;}
+		
+			if(flipper2_out.data > 127)
+		flipper2_out.data = 127;
 	else{
-		if(left_out.data < -100  || right_out.data < -100)
-			{left_out.data = -100;
-			right_out.data=-100;}
+		if(flipper2_out.data <= 0)
+			flipper2_out.data = 0;
+		else
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[1]>0.1) 
+			flipper2_out.data=round(64+50*joy->axes[1]);
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[1]<-0.1) 
+			flipper2_out.data=round(64+50*joy->axes[1]);
+			if(joy->buttons[4] &&  joy->buttons[5] && joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
+			flipper2_out.data=64;
+		}			
+		
+			if(flipper3_out.data > 127)
+		flipper3_out.data = 127;
+	else{
+		if(flipper3_out.data <= 0)
+			flipper3_out.data = 0;
+		else
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[3]>0.1) 
+			flipper3_out.data=round(64+50*joy->axes[3]);
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[3]<-0.1) 
+			flipper3_out.data=round(64+50*joy->axes[3]);
+			if(joy->buttons[4] &&  joy->buttons[5] && joy->axes[3]<=0.1 && joy->axes[3]>=-0.1) 
+			flipper3_out.data=64;
+		}			
+		
+			if(flipper4_out.data > 127)
+		flipper4_out.data = 127;
+	else{
+		if(flipper4_out.data <= 0)
+			flipper4_out.data = 0;
+		else
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[4]>0.1) 
+			flipper4_out.data=round(64+50*joy->axes[4]);
+			if(joy->buttons[4] && joy->buttons[5] && joy->axes[4]<-0.1) 
+			flipper4_out.data=round(64+50*joy->axes[4]);
+			if(joy->buttons[4] &&  joy->buttons[5] && joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
+			flipper4_out.data=64;
+		}			
+		
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Rutinas extras que mueven los bracitos combinados
+
+
+/* 
+	if(flipper1_out.data > 100 || flipper2_out.data>100)
+		{if (flipper1_out.data>100) flipper1_out.data = 100;
+		if(flipper2_out.data>100) flipper2_out.data=100;}
+	else{
+		if(flipper1_out.data < -100  || flipper1_out.data < -100)
+			{if (flipper1_out.data<-100) flipper1_out.data = -100;
+			if (flipper2_out.data<-100) flipper2_out.data=-100;}
 		else
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(!joy->buttons[4] && joy->axes[0]>0.2 || joy->axes[1]>0.2) 
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[3]>0.2) 
+			{
+			flipper1_out.data=round(64+50*joy->axes[3]);
+			flipper2_out.data=round(64+50*joy->axes[3]);
+			}
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[3]<-0.2) 
+			{
+			flipper1_out.data=round(64+50*joy->axes[3]);
+			flipper2_out.data=round(64+50*joy->axes[3]);
+
+			}
+			if(!joy->buttons[4]  && !joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
+			{
+			flipper1_out.data=0;
+			flipper2_out.data=0;
+			}
+			//else
+			//base_out.data=1500;
+	}
+	
+
+	if(flipper3_out.data > 100 || flipper4_out.data>100)
+		{if (flipper3_out.data>100) flipper3_out.data = 100;
+		if(flipper4_out.data>100) flipper4_out.data=100;}
+	else{
+		if(flipper3_out.data < -100  || flipper4_out.data < -100)
+			{if (flipper3_out.data<-100) flipper3_out.data = -100;
+			if (flipper4_out.data<-100) flipper4_out.data=-100;}
+		else
+//			base_out.data += scale * round(joy->axes[0]); 
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[4]>0.2) 
+			{
+			flipper3_out.data=round(64+50*joy->axes[4]);
+			flipper4_out.data=round(64+50*joy->axes[4]);
+			}
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[4]<-0.2) 
+			{
+			flipper3_out.data=round(64+50*joy->axes[4]);
+			flipper4_out.data=round(64+50*joy->axes[4]);
+
+			}
+			if(!joy->buttons[4]  && !joy->buttons[5] && joy->axes[4]<=0.2 && joy->axes[4]>=-0.2) 
+			{
+			flipper3_out.data=0;
+			flipper4_out.data=0;
+			}
+			//else
+			//base_out.data=1500;
+	}	
+	 		
+*/
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Rutina que mueve las ruedas de tracción	
+
+	
+	if(left_out.data > 100 || right_out.data>100)
+		{if (left_out.data>100) left_out.data = 100;
+		if(right_out.data>100) right_out.data=100;}
+	else{
+		if(left_out.data < -100  || right_out.data < -100)
+			{if (left_out.data<-100) left_out.data = -100;
+			if (right_out.data<-100)right_out.data=-100;}
+		else
+//			base_out.data += scale * round(joy->axes[0]); 
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]>0.2 || joy->axes[1]>0.2) 
 			{
 			angular_rate=joy->axes[0]*100;
 			linear_rate=joy->axes[1]*100;
 			right_out.data=linear_rate+angular_rate;
 			left_out.data=linear_rate-angular_rate;
 			}
-			if(!joy->buttons[4] && joy->axes[0]<-0.2 || joy->axes[1]>0.2) 
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2 || joy->axes[1]>0.2) 
 			{
 			angular_rate=joy->axes[0]*100;
 			linear_rate=joy->axes[1]*100;
@@ -76,15 +192,15 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			left_out.data=linear_rate-angular_rate;
 			}
 			
-			if(!joy->buttons[4] && joy->axes[0]<=0.2 && joy->axes[0]>=-0.2 && joy->axes[1]<=0.2 && joy->axes[1]>=-0.2) 
+			if(!joy->buttons[4]  && !joy->buttons[5] && joy->axes[0]<=0.2 && joy->axes[0]>=-0.2 && joy->axes[1]<=0.2 && joy->axes[1]>=-0.2) 
 			{left_out.data=0;
 			right_out.data=0;}
 			//else
 			//base_out.data=1500;
 	} 
 	
-	
-	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Rutinas que mueven el brazo	
 	
 	if(base_out.data > 2000)
 		base_out.data = 2000;
@@ -93,55 +209,29 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			base_out.data = 1000;
 		else
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(joy->buttons[4] && joy->axes[0]>0.2) 
+			if(joy->buttons[4] && !joy->buttons[5]  && joy->axes[0]>0.2) 
 			base_out.data=round(1700+scale*joy->axes[0]);
-			if(joy->buttons[4] && joy->axes[0]<-0.2) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2) 
 			base_out.data=round(1300+scale*joy->axes[0]);
-			if(joy->buttons[4] && joy->axes[0]<=0.2 && joy->axes[0]>=-0.2) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<=0.2 && joy->axes[0]>=-0.2) 
 			base_out.data=1500;
 			//else
 			//base_out.data=1500;
 	} 	
 	
-		if(roll_out.data > 127)
-		roll_out.data = 127;
-	else{
-		if(roll_out.data <= 0)
-			roll_out.data = 0;
-		else
-			if(!joy->buttons[5] && joy->axes[3]>0.2) 
-			roll_out.data=round(64+18*joy->axes[3]);
-			if(!joy->buttons[5] && joy->axes[3]<-0.2) 
-			roll_out.data=round(64+18*joy->axes[3]);
-			if(!joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
-			roll_out.data=64;
-		}
 
-		if(pitch_out.data > 127)
-		pitch_out.data = 127;
-	else{
-		if(pitch_out.data <= 0)
-			pitch_out.data = 0;
-		else
-			if(joy->buttons[5] && joy->axes[3]>0.2) 
-			pitch_out.data=round(64+25*joy->axes[3]);
-			if(joy->buttons[5] && joy->axes[3]<-0.2) 
-			pitch_out.data=round(64+25*joy->axes[3]);
-			if(joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
-			pitch_out.data=64;
-		}			
-			
+
 	if(shoulder_out.data > 127)
 		shoulder_out.data = 127;
 	else{
 		if(shoulder_out.data <= 0)
 			shoulder_out.data = 0;
 		else
-			if(joy->buttons[4] && joy->axes[1]>0.1) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[1]>0.1) 
 			shoulder_out.data=round(64+50*joy->axes[1]);
-			if(joy->buttons[4] && joy->axes[1]<-0.1) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[1]<-0.1) 
 			shoulder_out.data=round(64+50*joy->axes[1]);
-			if(joy->buttons[4] && joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[1]<=0.1 && joy->axes[1]>=-0.1) 
 			shoulder_out.data=64;
 		}
 
@@ -158,6 +248,37 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			if(joy->buttons[4] && !joy->buttons[5] &&  joy->axes[4]<=0.1 && joy->axes[4]>=-0.1) 
 			elbow_out.data=64;
 		}
+	
+	
+		if(roll_out.data > 127)
+		roll_out.data = 127;
+	else{
+		if(roll_out.data <= 0)
+			roll_out.data = 0;
+		else
+			if( joy->buttons[4] && !joy->buttons[5] && joy->axes[3]>0.2) 
+			roll_out.data=round(64+18*joy->axes[3]);
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[3]<-0.2) 
+			roll_out.data=round(64+18*joy->axes[3]);
+			if(joy->buttons[4] && !joy->buttons[5] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
+			roll_out.data=64;
+		}
+
+		if(pitch_out.data > 127)
+		pitch_out.data = 127;
+	else{
+		if(pitch_out.data <= 0)
+			pitch_out.data = 0;
+		else
+			if(joy->buttons[5] && !joy->buttons[4] && joy->axes[3]>0.2) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5] && !joy->buttons[4] && joy->axes[3]<-0.2) 
+			pitch_out.data=round(64+25*joy->axes[3]);
+			if(joy->buttons[5]  && !joy->buttons[4] && joy->axes[3]<=0.2 && joy->axes[3]>=-0.2) 
+			pitch_out.data=64;
+		}			
+			
+
 	//agregado recien
 	if(Xbutton == 1)
 		gripper_out.data = 3;

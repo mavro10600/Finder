@@ -85,6 +85,11 @@ int flip2_lec=0;
 int flip3_lec=0;
 int flip4_lec=0;
 
+/////////////////////////////////////////////////////////////////////
+//Agregar variables de la corriente de los motores y 
+//de los finales de carrera, son dos de los motores y dos finales de carrera
+
+
 //////////////////////////////////////////////////////////////////////
 //Roboclaws
 //Uncomment if Using Hardware Serial port
@@ -200,6 +205,7 @@ void OnMssageCompleted()
 //Set speed
 void Set_Speed()
 {
+    
     left_out=Messenger_Handler.readLong();
     right_out=Messenger_Handler.readLong();
     flipper1_out=Messenger_Handler.readLong();
@@ -229,7 +235,7 @@ void Update_Encoders()
  flip2_lec=ENCFLIP2.read();
  flip3_lec=ENCFLIP3.read();
  flip4_lec=ENCFLIP4.read();
- 
+
  Serial.print("e");
   Serial.print("\t");
   Serial.print(left_lec);
@@ -252,6 +258,11 @@ void Update_Encoders()
 
 void Update_Motors()
 {
+ //introducir aqui la lectura de corriente
+ //bool ReadCurrents(uint8_t address, int16_t &current1, int16_t &current2);
+ //y una instruccion de seguridad, para enviar un cero a los motores si pasan cierta coriiente
+ //También podriamos enviar una cadena con los valores de corriente :)
+
 LEFT.write(left_out);
 RIGHT.write(right_out);
 roboclaw.ForwardBackwardM1(address,flipper1_out);

@@ -10,6 +10,9 @@
 #define pindo PD_2
 #define pinclk PD_0
 #define pincsn PD_1 
+int vueltas;
+unsigned int last_lec;
+int angle;
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,6 +24,7 @@ pinMode(pindo,INPUT);
 pinMode(pincsn,OUTPUT);
 digitalWrite(pincsn,HIGH);
 delay(100);
+
 }
 
 void loop() {
@@ -47,10 +51,43 @@ void loop() {
     delayMicroseconds(1);
      }
 
+
   digitalWrite(pincsn, HIGH);
   delayMicroseconds(1);
   digitalWrite(pinclk, HIGH);
+
+//Condicionar la salida para que sea solo cuando es válido el valor del encoder
+     if (!bitRead(data,3) && !bitRead(data,4) && bitRead(data,5) && !( bitRead(data,1) && bitRead(data,2) ))
+     {
+     Serial.print(data>>6,DEC);
+     Serial.print('\t');
+     /*
+     if( ((data>>6)-last_lec) < -900 )
+     vueltas+=1;
+     if( ((data>>6)-last_lec) > 900  )
+     vueltas-=1;
+     if( (data>>6)-last_lec < 900 )
+     vueltas=vueltas;
+     */
+      if( abs((data>>6)-last_lec) > 900 )
+      {
+              if((data>>6)>last_lec)
+                vueltas-=1;
+              else
+                vueltas+=1;     
+      }
+      else
+      {vueltas=vueltas;}
+        
+     angle=vueltas*(1023)+(data>>6) ;
+     Serial.print(last_lec,DEC);
+     Serial.print('\t');
+     Serial.print(angle,DEC);
+     Serial.print('\n');
+     last_lec=(data>>6);
+     }
+   
      
-  Serial.print(data,BIN);
-  Serial.print('\n');
+//  Serial.print(data,BIN);
+//  Serial.print('\n');
 }

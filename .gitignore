@@ -14,3 +14,4 @@ stubs/
 **/**~
 **.pyc
 ./catkin_et/src/finder_description/urdf.rviz
+./catkin_et/src/rosserial_tivac/

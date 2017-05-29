@@ -25,12 +25,24 @@
  * 
  */
 
+#define pindo2 PE_3
+#define pinclk2 PE_1
+#define pincsn2 PE_2 
+
+#define pindo3 PC_4
+#define pinclk3 PB_3
+#define pincsn3 PC_5 
+
+#define pindo4 PA_4
+#define pinclk4 PA_3
+#define pincsn4 PA_2 
+
 
 Servo wrist_servo;
 Servo base;
 //umbral,max
 TalonClass BASE(2,50);
-EncoderClass ENCBASE(PD_2,485,1004,100,-100);
+
   /*EncoderClass(int anPin, int min, int max, int maxChange, int map_out);  
    * The basic constructor types specify:
    *
@@ -59,6 +71,34 @@ unsigned long LastUpdateMillisecs=0;
 unsigned long CurrentMicrosecs=0;
 unsigned long MicrosecsSinceLastUpdate=0;
 float SecondsSinceLastUpdate=0;
+
+
+///////////////////////////////////////////////////////////////////
+//Variables de los encoders
+int stat_complete=0;
+
+int vueltas1;
+unsigned int last_lec1;
+boolean stat1;
+
+int vueltas2;
+unsigned int last_lec2;
+boolean stat2;
+
+int vueltas3;
+unsigned int last_lec3;
+boolean stat3;
+
+int vueltas4;
+unsigned int last_lec4;
+boolean stat4;
+
+int left_lec=0;
+int right_lec=0;
+int flip1_lec=0;
+int flip2_lec=0;
+int flip3_lec=0;
+int flip4_lec=0;
 
 
 ///In fromROS

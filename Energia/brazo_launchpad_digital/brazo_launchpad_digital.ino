@@ -1,73 +1,67 @@
 #include <Messenger.h>
 #include <limits.h>
 #include "RoboClaw.h"
-#include "OSMC.h"
+
+
+#include <Servo.h>
+#include "DynamixelSerial.h"
+#include "SimpleDynamixel.h"
+#include "Talon.h"
+#include "SimpleServo.h"
 #include "AS5043.h"
 #include "Encoder.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*Estructura del programa
-Define los objetos de lo OSMC, pines
-Define los objetos asociados a los encoders, pines de prog, DO y CLK,
-usamos rutinas de forma digital 
-Define los encoders asigna pines analogicos, deberia de asignar tambien pines de seleccion clk y do
-Defino variables de control de los motores
-Defino variables de lectura de encoders
-Defino roboclaws
-SETUP //aqui quizas lo mas importante es fijarse que se inicien los objetos OSMC y los objetos de AS5043
-definidos anteriormente
-Loop
-  Read from serial
-  On_mssg_Completed
-    llama a la siguiente funcion para leer los datos de entrafda desde ros psra asignar valores de pwm 
-    a los osmc y roboclaw
-  Set speed
-    Descompone la cadena de entrada de datos en los valores a asignar a las variales de control de motores
-  Reset
-    Funcion de reset
-  Update encoders
-    LLamamos a la funcion read de cada objeto tipo encoder declarado, además se asignan pines de 
-     lectura analógica para leer el voltaje de las baterias y la corriente de los motorees de traccion
-  Update motors
-    Mandamos los valores obtenidos en Set speed a las instrucciones de movimiento de los motores
-  Update time
-    Funcion de actualizacion de tiempo de ejecución
+////*
+/*
+ * TODO agregar dynamixel
+ * 
+ * revisar funcionamiento de sensores
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 
-*//////////////////////////////////////////////////////////////////////////////////////////
+#define pindo1 PE_3
+#define pinclk1 PE_1
+#define pincsn1 PE_2 
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-//DEfinimos los pines de los encoders
+#define pindo2 PC_4
+#define pinclk2 PB_3
+#define pincsn2 PC_5 
 
-#define pindo1 PD_2
-#define pinclk1 PD_0
-#define pincsn1 PD_1 
-
-#define pindo2 PE_2
-#define pinclk2 PD_3
-#define pincsn2 PE_1 
-
-#define pindo3 PC_4
-#define pinclk3 PB_3
-#define pincsn3 PC_5 
-
-#define pindo4 PA_4
-#define pinclk4 PA_3
-#define pincsn4 PA_2 
+#define pindo3 PA_4
+#define pinclk3 PA_3
+#define pincsn3 PA_2 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//(pinpwm1,pinpwm2,umbral, maxpwmsense)
-//OSMCClass LEFT(5,3,2,1,127);
-//OSMCClass RIGHT(9,6,4,1,127);
-OSMCClass LEFT(PB_5,PB_0,PB_1,1,127);
-OSMCClass RIGHT(PE_5,PB_4,PA_5,1,127);
-//(clk,dO,pROG)
-//(AS5043,CSn,input_min,input_max,output_max_abs_sense)
-            
-////////////////////////TODO agrgar los sensores de los flippers
+Servo wrist_servo;
+Servo base;
+//umbral,max
+TalonClass BASE(2,50);
 
+  /*EncoderClass(int anPin, int min, int max, int maxChange, int map_out);  
+   * The basic constructor types specify:
+   *
+   * anPIn - if the sensor is pure analog, use this pin for analogRead
+   * AS5043 - if the sensor is MGN ABS 10 BIT in SPI (hardware or software) mode read, use this object to perform read
+   * indexChain - The "number" of the sensor in the "chain". Use 0 if there is a single sensor per CS pin, at most MAX_DEVICES - 1  (currently 3)
+   * pinCSn - Serves to specify an CS pin to perform read, in case one is needed for this encoder
+   *
+   * min - minimal value of lecture, if not specified then 0
+   * max - maximal value of lecture, if not specified then 1023
+   * map_out - if > 0, use INCREASING values, if < 0, use DECREASING values, if 0 report lecture
+   *       the magnitude of map_out is used to specify "output angle" size. This is, if magnitude is 127, read goes from -127 to +127,
+   *       if magnitude is 511, read goes from -511 to +511, etc.
+   *
+   */
 Messenger Messenger_Handler=Messenger();
+//reset pin for tiva , if this pin set HIGH, will reset
 #define RESET_PIN PB_2
+
 
 ////////////////////////////
 //Time update variables
@@ -78,14 +72,6 @@ unsigned long CurrentMicrosecs=0;
 unsigned long MicrosecsSinceLastUpdate=0;
 float SecondsSinceLastUpdate=0;
 
-///////////////////////////////////////////////////////////////
-// Valores de control a los motores
-int left_out=0;
-int right_out=0;
-int flipper1_out=64;
-int flipper2_out=64;
-int flipper3_out=64;
-int flipper4_out=64;
 
 ///////////////////////////////////////////////////////////////////
 //Variables de los encoders
@@ -103,9 +89,6 @@ int vueltas3;
 unsigned int last_lec3;
 boolean stat3;
 
-int vueltas4;
-unsigned int last_lec4;
-boolean stat4;
 
 int left_lec=0;
 int right_lec=0;
@@ -114,22 +97,50 @@ int flip2_lec=0;
 int flip3_lec=0;
 int flip4_lec=0;
 
-/////////////////////////////////////////////////////////////////////
-//Agregar variables de la corriente de los motores y 
-//de los finales de carrera, son dos de los motores y dos finales de carrera
+
+///In fromROS
+
+int base_out=1500;
+int shoulder_out=64;
+int elbow_out=64;
+int roll_out= 64;
+int pitch_out = 64;
+int yaw_out = 0;
+int gripper_out = 0;
+
+int basel=0;
+int shoulder=0;
+int elbow=0;
+int roll=0;
+int pitch=0;
+int yaw=0;
+int gripper=0;
 
 
-//////////////////////////////////////////////////////////////////////
-//Roboclaws
+
+///////////////////////////////////////
+//Motor speed
+
+//Velocity PID coefficients
+#define Kp 70.0
+#define Ki 0
+#define Kd 0
+#define qpps 44000
+  uint32_t kiMax=0;
+  uint32_t deadzone=5;
+  uint32_t mini=100;
+  uint32_t maxi=700;  
+
+
 //Uncomment if Using Hardware Serial port
 RoboClaw roboclaw(&Serial2,10000);
 RoboClaw rc(&Serial3,10000);
 
 #define address 0x80
 
-
 void setup() {
-Serial.begin(115200);//cuando se ve en el ide de arduino
+  //Open Serial and roboclaw serial ports
+  Serial.begin(115200);//cuando se ve en el ide de arduino
 
   roboclaw.begin(38400);
   
@@ -142,7 +153,6 @@ Serial.begin(115200);//cuando se ve en el ide de arduino
   SetupReset();
 
   Messenger_Handler.attach(OnMssageCompleted);
-
 }
 
 void SetupEncoders()
@@ -165,22 +175,16 @@ pinMode(pincsn3,OUTPUT);
 digitalWrite(pincsn3,HIGH);
 digitalWrite(pinclk3, HIGH);  
 delay(100);
-
-pinMode(pinclk4,OUTPUT);
-pinMode(pindo4,INPUT);
-pinMode(pincsn4,OUTPUT);
-digitalWrite(pincsn4,HIGH);
-digitalWrite(pinclk4, HIGH);
-delay(100);
-  
+  ///Encoders de cuadratura
 }
 
 void SetupMotors()
 {
-  pinMode(PB_1, OUTPUT);
-  pinMode(PA_5, OUTPUT);
-  LEFT.begin();
-  RIGHT.begin();
+  ///Aqui configuramos el tipo de control
+  //Set PID Coefficients
+  wrist_servo.attach(PE_1);
+  base.attach(PD_3);
+
 }
 
 void SetupReset()
@@ -191,9 +195,7 @@ void SetupReset()
   ///Conectar el pin de reset al pin reset de la placa
   digitalWrite(RESET_PIN,HIGH);
 }
-
  
-
 
 void loop() {
     
@@ -248,23 +250,24 @@ void OnMssageCompleted()
   }
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Set speed
 void Set_Speed()
 {
-    
-    left_out=Messenger_Handler.readLong();
-    right_out=Messenger_Handler.readLong();
-    flipper1_out=Messenger_Handler.readLong();
-    flipper2_out=Messenger_Handler.readLong();
-    flipper3_out=Messenger_Handler.readLong();
-    flipper4_out=Messenger_Handler.readLong();
-    
+    base_out=Messenger_Handler.readLong();
+    shoulder_out=Messenger_Handler.readLong();
+    elbow_out=Messenger_Handler.readLong();
+    roll_out=Messenger_Handler.readLong();
+    pitch_out=Messenger_Handler.readLong();
+    yaw_out=Messenger_Handler.readLong();
+    gripper_out=Messenger_Handler.readLong();
+  //motor_left_speed = Messenger_Handler.readLong();
+  //motor_right_speed = Messenger_Handler.readLong(); 
 }
 
-////////////////////////////////////////////////////////////////////////
-//funcion de reset
+
+
+
 void Reset()
 {
   digitalWrite(GREEN_LED,HIGH);
@@ -273,50 +276,70 @@ void Reset()
   digitalWrite(GREEN_LED,LOW);
 }
 
-///////////////////////////////////////////////////////////////
-//funcion de leer los encoders
 void Update_Encoders()
 {
- left_lec=0;
- right_lec=0;
- flip1_lec=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
- flip2_lec=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
- flip3_lec=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
- flip4_lec=encoder_digital(pindo4,pinclk4,pincsn4,&last_lec4,&vueltas4,&stat4);
-
+  basel=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
+  shoulder=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
+  elbow=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
+  displaySpeed_R2();
+  set_status();
+ // displaySpeed_Servo();
  Serial.print("e");
   Serial.print("\t");
-  Serial.print(left_lec);
+  Serial.print(basel);
   Serial.print("\t");
-  Serial.print(right_lec);
+  Serial.print(shoulder);
   Serial.print("\t");
-  Serial.print(flip1_lec);
+  Serial.print(elbow);
   Serial.print("\t");
-  Serial.print(flip2_lec);
+  Serial.print(roll);
   Serial.print("\t");
-  Serial.print(flip3_lec);
+  Serial.print(pitch);
   Serial.print("\t");
-  Serial.print(flip4_lec);
+  Serial.print(yaw);
   Serial.print("\n");
 }
 
+
+
+void displaySpeed_R2(void)
+{
+  uint8_t depth1,depth2,depth3,depth4;
+  
+  uint8_t status1,status2,status3,status4;
+  bool valid1,valid2,valid3,valid4;
+  int32_t enc3 = rc.ReadEncM1(address, &status1, &valid1);
+  //int32_t speed1 = rc.ReadSpeedM1(address, &status2, &valid2);
+  int32_t enc4 = rc.ReadEncM2(address, &status3, &valid3);
+  //int32_t speed2 = rc.ReadSpeedM2(address, &status4, &valid4);
+  float angulo3;
+  float angulo4;
+  if(valid1){//debe estar en radianes!!
+  //angulo3=2*3.1416/2048*enc3;//conversion de ticks a radianes
+  roll = enc3;
+  }
+  if(valid3){//debe estar en radianes!!
+  //angulo4=2*3.1416/2048*enc4;//conversion de ticks a radianes
+  pitch=enc4;
+  }
+}
+
+void displaySpeed_Servo()
+{
+//return;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Update motors function
 
 void Update_Motors()
 {
- //introducir aqui la lectura de corriente
- //bool ReadCurrents(uint8_t address, int16_t &current1, int16_t &current2);
- //y una instruccion de seguridad, para enviar un cero a los motores si pasan cierta coriiente
- //También podriamos enviar una cadena con los valores de corriente :)
-
-LEFT.write(left_out);
-RIGHT.write(right_out);
-roboclaw.ForwardBackwardM1(address,flipper1_out);
-roboclaw.ForwardBackwardM2(address,flipper2_out);
-rc.ForwardBackwardM1(address,flipper3_out);
-rc.ForwardBackwardM2(address,flipper4_out);
+//BASE.write(base_out);
+base.writeMicroseconds(base_out);
+roboclaw.ForwardBackwardM1(address,shoulder_out);
+roboclaw.ForwardBackwardM2(address,elbow_out);
+rc.ForwardBackwardM1(address,roll_out);
+rc.ForwardBackwardM2(address,pitch_out);
 }
 
 
@@ -401,5 +424,4 @@ void set_status()
   if(stat1)  bitWrite(stat_complete,0,1); else bitWrite(stat_complete,0,0);
   if(stat2)  bitWrite(stat_complete,1,1); else bitWrite(stat_complete,1,0);
   if(stat3)  bitWrite(stat_complete,2,1); else bitWrite(stat_complete,2,0);
-  if(stat4)  bitWrite(stat_complete,3,1); else bitWrite(stat_complete,3,0);
 }

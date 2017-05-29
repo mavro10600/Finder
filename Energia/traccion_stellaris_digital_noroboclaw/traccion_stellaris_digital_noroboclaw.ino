@@ -35,27 +35,10 @@ Loop
 
 *//////////////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-//DEfinimos los pines de los encoders
-
-#define pindo1 PD_2
-#define pinclk1 PD_0
-#define pincsn1 PD_1 
-
-#define pindo2 PE_2
-#define pinclk2 PD_3
-#define pincsn2 PE_1 
-
-#define pindo3 PC_4
-#define pinclk3 PB_3
-#define pincsn3 PC_5 
-
-#define pindo4 PA_4
-#define pinclk4 PA_3
-#define pincsn4 PA_2 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //(pinpwm1,pinpwm2,umbral, maxpwmsense)
 //OSMCClass LEFT(5,3,2,1,127);
 //OSMCClass RIGHT(9,6,4,1,127);
@@ -63,6 +46,13 @@ OSMCClass LEFT(PB_5,PB_0,PB_1,1,127);
 OSMCClass RIGHT(PE_5,PB_4,PA_5,1,127);
 //(clk,dO,pROG)
 //(AS5043,CSn,input_min,input_max,output_max_abs_sense)
+AS5043Class AS5043obj(13,12,11);
+EncoderClass ENCLEFT(&AS5043obj,A0,0,1023,100);
+EncoderClass ENCRIGHT(&AS5043obj,A1,0,1023,100);
+EncoderClass ENCFLIP1(&AS5043obj,A1,0,1023,100);
+EncoderClass ENCFLIP2(&AS5043obj,A1,0,1023,100);
+EncoderClass ENCFLIP3(&AS5043obj,A1,0,1023,100);
+EncoderClass ENCFLIP4(&AS5043obj,A1,0,1023,100);
             
 ////////////////////////TODO agrgar los sensores de los flippers
 
@@ -89,24 +79,6 @@ int flipper4_out=64;
 
 ///////////////////////////////////////////////////////////////////
 //Variables de los encoders
-int stat_complete=0;
-
-int vueltas1;
-unsigned int last_lec1;
-boolean stat1;
-
-int vueltas2;
-unsigned int last_lec2;
-boolean stat2;
-
-int vueltas3;
-unsigned int last_lec3;
-boolean stat3;
-
-int vueltas4;
-unsigned int last_lec4;
-boolean stat4;
-
 int left_lec=0;
 int right_lec=0;
 int flip1_lec=0;
@@ -122,8 +94,8 @@ int flip4_lec=0;
 //////////////////////////////////////////////////////////////////////
 //Roboclaws
 //Uncomment if Using Hardware Serial port
-RoboClaw roboclaw(&Serial2,10000);
-RoboClaw rc(&Serial3,10000);
+//RoboClaw roboclaw(&Serial2,10000);
+//RoboClaw rc(&Serial3,10000);
 
 #define address 0x80
 
@@ -131,9 +103,9 @@ RoboClaw rc(&Serial3,10000);
 void setup() {
 Serial.begin(115200);//cuando se ve en el ide de arduino
 
-  roboclaw.begin(38400);
+  //roboclaw.begin(38400);
   
-  rc.begin(38400);
+  //rc.begin(38400);
   
   SetupEncoders();
   
@@ -147,31 +119,12 @@ Serial.begin(115200);//cuando se ve en el ide de arduino
 
 void SetupEncoders()
 {
-pinMode(pinclk1,OUTPUT);
-pinMode(pindo1,INPUT);
-pinMode(pincsn1,OUTPUT);
-digitalWrite(pincsn1,HIGH);
-digitalWrite(pinclk1, HIGH);  
-delay(100);
-pinMode(pinclk2,OUTPUT);
-pinMode(pindo2,INPUT);
-pinMode(pincsn2,OUTPUT);
-digitalWrite(pincsn2,HIGH);
-digitalWrite(pinclk2, HIGH);  
-delay(100);
-pinMode(pinclk3,OUTPUT);
-pinMode(pindo3,INPUT);
-pinMode(pincsn3,OUTPUT);
-digitalWrite(pincsn3,HIGH);
-digitalWrite(pinclk3, HIGH);  
-delay(100);
-
-pinMode(pinclk4,OUTPUT);
-pinMode(pindo4,INPUT);
-pinMode(pincsn4,OUTPUT);
-digitalWrite(pincsn4,HIGH);
-digitalWrite(pinclk4, HIGH);
-delay(100);
+  ENCLEFT.begin();
+  ENCRIGHT.begin();
+  ENCFLIP1.begin();
+  ENCFLIP2.begin();
+  ENCFLIP3.begin();
+  ENCFLIP4.begin();
   
 }
 
@@ -277,12 +230,12 @@ void Reset()
 //funcion de leer los encoders
 void Update_Encoders()
 {
- left_lec=0;
- right_lec=0;
- flip1_lec=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
- flip2_lec=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
- flip3_lec=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
- flip4_lec=encoder_digital(pindo4,pinclk4,pincsn4,&last_lec4,&vueltas4,&stat4);
+ left_lec=ENCLEFT.read();
+ right_lec=ENCRIGHT.read();
+ flip1_lec=ENCFLIP1.read();
+ flip2_lec=ENCFLIP2.read();
+ flip3_lec=ENCFLIP3.read();
+ flip4_lec=ENCFLIP4.read();
 
  Serial.print("e");
   Serial.print("\t");
@@ -313,10 +266,10 @@ void Update_Motors()
 
 LEFT.write(left_out);
 RIGHT.write(right_out);
-roboclaw.ForwardBackwardM1(address,flipper1_out);
-roboclaw.ForwardBackwardM2(address,flipper2_out);
-rc.ForwardBackwardM1(address,flipper3_out);
-rc.ForwardBackwardM2(address,flipper4_out);
+//roboclaw.ForwardBackwardM1(address,flipper1_out);
+//roboclaw.ForwardBackwardM2(address,flipper2_out);
+//rc.ForwardBackwardM1(address,flipper3_out);
+//rc.ForwardBackwardM2(address,flipper4_out);
 }
 
 
@@ -343,63 +296,3 @@ void Update_Time()
   Serial.print("\n");
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////Funcion para leer cada encoder pasando como valores de referencia 
-int encoder_digital(int d0,int clk,int csn, unsigned int* last_lect,int* vueltas,boolean* statn)
-{
-int angle;
-    digitalWrite(csn, LOW);
-  delayMicroseconds(4);
-    unsigned int data = 0;
-  digitalWrite(clk, LOW);
-  delayMicroseconds(1);
-  for (uint8_t k = 0; k < 16; k++) 
-    {
-    digitalWrite(clk, HIGH);
-    delayMicroseconds(1);
-    data = (data << 1) | (digitalRead(d0) ? 0x0001 : 0x0000);
-    digitalWrite(clk, LOW);
-    delayMicroseconds(1);
-     }
-
-
-  digitalWrite(csn, HIGH);
-  delayMicroseconds(1);
-  digitalWrite(clk, HIGH);
-
-//Condicionar la salida para que sea solo cuando es válido el valor del encoder
-     if (!bitRead(data,3) && !bitRead(data,4) && bitRead(data,5) && !( bitRead(data,1) && bitRead(data,2) ))
-     {
-      *statn=true;
-
-      if( abs((data>>6)-*last_lect) > 900 )
-      {
-              if((data>>6)>*last_lect)
-                *vueltas-=1;
-              else
-                *vueltas+=1;     
-      }
-      else
-      {*vueltas=*vueltas;}
-        
-     angle=(*vueltas)*(1023)+(data>>6) ;
-
-     *last_lect=(data>>6);
-     return (angle);
-     }
-     else
-     {
-      *statn=false;
-      return(data>>6);
-     }
-}
-
-
-
-void set_status()
-{
-  if(stat1)  bitWrite(stat_complete,0,1); else bitWrite(stat_complete,0,0);
-  if(stat2)  bitWrite(stat_complete,1,1); else bitWrite(stat_complete,1,0);
-  if(stat3)  bitWrite(stat_complete,2,1); else bitWrite(stat_complete,2,0);
-  if(stat4)  bitWrite(stat_complete,3,1); else bitWrite(stat_complete,3,0);
-}

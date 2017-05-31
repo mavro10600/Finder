@@ -184,7 +184,7 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			right_out.data=linear_rate+angular_rate;
 			left_out.data=linear_rate-angular_rate;
 			}
-			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2 || joy->axes[1]>0.2) 
+			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2 || joy->axes[1]<-0.2) 
 			{
 			angular_rate=joy->axes[0]*100;
 			linear_rate=joy->axes[1]*100;

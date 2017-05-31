@@ -11,6 +11,8 @@ import sys
 import time
 import math
 
+
+from roboclaw import Roboclaw
 from SerialDataGateway import SerialDataGateway
 from std_msgs.msg import Int16,Int32,Int64,Float32,String,Header,UInt64
 #from sensor_msgs.msg import Imu
@@ -31,21 +33,22 @@ class Launchpad_Class(object):
 		
 		self._right_encoder_value=0
 		self._right_wheel_speed=0
-		
-		self._flipper1_encoder_value=0
 		self._flipper1_wheel_speed=0		
-		
-		self._flipper2_encoder_value=0
 		self._flipper2_wheel_speed=0		
-		
-		self._flipper3_encoder_value=0
 		self._flipper3_wheel_speed=0		
-		
-		self._flipper4_encoder_value=0
 		self._flipper4_wheel_speed=0		
 
 		self._LastUpdate_Microsec=0
 		self._Second_Since_Last_Update=0
+#########################################
+#Iniciamos los objetos roboclaw
+rc=Roboclaw("/dev/ttyACM1",115200)
+robo=Roboclaw("/dev/ttyACM2",115200)
+
+rc.Open()
+robo.Open()
+address=0x80
+
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
 		port=rospy.get_param("~port","/dev/ttyACM0")
@@ -60,15 +63,10 @@ class Launchpad_Class(object):
 #publisher y suscribers
 		self._Left_Encoder=rospy.Publisher('left_lec',Int16,queue_size=10)
 		
-		self._SerialPublisher=rospy.Publisher('serial_base',String,queue_size=10)
+		self._SerialPublisher=rospy.Publisher('serial',String,queue_size=10)
 		self.deltat=0
 		self.lastUpdate=0
 		self._Right_Encoder=rospy.Publisher('right_lec',Int16,queue_size=10)
-		
-		self._Flipper1_Encoder=rospy.Publisher('flip1_lec',Int16,queue_size=10)
-		self._Flipper2_Encoder=rospy.Publisher('flip2_lec',Int16,queue_size=10)
-		self._Flipper3_Encoder=rospy.Publisher('flip3_lec',Int16,queue_size=10)
-		self._Flipper4_Encoder=rospy.Publisher('flip4_lec',Int16,queue_size=10)
 		
 		self._left_motor_speed=rospy.Subscriber('left_out',Int16,self._Update_Left_Speed)
 		self._right_motor_speed=rospy.Subscriber('right_out',Int16,self._Update_Right_Speed)
@@ -80,37 +78,41 @@ class Launchpad_Class(object):
 	def _Update_Left_Speed(self,left_speed):
 		self._left_wheel_speed=left_speed.data
 		rospy.loginfo(left_speed.data)
-		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))	
+		speed_message='s %d %d %d %d %d %d \r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),64,64,64)	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Right_Speed(self,right_speed):
 		self._right_wheel_speed=right_speed.data
 		rospy.loginfo(right_speed.data)
-		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))	
+		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),64,64,64)	
 		self._WriteSerial(speed_message)
 		
 
 	def _Update_Flipper1_Speed(self,flipper1_speed):
                 self._flipper1_wheel_speed=flipper1_speed.data
                 rospy.loginfo(flipper1_speed.data)
+				rc.FordwardBackwardM1(address,int(self._flipper1_wheel_speed))
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper2_Speed(self,flipper2_speed):
                 self._flipper2_wheel_speed=flipper2_speed.data
                 rospy.loginfo(flipper2_speed.data)
+                rc.FordwardBackwardM2(address,int(self._flipper2_wheel_speed))
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper3_Speed(self,flipper3_speed):
                 self._flipper3_wheel_speed=flipper3_speed.data
                 rospy.loginfo(flipper3_speed.data)
+                robo.FordwardBackwardM1(address,int(self._flipper3_wheel_speed))
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper4_Speed(self,flipper4_speed):
                 self._flipper4_wheel_speed=flipper4_speed.data
                 rospy.loginfo(flipper4_speed.data)
+                robo.FordwardBackwardM2(address,int(self._flipper4_wheel_speed))
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
@@ -125,18 +127,13 @@ class Launchpad_Class(object):
 				if(lineParts[0]=='e'):
 					self._left_encoder_value=long(lineParts[1])
 					self._right_encoder_value=long(lineParts[2])					
-					self._flipper1_encoder_value=long(lineParts[3])
-					self._flipper2_encoder_value=long(lineParts[4])					
-					self._flipper3_encoder_value=long(lineParts[5])
-					self._flipper4_encoder_value=long(lineParts[6])					
+					self._left_encoder_value=long(lineParts[3])
+					self._right_encoder_value=long(lineParts[4])					
+					self._left_encoder_value=long(lineParts[5])
+					self._right_encoder_value=long(lineParts[6])					
 
 					self._Left_Encoder.publish(self._left_encoder_value)
-					self._Right_Encoder.publish(self._right_encoder_value)
-					self._Flipper1_Encoder.publish(self._flipper1_encoder_value)
-					self._Flipper2_Encoder.publish(self._flipper2_encoder_value)
-					self._Flipper3_Encoder.publish(self._flipper3_encoder_value)
-					self._Flipper4_Encoder.publish(self._flipper4_encoder_value)
-										
+					self._Right_Encoder.publish(self._right_encoder_value)					
 			except:
 				rospy.logwarn("Error in sensor values")
 				rospy.logwarn(lineParts)

@@ -7,6 +7,16 @@
  * conectar PD_2 a D0, PD_1 a CSN y   
  */
 
+#define pindoIzq PA_6
+#define pinclkIzq PA_7
+#define pincsnIzq PE_3 
+
+#define pindoDer PF_1
+#define pinclkDer PF_3
+#define pincsnDer PF_2 
+
+
+
 #define pindo1 PD_2
 #define pinclk1 PD_0
 #define pincsn1 PD_1 
@@ -24,6 +34,15 @@
 #define pincsn4 PA_2 
 
 int stat_complete=0;
+
+
+int vueltasIzq;
+unsigned int last_lecIzq;
+boolean statIzq;
+
+int vueltasDer;
+unsigned int last_lecDer;
+boolean statDer;
 
 int vueltas1;
 unsigned int last_lec1;
@@ -46,6 +65,23 @@ void setup() {
 //aqui hay quew declarar los pines de pinclk y pind0
 //Y iniciar la comunicacion serial
 Serial.begin(9600);
+///*
+pinMode(pinclkIzq,OUTPUT);
+pinMode(pindoIzq,INPUT);
+pinMode(pincsnIzq,OUTPUT);
+digitalWrite(pincsnIzq,HIGH);
+digitalWrite(pinclkIzq, HIGH);  
+delay(100);
+//*/ 
+///*
+pinMode(pinclkDer,OUTPUT);
+pinMode(pindoDer,INPUT);
+pinMode(pincsnDer,OUTPUT);
+digitalWrite(pincsnDer,HIGH);
+digitalWrite(pinclkDer, HIGH);  
+delay(100);
+ //*/
+
 pinMode(pinclk1,OUTPUT);
 pinMode(pindo1,INPUT);
 pinMode(pincsn1,OUTPUT);
@@ -84,6 +120,8 @@ Update_Encoders();
 
 void Update_Encoders()
 {
+ int left_lec=encoder_digital(pindoIzq,pinclkIzq,pincsnIzq,&last_lecIzq,&vueltasIzq,&statIzq);
+ int right_lec=encoder_digital(pindoDer,pinclkDer,pincsnDer,&last_lecDer,&vueltasDer,&statDer);
  int enc1=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
  int enc2=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
  int enc3=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
@@ -99,6 +137,12 @@ void Update_Encoders()
  Serial.print("\t");
  Serial.print(enc4);
  Serial.print("\t");
+ Serial.print(left_lec);
+ Serial.print("\t");
+///*
+  Serial.print(right_lec);
+ Serial.print("\t");
+ //*/
  Serial.print(stat_complete,BIN);
  Serial.print("\n");
 
@@ -160,5 +204,7 @@ void set_status()
   if(stat2)  bitWrite(stat_complete,1,1); else bitWrite(stat_complete,1,0);
   if(stat3)  bitWrite(stat_complete,2,1); else bitWrite(stat_complete,2,0);
   if(stat4)  bitWrite(stat_complete,3,1); else bitWrite(stat_complete,3,0);
+  if(statIzq)  bitWrite(stat_complete,4,1); else bitWrite(stat_complete,4,0);
+  if(statDer)  bitWrite(stat_complete,5,1); else bitWrite(stat_complete,5,0);
 }
 

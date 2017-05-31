@@ -38,6 +38,14 @@ Loop
 /////////////////////////////////////////////////////////////////////////////////////////////
 //DEfinimos los pines de los encoders
 
+#define pindoIzq PA_6
+#define pinclkIzq PA_7
+#define pincsnIzq PE_3 
+
+#define pindoDer PF_1
+#define pinclkDer PF_3
+#define pincsnDer PF_2 
+
 #define pindo1 PD_2
 #define pinclk1 PD_0
 #define pincsn1 PD_1 
@@ -59,8 +67,12 @@ Loop
 //(pinpwm1,pinpwm2,umbral, maxpwmsense)
 //OSMCClass LEFT(5,3,2,1,127);
 //OSMCClass RIGHT(9,6,4,1,127);
-OSMCClass LEFT(PB_5,PB_0,PB_1,1,127);
-OSMCClass RIGHT(PE_5,PB_4,PA_5,1,127);
+
+//OSMCClass LEFT(PB_5,PB_0,PE_4,1,127);
+//OSMCClass RIGHT(PB_1,PB_4,PA_5,1,127);
+
+OSMCClass LEFT(PB_0,PB_5,PE_4,1,127);
+OSMCClass RIGHT(PB_4,PB_1,PA_5,1,127);
 //(clk,dO,pROG)
 //(AS5043,CSn,input_min,input_max,output_max_abs_sense)
             
@@ -90,6 +102,14 @@ int flipper4_out=64;
 ///////////////////////////////////////////////////////////////////
 //Variables de los encoders
 int stat_complete=0;
+
+int vueltasIzq;
+unsigned int last_lecIzq;
+boolean statIzq;
+
+int vueltasDer;
+unsigned int last_lecDer;
+boolean statDer;
 
 int vueltas1;
 unsigned int last_lec1;
@@ -147,6 +167,20 @@ Serial.begin(115200);//cuando se ve en el ide de arduino
 
 void SetupEncoders()
 {
+pinMode(pinclkIzq,OUTPUT);
+pinMode(pindoIzq,INPUT);
+pinMode(pincsnIzq,OUTPUT);
+digitalWrite(pincsnIzq,HIGH);
+digitalWrite(pinclkIzq, HIGH);  
+delay(100);
+
+pinMode(pinclkDer,OUTPUT);
+pinMode(pindoDer,INPUT);
+pinMode(pincsnDer,OUTPUT);
+digitalWrite(pincsnDer,HIGH);
+digitalWrite(pinclkDer, HIGH);  
+delay(100);
+
 pinMode(pinclk1,OUTPUT);
 pinMode(pindo1,INPUT);
 pinMode(pincsn1,OUTPUT);
@@ -177,7 +211,7 @@ delay(100);
 
 void SetupMotors()
 {
-  pinMode(PB_1, OUTPUT);
+  pinMode(PE_4, OUTPUT);
   pinMode(PA_5, OUTPUT);
   LEFT.begin();
   RIGHT.begin();
@@ -277,8 +311,8 @@ void Reset()
 //funcion de leer los encoders
 void Update_Encoders()
 {
- left_lec=0;
- right_lec=0;
+ left_lec=0;//encoder_digital(pindoIzq,pinclkIzq,pincsnIzq,&last_lecIzq,&vueltasIzq,&statIzq);
+ right_lec=0;//encoder_digital(pindoDer,pinclkDer,pincsnDer,&last_lecDer,&vueltasDer,&statDer);
  flip1_lec=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
  flip2_lec=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
  flip3_lec=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
@@ -402,4 +436,6 @@ void set_status()
   if(stat2)  bitWrite(stat_complete,1,1); else bitWrite(stat_complete,1,0);
   if(stat3)  bitWrite(stat_complete,2,1); else bitWrite(stat_complete,2,0);
   if(stat4)  bitWrite(stat_complete,3,1); else bitWrite(stat_complete,3,0);
+  if(statIzq)  bitWrite(stat_complete,5,1); else bitWrite(stat_complete,5,0);
+  if(statDer)  bitWrite(stat_complete,6,1); else bitWrite(stat_complete,6,0);
 }

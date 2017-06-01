@@ -311,8 +311,8 @@ void Reset()
 //funcion de leer los encoders
 void Update_Encoders()
 {
- left_lec=0;//encoder_digital(pindoIzq,pinclkIzq,pincsnIzq,&last_lecIzq,&vueltasIzq,&statIzq);
- right_lec=0;//encoder_digital(pindoDer,pinclkDer,pincsnDer,&last_lecDer,&vueltasDer,&statDer);
+ left_lec=encoder_digital(pindoIzq,pinclkIzq,pincsnIzq,&last_lecIzq,&vueltasIzq,&statIzq);
+ right_lec=encoder_digital(pindoDer,pinclkDer,pincsnDer,&last_lecDer,&vueltasDer,&statDer);
  flip1_lec=encoder_digital(pindo1,pinclk1,pincsn1,&last_lec1,&vueltas1,&stat1);
  flip2_lec=encoder_digital(pindo2,pinclk2,pincsn2,&last_lec2,&vueltas2,&stat2);
  flip3_lec=encoder_digital(pindo3,pinclk3,pincsn3,&last_lec3,&vueltas3,&stat3);
@@ -424,7 +424,21 @@ int angle;
      else
      {
       *statn=false;
-      return(data>>6);
+      
+      if( abs((data>>6)-*last_lect) > 900 )
+      {
+              if((data>>6)>*last_lect)
+                *vueltas-=1;
+              else
+                *vueltas+=1;     
+      }
+      else
+      {*vueltas=*vueltas;}
+        
+     angle=(*vueltas)*(1023)+(data>>6) ;
+
+     *last_lect=(data>>6);
+     return (angle);
      }
 }
 

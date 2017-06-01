@@ -55,7 +55,7 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			flipper1_out.data=64;
 		}			
 		
-			if(flipper2_out.data > 127)
+	if(flipper2_out.data > 127)
 		flipper2_out.data = 127;
 	else{
 		if(flipper2_out.data <= 0)
@@ -177,14 +177,14 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 			if (right_out.data<-100)right_out.data=-100;}
 		else
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]>0.2 || joy->axes[1]>0.2) 
+			if((!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]>0.2) || (!joy->buttons[4] && !joy->buttons[5] && joy->axes[1]>0.2)) 
 			{
 			angular_rate=joy->axes[0]*100;
 			linear_rate=joy->axes[1]*100;
 			right_out.data=linear_rate+angular_rate;
 			left_out.data=linear_rate-angular_rate;
 			}
-			if(!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2 || joy->axes[1]<-0.2) 
+			if((!joy->buttons[4] && !joy->buttons[5] && joy->axes[0]<-0.2 )|| ( !joy->buttons[4] && !joy->buttons[5] && joy->axes[1]<-0.2)) 
 			{
 			angular_rate=joy->axes[0]*100;
 			linear_rate=joy->axes[1]*100;

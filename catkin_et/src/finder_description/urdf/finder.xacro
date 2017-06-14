@@ -43,7 +43,7 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 	<!--Macro para crear las juntas de los brazos laterales con el chasis-->
 	<xacro:macro name = "arms_joints" params="name child origin">
 		<joint name = "${name}" type="revolute">
-			<parent link = "base_link"/>
+			<parent link = "traction"/>
 			<child	link = "${child}"/>
 			<origin xyz ="${origin}"/>
 			<axis xyz = "1 0 0"/>
@@ -77,8 +77,9 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
     </material>
 
 <!--//////////////////////////  base link //////////////////-->
-	<!--link name = "base_link"></link-->
-	<link name = "base_link">
+	<link name = "base_link"></link>
+
+	<link name = "traction">
 		<visual>
 			<xacro:default_geometry cad_file = "chasis"/>
 			<origin xyz= "0 0 0"/>
@@ -88,6 +89,12 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 			<origin xyz= "0 0 0"/>
     	</collision>
 	</link>
+
+	<joint name = "adjustment" type="fixed">
+		<parent link = "base_link"/>
+		<child	link = "traction"/>
+		<origin rpy="0 0 ${pi/2}"/>
+	</joint>
 <!--////////////////// juntas de los brazos laterales del chasis //////////////////-->
 	<!-- junta del brazo frontal derecho -->
 	<xacro:arms_joints name="right_front_flipper" child="right_front_arm" origin="-0.3264 -0.30255 0.1556"/>
@@ -106,19 +113,19 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 	<xacro:lateral_arms name="right_front_arm" cad_name="brazo_der_frontal" origin="0.3264 0.30255 -0.0629"/>
 
 	<!-- brazo frontal izquierdo chasis -->
-	<xacro:lateral_arms name="left_front_arm" cad_name="brazo_izq_frontal" origin="-0.3264 0.30255 -0.0629"/>
+	<xacro:lateral_arms name="left_front_arm" cad_name="brazo_der_frontal" origin="0.3264 0.30255 -0.0629"/>
 
 	<!-- brazo trasero derecho chasis -->
-	<xacro:lateral_arms name="right_back_arm" cad_name="brazo_der_trasero" origin="0.3264 -0.30255 -0.0629"/>
+	<xacro:lateral_arms name="right_back_arm" cad_name="brazo_der_frontal" origin="0.3264 0.30255 -0.0629"/>
 
 	<!-- brazo trasero izquierdo chasis -->
-	<xacro:lateral_arms name="left_back_arm" cad_name="brazo_izq_trasero" origin="-0.3264 -0.30255 -0.0629"/>
+	<xacro:lateral_arms name="left_back_arm" cad_name="brazo_der_frontal" origin="0.3264 0.30255 -0.0629"/>
 
 <!--///////////////// Brazo 6GDL + Gripper//////////////////-->
 
 <!--////////////////// "eje tronco" rotation joint //////////////////-->
 	<joint name = "base_rotation" type="revolute">
-		<parent link = "base_link"/>
+		<parent link = "traction"/>
 		<child	link = "eje_tronco"/>
 		<origin xyz ="0 -0.30645 ${0.2691-0.0455}" rpy="0 0 0"/>
 		<axis xyz = "0 0 1"/>

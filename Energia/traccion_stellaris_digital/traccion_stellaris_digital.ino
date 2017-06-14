@@ -244,13 +244,24 @@ void loop() {
 void Read_From_Serial()
 
 {
+  
    while(Serial.available() > 0)
     {
-     
+      if(Serial.available()>0)
+      {
        int data = Serial.read();
-       Messenger_Handler.process(data);
-     
-     
+       Messenger_Handler.process(data);    
+      }
+      else
+      {
+    left_out=0;
+    right_out=0;
+    flipper1_out=64;
+    flipper2_out=64;
+    flipper3_out=64;
+    flipper4_out=64;
+    Reset();
+      }
     } 
     
 }
@@ -280,6 +291,16 @@ void OnMssageCompleted()
     
     
   }
+  else 
+  {
+    left_out=0;
+    right_out=0;
+    flipper1_out=64;
+    flipper2_out=64;
+    flipper3_out=64;
+    flipper4_out=64;
+  }
+
 }
 
 
@@ -419,10 +440,11 @@ int angle;
      angle=(*vueltas)*(1023)+(data>>6) ;
 
      *last_lect=(data>>6);
-     return (angle);
+     return (data>>6);
      }
      else
      {
+      /*
       *statn=false;
       
       if( abs((data>>6)-*last_lect) > 900 )
@@ -439,6 +461,9 @@ int angle;
 
      *last_lect=(data>>6);
      return (angle);
+     
+     */
+     return ( data>>6 );
      }
 }
 

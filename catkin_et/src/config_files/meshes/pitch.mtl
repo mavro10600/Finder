@@ -1,0 +1,11 @@
+# Exported from 3D Builder
+
+newmtl Negro
+Kd 0.000000 0.000000 0.000000
+
+newmtl Amarillo
+Kd 0.996078 0.945098 0.000000
+
+newmtl Gris
+#Kd 0.501961 0.501961 0.501961
+Kd 0.749020 0.745098 0.717647

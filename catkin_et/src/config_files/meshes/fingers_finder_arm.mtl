@@ -1,0 +1,9 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Gris
+#Kd 0.501961 0.501961 0.501961
+Kd 0.749020 0.745098 0.717647
+
+newmtl Negro
+Kd 0.000000 0.000000 0.000000

@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<!--Taller de Robotica Abierta
+	FinDER robot xacro file 
+	developed by Cesar Pineda 
+	December 2016 - January 2017
+NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se podra convertir a URDF.-->
+<!-- Rojo= X, Verde=Y y Azul= Z (color de los ejes en Rviz)-->
+<robot name="finder"  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Macro para "mandar llamar" a las mallas *.obj -->
+    <xacro:macro name="default_geometry" params="cad_dir:=package://config_files/meshes cad_file extension:=obj">
+        <geometry>
+	<!-- Typically, STL/DAE/OBJ model units are in mm, but RViz units are in m, hence models must be scaled down by 1000-->
+            <mesh filename="${cad_dir}/${cad_file}.${extension}" scale="0.001 0.001 0.001"/>
+        </geometry>
+    </xacro:macro>
+
+	<!--General porpuse variables-->
+	<xacro:property name="pi" value = "3.14159265359"/>
+	<property name="deg_to_rad" value="0.01745329251994329577"/>
+
+	<!--Inertial matrix macro-->
+   	<xacro:macro name="inertial_matrix" params="mass">
+    	<inertial>
+      		<mass value="${mass}"/>
+        	<inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="1.0"/>
+  		</inertial>
+   </xacro:macro>
+
+	<!--Macro para crear los eslabones y "mandar llamar" a los brazos laterales del chasis-->
+	<xacro:macro name = "lateral_arms" params="name cad_name origin">
+		<link name = "${name}">
+			<visual>
+				<xacro:default_geometry cad_file = "${cad_name}"/>
+				<origin xyz= "${origin}"/>
+			</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "${cad_name}"/>
+			<origin xyz= "${origin}"/>
+    	</collision>
+	</link>
+	</xacro:macro>
+	<!--Macro para crear las juntas de los brazos laterales con el chasis-->
+	<xacro:macro name = "arms_joints" params="name child origin">
+		<joint name = "${name}" type="revolute">
+			<parent link = "base_link"/>
+			<child	link = "${child}"/>
+			<origin xyz ="${origin}"/>
+			<axis xyz = "1 0 0"/>
+			<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+		</joint>
+	</xacro:macro>
+
+	<!--parameters for geometries in collision tags-->
+<!--///////////////////// shoulder collision geometry//////////////////////////////-->
+	<property name="shoulder_coll_len" value="0.456" />
+	<property name="shoulder_coll_width" value="0.062" />
+	<property name="shoulder_coll_height" value="0.05" />
+<!--///////////////////// elbow  collision geometry//////////////////////////////-->
+	<property name="elbow_coll_len" value="0.393" /><!--altura en y-->
+	<property name="elbow_coll_width" value="0.052" /><!--altura en x-->
+	<property name="elbow_coll_height" value="0.0475" /><!--altura en z-->
+<!--///////////////////// elbow  collision geometry//////////////////////////////-->
+	<property name="roll_coll_len" value="0.05"/><!--altura en y-->
+	<property name="roll_coll_width" value="0.087" /><!--altura en x-->
+	<property name="roll_coll_height" value="0.03" /><!--altura en z-->
+	<!--Cylinder parameters-->
+	<property name="cylinder_len" value ="0.087"/>
+	<property name="cylinder_rad" value ="0.0187"/>
+
+	<!-- Grasping frame -->
+	<property name="grasp_frame_len" value="0.02"/>
+	<property name="grasp_frame_width" value="0.02"/>
+	<property name="grasp_frame_height" value="0.02"/>
+	<material name="White">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+<!--//////////////////////////  base link //////////////////-->
+	<!--link name = "base_link"></link-->
+	<link name = "base_link">
+		<visual>
+			<xacro:default_geometry cad_file = "chasis"/>
+			<origin xyz= "0 0 0"/>
+		</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "chasis"/>
+			<origin xyz= "0 0 0"/>
+    	</collision>
+	</link>
+<!--////////////////// juntas de los brazos laterales del chasis //////////////////-->
+	<!-- junta del brazo frontal derecho -->
+	<xacro:arms_joints name="right_front_flipper" child="right_front_arm" origin="-0.3264 -0.30255 0.1556"/>
+
+	<!-- junta del brazo frontal izquierdo -->
+	<xacro:arms_joints name="left_front_flipper" child="left_front_arm" origin="0.3264 -0.30255 0.1556"/>
+
+	<!-- junta del brazo trasero derecho -->
+	<xacro:arms_joints name="right_back_flipper" child="right_back_arm" origin="-0.3264 0.30255 0.1556"/>
+
+	<!-- junta del brazo trasero izquierdo -->
+	<xacro:arms_joints name="left_back_flipper" child="left_back_arm" origin="0.3264 0.30255 0.1556"/>
+
+<!--////////////// brazos laterales del chasis ////////////////////-->
+	<!-- brazo frontal derecho chasis -->
+	<xacro:lateral_arms name="right_front_arm" cad_name="brazo_der_frontal_v2" origin="0.3264 0.30255 -0.0629"/>
+
+	<!-- brazo frontal izquierdo chasis -->
+	<xacro:lateral_arms name="left_front_arm" cad_name="brazo_izq_frontal_v2" origin="-0.3264 0.30255 -0.0629"/>
+
+	<!-- brazo trasero derecho chasis -->
+	<xacro:lateral_arms name="right_back_arm" cad_name="brazo_der_trasero_v2" origin="0.3264 -0.30255 -0.0629"/>
+
+	<!-- brazo trasero izquierdo chasis -->
+	<xacro:lateral_arms name="left_back_arm" cad_name="brazo_izq_trasero_v2" origin="-0.3264 -0.30255 -0.0629"/>
+
+<!--///////////////// Brazo 6GDL + Gripper//////////////////-->
+
+<!--////////////////// "eje tronco" rotation joint //////////////////-->
+	<joint name = "base_rotation" type="revolute">
+		<parent link = "base_link"/>
+		<child	link = "eje_tronco"/>
+		<origin xyz ="0 -0.30645 ${0.2691-0.0455}" rpy="0 0 0"/>
+		<axis xyz = "0 0 1"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+
+	<!--////////////////// "eje tronco link" //////////////////-->
+	<link name = "eje_tronco">
+		<visual>
+			<xacro:default_geometry cad_file = "base"/>
+			<origin xyz= "0 0 0"/>
+		</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "base"/>
+    	</collision>
+	</link>
+<!--//////////////////"eje_tronco-shoulder rotation joint//////////////////-->
+	<joint name = "shoulder_rotation" type = "revolute">
+		<parent link = "eje_tronco"/>
+		<child link = "shoulder"/>
+		<origin xyz = "0 -0.0035 0.179"/>
+		<axis xyz = "1 0 0"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+<!--////////////////////// shoulder link //////////////////////-->
+	<link name = "shoulder">
+		<visual>
+			<xacro:default_geometry cad_file = "hombro"/>
+			<origin  xyz= "0 0.0035 -0.0338"/>
+		</visual>
+		<collision>
+			<origin  xyz= "0 0.0035 -0.0338"/>
+      		<xacro:default_geometry cad_file = "hombro"/>
+		</collision>
+	</link>
+<!--///////////////////// "shoulder-elbow" rotation joint ////////////////////////////-->
+	<joint name = "elbow_rotation" type = "revolute">
+		<parent link = "shoulder"/>
+		<child link = "elbow"/>
+		<origin xyz = "0 0.423 0.0363"/>
+		<axis xyz = "1 0 0"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+
+<!--////////////////////// elbow link /////////////////////////////////////-->
+	<link name = "elbow">
+		<visual>
+			<origin xyz= "0 -0.4192 -0.027"/>
+			<xacro:default_geometry cad_file = "codo"/>	
+		</visual>
+		<collision>
+			<origin xyz= "0 -0.4192 -0.027"/>
+			<xacro:default_geometry cad_file = "codo"/>
+		</collision>
+	</link>
+<!--/////////////////////// roll joint ///////////////////////-->
+	<joint name = "roll_rotation" type = "revolute">
+		<parent link = "elbow"/>
+		<child link = "roll"/>
+		<origin xyz = "0 -0.4192 0.0103"/>
+		<axis xyz = "0 1 0"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+
+<!--//////////////////// roll link ////////////////////////////////-->
+	<link name = "roll">
+		<visual>
+			<xacro:default_geometry cad_file = "roll1"/>	
+			<origin xyz = "0 0 -0.0188"/>
+		</visual>
+		<collision>
+			<origin xyz = "0 0 -0.0188" rpy = "0 0 0"/>
+			<xacro:default_geometry cad_file = "roll1"/>
+		</collision>
+	</link>
+<!--///////////////// pitch rotation joint////////////////////////////////-->
+	<joint name = "pitch_rotation" type = "revolute">
+		<parent link = "roll"/>
+		<child link = "pitch"/>
+		<origin xyz = "0 -0.0778 0"/>
+		<axis xyz = "1 0 0"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+<!--//////////////////// pitch link ////////////////////////7-->
+	<link name = "pitch">
+		<visual>
+			<xacro:default_geometry cad_file = "pitch"/>
+			<!--origin xyz= "0 0.0778 -0.0188"/-->
+			<origin xyz= "0 0.048 -0.0188"/>
+		</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "pitch"/>
+			<origin xyz= "0 0.0778 -0.0188"/>
+		</collision>
+	</link>
+	<!--////////////////////// yaw rotation joint /////////////////////////////7-->
+	<joint name = "roll_rotation_2" type = "revolute">
+		<parent link = "pitch"/>
+		<child link = "yaw"/>
+		<origin xyz = "0 -0.0835 0"/>
+		<axis xyz = "0 1 0"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+<!-- ///////////////////// yaw link ///////////////////////////////-->
+	<link name = "yaw">
+		<visual>
+			<xacro:default_geometry cad_file = "yaw_finder_arm_"/>
+			<origin xyz= "0.0007 0 0.00053"/>
+		</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "yaw_finder_arm_"/>
+			<origin xyz= "0.0007 0 0.00053"/>
+		</collision>
+	</link>
+	<!--////////////////////// gripper rotation joint /////////////////////////////7-->
+	<joint name = "gripper_rotation" type = "revolute">
+		<parent link = "yaw"/>
+		<child link = "gripper"/>
+		<origin xyz = "-0.0147485 -0.003042 0"/>
+		<axis xyz = "0 0 1"/>
+		<limit effort="300" velocity="0.1" lower="${-pi}" upper="${pi}"/>
+	</joint>
+<!-- ///////////////////// gripper link ///////////////////////////////-->
+	<link name = "gripper">
+		<visual>
+			<xacro:default_geometry cad_file = "fingers_finder_arm"/>
+			<origin xyz= "-0.00425 0.0071 0"/>
+		</visual>
+		<collision>
+			<xacro:default_geometry cad_file = "fingers_finder_arm"/>
+			<origin xyz= "-0.00425 0.0071 0"/>
+		</collision>
+	</link>
+	
+    <link name="grasping_frame">
+      	<inertial>
+        	<origin xyz="0 0 0" rpy="0 0 0"/>
+        	<mass value="0.001"/>
+        	<cuboid_inertia mass="0.0001" x="0.001" y="0.001" z="0.001"/>
+        	<inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="100.0"  iyz="0.0"  izz="1.0"/>
+      	</inertial>
+		<visual>
+      		<origin xyz="0 0 0"/>
+      		<geometry>
+          		<box size="${grasp_frame_len} ${grasp_frame_width} ${grasp_frame_height}"/>
+      		</geometry>
+      		<material name="White" />
+    	</visual>
+    </link>
+<!-- ////////////// Finger-Grasping joint///////////// -->
+    <joint name="grasping_frame_joint" type="fixed">
+      <parent link="yaw"/>
+      <child link="grasping_frame"/>
+      <origin xyz="-0.023 -0.1 0"/>
+    </joint>
+</robot>

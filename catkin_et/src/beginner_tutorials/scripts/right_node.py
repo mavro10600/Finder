@@ -41,12 +41,12 @@ class Right_node:
         self.kisum_pos = 0.
         self.error_pos = 0.
 
-        self.kp_vel = 80
-        self.ki_vel = 5.
+        self.kp_vel = 1. #80
+        self.ki_vel = 1. #5.
         self.kd_vel = 0.
         self.km_vel = 0.
         self.umbral_vel = 0.1
-        self.range_vel = 100. # Maximo pwm permitido
+        self.range_vel = 80. # Maximo pwm permitido  ##100
         self.kierr_vel = 2
         self.kimax_vel = 25.
         self.kisum_vel = 0.
@@ -283,6 +283,7 @@ class Right_node:
 
         self.right_vel_des = data.data
         self.angCalc()
+        self.pid_vel()
 
         # if (abs(self.right_vel_des) < 0.1):
         #     # self.right_ang_des = self.constrain(self.right_ang_des, 0, 1000)
@@ -295,8 +296,8 @@ class Right_node:
 
     def update(self):
 
-        self.rightOutPub.publish(self.right_des)
-        #self.rightOutPub.publish(self.right_out)
+        #self.rightOutPub.publish(self.right_des)
+        self.rightOutPub.publish(self.right_out)
         self.rightAngPub.publish(self.right_ang)
         self.rightVelPub.publish(self.right_vel)
 

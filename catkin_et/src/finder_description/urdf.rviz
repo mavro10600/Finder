@@ -63,7 +63,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         eje_tronco:
           Alpha: 1
           Show Axes: false
@@ -115,6 +114,11 @@ Visualization Manager:
           Show Trail: false
           Value: true
         shoulder:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        traction:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -159,6 +163,8 @@ Visualization Manager:
           Value: true
         shoulder:
           Value: true
+        traction:
+          Value: true
         yaw:
           Value: true
       Marker Scale: 0.5
@@ -168,24 +174,25 @@ Visualization Manager:
       Show Names: false
       Tree:
         base_link:
-          eje_tronco:
-            shoulder:
-              elbow:
-                roll:
-                  pitch:
-                    yaw:
-                      grasping_frame:
-                        {}
-                      gripper:
-                        {}
-          left_back_arm:
-            {}
-          left_front_arm:
-            {}
-          right_back_arm:
-            {}
-          right_front_arm:
-            {}
+          traction:
+            eje_tronco:
+              shoulder:
+                elbow:
+                  roll:
+                    pitch:
+                      yaw:
+                        grasping_frame:
+                          {}
+                        gripper:
+                          {}
+            left_back_arm:
+              {}
+            left_front_arm:
+              {}
+            right_back_arm:
+              {}
+            right_front_arm:
+              {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -212,22 +219,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.50782
+      Distance: 1.81851
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.05169
-        Y: -0.0694298
-        Z: 0.143502
+        X: -0.0502688
+        Y: 0.104494
+        Z: 0.371531
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.375398
+      Pitch: 0.045398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.86041
+      Yaw: 1.15223
     Saved: ~
 Window Geometry:
   Displays:
@@ -245,5 +252,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1321
-  X: 55
-  Y: 14
+  X: 45
+  Y: 24

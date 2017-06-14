@@ -41,12 +41,12 @@ class Left_node:
         self.kisum_pos = 0.
         self.error_pos = 0.
 
-        self.kp_vel = 80
-        self.ki_vel = 5.
+        self.kp_vel = 1.
+        self.ki_vel = 1.
         self.kd_vel = 0.
         self.km_vel = 0.
         self.umbral_vel = 0.1
-        self.range_vel = 100. # Maximo pwm permitido
+        self.range_vel = 80. # Maximo pwm permitido
         self.kierr_vel = 2
         self.kimax_vel = 25.
         self.kisum_vel = 0.
@@ -206,7 +206,7 @@ class Left_node:
     """
     def angCalc(self):
 
-        ###MAP FIRST###
+        ###MAP FIRST#rosto##
         ###
         if self.left_lec < self.left_offset:
             self.left_ang_tmp = self.left_lec + 1024 - self.left_offset
@@ -283,6 +283,7 @@ class Left_node:
 
         self.left_vel_des = data.data
         self.angCalc()
+        self.pid_vel()
 
         # if (abs(self.left_vel_des) < 0.1):
         #     # self.left_ang_des = self.constrain(self.left_ang_des, 0, 1000)
@@ -295,8 +296,8 @@ class Left_node:
 
     def update(self):
 
-        self.leftOutPub.publish(self.left_des)
-        #self.leftOutPub.publish(self.left_out)
+        #self.leftOutPub.publish(self.left_des)
+        self.leftOutPub.publish(self.left_out)
         self.leftAngPub.publish(self.left_ang)
         self.leftVelPub.publish(self.left_vel)
 
@@ -313,4 +314,4 @@ if __name__ == '__main__':
 
     """ main """
     left_node = Left_node()
-    left_node.spin() 
+    left_node.spin()

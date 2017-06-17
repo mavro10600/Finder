@@ -1,0 +1,27 @@
+body {
+    padding: 33px 10px 70px 10px;
+    background:#588bb5;
+}
+
+.navbar-brand>span>img {
+  height: 100%;
+  width: auto;
+}
+
+.navbar-header >a {
+  /*padding-top: 0px;
+  padding-right: 10px;
+  padding-bottom: 0px;
+  padding-left: 10px;*/
+  padding: 0px 0px 0px 10px;
+}
+
+.img-responsive {
+    margin: 0 auto;
+}
+
+.container {
+  /*padding-right: 0px;
+  padding-left: 0px;*/
+  width: 100%;
+}

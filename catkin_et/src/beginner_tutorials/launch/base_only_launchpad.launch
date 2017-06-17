@@ -4,10 +4,11 @@
 		
 	</node>
 	<node pkg="teleoperation" type="teleoperation_node.cpp" name="teleoperation_node" />	
-	
+	<node pkg="joy" type="joy_node.py" name="joy_node" />
+		
 	<node pkg="beginner_tutorials" type="right_node.py" name="right_node" />
 	<node pkg="beginner_tutorials" type="left_node.py" name="left_node" />
-	<node pkg="joy" type="joy_node.py" name="joy_node" />
+
 	
 
 

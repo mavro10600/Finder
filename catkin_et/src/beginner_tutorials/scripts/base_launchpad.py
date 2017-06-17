@@ -48,8 +48,8 @@ class Launchpad_Class(object):
 		self._Second_Since_Last_Update=0
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
-#		port=rospy.get_param("~port","/dev/ttyACM0")
-		port=rospy.get_param("~port","/dev/stellaris-base")
+		port=rospy.get_param("~port","/dev/ttyACM0")
+#		port=rospy.get_param("~port","/dev/stellaris-base")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 #########################################

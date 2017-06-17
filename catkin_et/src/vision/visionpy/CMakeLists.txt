@@ -10,7 +10,7 @@ project(visionpy)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
-  rosccp
+#  rosccp
   rospy
   sensor_msgs
   std_msgs

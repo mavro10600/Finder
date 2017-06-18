@@ -29,6 +29,7 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 }
 void dynamixelCallback(const dynamixel_msgs::JointState::ConstPtr& dynamixel_status){
 	std::cout<< float(dynamixel_status->load) <<std::endl;
+	std::cout<< float(dynamixel_status->error) <<std::endl;
 	float load = 1;
 }
 

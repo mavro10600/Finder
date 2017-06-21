@@ -2,10 +2,12 @@ $(document).ready(principal);
 var ip = '192.168.100.50';
 //var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
-var cam2 = 'usb_cam2', quality2 = '20', width2 = '320', height2 = '240';
-var cam3 = 'usb_cam3', quality3 = '20', width3 = '320', height3 = '240';
-var cam4 = 'usb_cam4', quality4 = '20', width4 = '320', height4 = '240';
-var cam5 = 'usb_cam5', quality5 = '20', width5 = '320', height5 = '240';
+var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';
+var cam3 = 'usb_cam3', quality3 = '20', width3 = '640', height3 = '480';
+var cam4 = 'usb_cam4', quality4 = '20', width4 = '640', height4 = '480';
+var cam5 = 'usb_cam5', quality5 = '20', width5 = '640', height5 = '480';
+
+var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
 
 function principal(){
 	//-----------ROS Connection
@@ -73,14 +75,15 @@ function principal(){
 	});
 }
 //http://192.168.100.239:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&quality=20
+//http:192.168.0.50:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&width=640&height=480&quality=20
 function setCam1(){
-	cam1 = $(this).val();
+	cam2 = $(this).val();
 	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
 	$('.img-responsive').eq(0).attr('src', src);
 }
 
 function setCam2(){
-	cam2 = $(this).val();
+	cam1 = $(this).val();
 	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
 	$('.img-responsive').eq(1).attr('src', src);
 }
@@ -106,15 +109,15 @@ function setCam5(){
 
 
 function setQuality1(){
-	quality1 = $(this).val().toString();
+	quality2 = $(this).val().toString();
 	//console.log("Quality: " + quality1);
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
+	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
 	$('.img-responsive').eq(0).attr('src', src);
 	$('#Q1').html($(this).val() + ' %');
 }
 function setQuality2(){
-	quality2 = $(this).val().toString();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
+	quality1 = $(this).val().toString();
+	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
 	$('.img-responsive').eq(1).attr('src', src);
 	$('#Q2').html($(this).val() + ' %');
 }
@@ -143,17 +146,17 @@ function setQuality5(){
 
 function setResolution1(){
 	var size = $(this).val();
-	width1  = Math.round(160 + 480 * size / 100).toString();
-	height1 = Math.round(120 + 360 * size / 100).toString();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
+	width2  = Math.round(160 + 480 * size / 100).toString();
+	height2 = Math.round(120 + 360 * size / 100).toString();
+	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
 	$('.img-responsive').eq(0).attr('src', src);
 	$('#R1').html(width1+' x '+height1);
 }
 function setResolution2(){
 	var size = $(this).val();
-	width2  = Math.round(160 + 480 * size / 100).toString();
-	height2 = Math.round(120 + 360 * size / 100).toString();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
+	width1  = Math.round(160 + 480 * size / 100).toString();
+	height1 = Math.round(120 + 360 * size / 100).toString();
+	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
 	$('.img-responsive').eq(1).attr('src', src);
 	$('#R2').html(width2+' x '+height2);
 }

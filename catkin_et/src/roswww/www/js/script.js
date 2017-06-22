@@ -28,16 +28,17 @@ function principal(){
 	console.log('Connection to websocket server closed.');
 	});
 	// Quality and Resolution
-	$('input').eq(0).on('change',setQuality1);
-	$('input').eq(1).on('change',setResolution1);
-	$('input').eq(2).on('change',setQuality2);
-	$('input').eq(3).on('change',setResolution2);
-	$('input').eq(4).on('change',setQuality3);
-	$('input').eq(5).on('change',setResolution3);
-	$('input').eq(6).on('change',setQuality4);
-	$('input').eq(7).on('change',setResolution4);
-	$('input').eq(8).on('change',setQuality5);
-	$('input').eq(9).on('change',setResolution5);
+	$('input').eq(0).on('change',setGeneralQuality);
+	$('input').eq(1).on('change',setQuality1);
+	$('input').eq(2).on('change',setResolution1);
+	$('input').eq(3).on('change',setQuality2);
+	$('input').eq(4).on('change',setResolution2);
+	$('input').eq(5).on('change',setQuality3);
+	$('input').eq(6).on('change',setResolution3);
+	$('input').eq(7).on('change',setQuality4);
+	$('input').eq(8).on('change',setResolution4);
+	$('input').eq(10).on('change',setQuality5);
+	$('input').eq(11).on('change',setResolution5);
 
 	// Set cams
 	$('select').eq(0).on('click', setCam1);
@@ -107,6 +108,26 @@ function setCam5(){
 }
 
 
+function setGeneralQuality(){
+	quality2 = $(this).val().toString();
+	quality3 = $(this).val().toString();
+	quality4 = $(this).val().toString();
+	quality5 = $(this).val().toString();
+	var src2 = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
+	var src3 = 'http://' + ip + ':8080/stream?topic=/' + cam3 + '/image_raw&type=mjpeg&width=' + width3 +'&height=' + height3 + '&quality=' + quality3;
+	var src4 = 'http://' + ip + ':8080/stream?topic=/' + cam4 + '/image_raw&type=mjpeg&width=' + width4 +'&height=' + height4 + '&quality=' + quality4;
+	var src5 = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
+	$('.img-responsive').eq(0).attr('src', src2);
+	$('.img-responsive').eq(2).attr('src', src3);
+	$('.img-responsive').eq(3).attr('src', src4);
+	$('.img-responsive').eq(4).attr('src', src5);
+
+	$('#QG').html($(this).val() + ' %');
+	$('#Q1').html($(this).val() + ' %');
+	$('#Q3').html($(this).val() + ' %');
+	$('#Q4').html($(this).val() + ' %');
+	$('#Q5').html($(this).val() + ' %');
+}
 
 function setQuality1(){
 	quality2 = $(this).val().toString();

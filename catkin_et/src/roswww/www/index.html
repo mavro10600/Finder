@@ -66,8 +66,10 @@
       <input type="range" min="0" max="100" value="20"/>
 
       <div class="container-fluid">
+      
         <div class="row">
-          <div class="col-sm-4 col-md-4 col-lg-4">
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
                 <table>
                   <tr>
                     <td>
@@ -78,6 +80,7 @@
                         <option value="usb_cam3">Camera 3</option>
                         <option value="usb_cam4">Camera 4</option>
                         <option value="usb_cam5">Camera 5</option>
+                        <option value="empty">Empty</option>
                       </select>
                     </td>
                     <td>
@@ -98,7 +101,8 @@
 
                 
           </div>
-          <div class="col-sm-4 col-md-4 col-lg-4">
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
                 
                 <table>
                   <tr>
@@ -110,6 +114,7 @@
                         <option value="usb_cam3">Camera 3</option>
                         <option value="usb_cam4">Camera 4</option>
                         <option value="usb_cam5">Camera 5</option>
+                        <option value="empty">Empty</option>
                       </select>
                     </td>
                     <td>
@@ -130,7 +135,7 @@
 
                 
           </div>
-          <div class="col-sm-4 col-md-4 col-lg-4">
+          <div class="col-sm-3 col-md-3 col-lg-3">
                 <table>
                   <tr>
                     <td>
@@ -141,6 +146,7 @@
                         <option value="usb_cam3" selected="selected">Camera 3</option>
                         <option value="usb_cam4">Camera 4</option>
                         <option value="usb_cam5">Camera 5</option>
+                        <option value="empty">Empty</option>
                       </select>
                     </td>
                     <td>
@@ -160,10 +166,49 @@
                 <img src="http://192.168.100.50:8080/stream?topic=/usb_cam3/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
 
           </div>
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
+
+            <div class="row">
+              <h4 class="text-center">Robot Info</h4>
+              
+              <span class="col-sm-4 col-md-4 col-lg-3 text-center">
+                <span class="label label-success">Battery</span> 
+              </span>
+              <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
+                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                  UNKNOWN 
+                </div>
+              </div>
+
+              <span class="col-sm-4 col-md-4 col-lg-3 text-center">
+                <span class="label label-success">CO2</span> 
+              </span>
+              <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
+                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                  UNKNOWN
+                </div>
+              </div>
+
+              <span class="col-sm-4 col-md-4 col-lg-3 text-center">
+                <span class="label label-success">Laptop battery</span> 
+              </span>
+              <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
+                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                  UNKNOWN
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
+        
+
         <div class="row">
-          <div class="col-sm-4 col-md-4 col-lg-4">
+          <div class="col-sm-3 col-md-3 col-lg-3">
                  <table>
                   <tr>
                     <td>
@@ -174,6 +219,7 @@
                         <option value="usb_cam3">Camera 3</option>
                         <option value="usb_cam4" selected="selected">Camera 4</option>
                         <option value="usb_cam5">Camera 5</option>
+                        <option value="empty">Empty</option>
                       </select>
                     </td>
                     <td>
@@ -193,25 +239,14 @@
                 <img src="http://192.168.100.50:8080/stream?topic=/usb_cam4/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
 
           </div>
-          <div class="col-sm-4 col-md-4 col-lg-4">
-                <div class="row">
-                  <h4 class="text-center">Robot Info</h4>
-                      <span class="col-sm-4 col-md-4 col-lg-3 text-center">
-                        <span class="label label-success">Battery</span> 
-                      </span>
-                      <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                              UNKNOWN 
-                            </div>
-                      </div>
-                </div>
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
                 <input id="box-toggle" type="checkbox">
                 <label for="box-toggle">Show robot</label>
-
-
-
           </div>
-          <div class="col-sm-4 col-md-4 col-lg-4">
+
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
                 <table>
                   <tr>
                     <td>
@@ -222,6 +257,7 @@
                         <option value="usb_cam3">Camera 3</option>
                         <option value="usb_cam4">Camera 4</option>
                         <option value="usb_cam5" selected="selected">Camera 5</option>
+                        <option value="empty">Empty</option>
                       </select>
                     </td>
                     <td>
@@ -241,6 +277,8 @@
 
           </div>
         </div>
+
+
       </div>
     </main>
     <div class="row">

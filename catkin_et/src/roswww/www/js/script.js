@@ -50,61 +50,147 @@ function principal(){
 	//Subscribe battery
 	var batteryListener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/robot_state/battery',
+		name : '/hardware/robot_state/robotBattery',
 		messageType : 'std_msgs/Float32'
 	});
 
-	batteryListener.subscribe(function(message){
-	var levelBaterry = message.data;
-	if($('.progress-bar').hasClass('progress-bar-success')){
-	  $('.progress-bar').toggleClass('progress-bar-success');
-	}
-	if($('.progress-bar').hasClass('progress-bar-danger')){
-	  $('.progress-bar').toggleClass('progress-bar-danger');
-	}
-	var percent = Math.round(100*(levelBaterry-9.9)/2.7);
-	$('.progress-bar').css("width", percent + "%");
-	$('.progress-bar').html('<strong>' + percent + '%' +'</strong>');
-	if(percent>80.0){
-	  $('.progress-bar').toggleClass('progress-bar-success');
-	}
-	else if(percent>45.0){
-	}
-	else{
-	  $('.progress-bar').toggleClass('progress-bar-danger');
-	}
+	var co2Listener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/sensor/co2',
+		messageType : 'std_msgs/Int32'
 	});
+
+	var laptopBatteryListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/laptopBattery',
+		messageType : 'std_msgs/Int32'
+	});
+
+	batteryListener.subscribe(function(message){
+		var levelRobotBaterry = message.data;
+		console.log("Level battery:"+levelRobotBaterry);
+		if($('.progress-bar').eq(0).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(0).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelRobotBaterry-9.9)/2.7);
+		$('.progress-bar').eq(0).css("width", percent + "%");
+		$('.progress-bar').eq(0).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-danger');
+		}
+	});
+
+	co2Listener.subscribe(function(message){
+		var levelCo2 = message.data;
+		console.log("CO2:"+levelCo2);
+		if($('.progress-bar').eq(1).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(1).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelCo2/100));
+		$('.progress-bar').eq(1).css("width", percent + "%");
+		$('.progress-bar').eq(1).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+
+	});
+
+	laptopBatteryListener.subscribe(function(message){
+		var levelLaptopBaterry = message.data;
+
+		if($('.progress-bar').eq(2).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(2).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelLaptopBaterry/100));
+		$('.progress-bar').eq(2).css("width", percent + "%");
+		$('.progress-bar').eq(2).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
+		}
+
+	})
+
 }
 //http://192.168.100.239:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&quality=20
 //http:192.168.0.50:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&width=640&height=480&quality=20
 function setCam1(){
 	cam2 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
-	$('.img-responsive').eq(0).attr('src', src);
+	console.log("CAM2:_" + cam2+"_");
+	if (cam2=="empty") {
+		$('.img-responsive').eq(0).attr('src', "img/camera.jpg");
+
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
+		$('.img-responsive').eq(0).attr('src', src);
+	}
+
+	
 }
 
 function setCam2(){
 	cam1 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
-	$('.img-responsive').eq(1).attr('src', src);
+	console.log("CAM1:_" + cam1+"_");
+	if (cam1=="empty") {
+		$('.img-responsive').eq(1).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
+		$('.img-responsive').eq(1).attr('src', src);
+	}
 }
 
 function setCam3(){
 	cam3 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam3 + '/image_raw&type=mjpeg&width=' + width3 +'&height=' + height3 + '&quality=' + quality3;
-	$('.img-responsive').eq(2).attr('src', src);
+
+	if (cam3=="empty") {
+		$('.img-responsive').eq(2).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam3 + '/image_raw&type=mjpeg&width=' + width3 +'&height=' + height3 + '&quality=' + quality3;
+		$('.img-responsive').eq(2).attr('src', src);
+	}
 }
 
 function setCam4(){
 	cam4 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam4 + '/image_raw&type=mjpeg&width=' + width4 +'&height=' + height4 + '&quality=' + quality4;
-	$('.img-responsive').eq(3).attr('src', src);
+	if (cam4=="empty") {
+		$('.img-responsive').eq(3).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam4 + '/image_raw&type=mjpeg&width=' + width4 +'&height=' + height4 + '&quality=' + quality4;
+		$('.img-responsive').eq(3).attr('src', src);
+	}
 }
 
 function setCam5(){
 	cam5 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
-	$('.img-responsive').eq(4).attr('src', src);
+	if (cam5=="empty") {
+		$('.img-responsive').eq(4).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
+		$('.img-responsive').eq(4).attr('src', src);
+	}
 }
 
 

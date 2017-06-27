@@ -278,18 +278,18 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 
 	//agregado recien
 	if(Xbutton == 1)
-		gripper_out.data = 3;
+		gripper_out.data = 5;
 	else
 		if(Ybutton == 1)
-			gripper_out.data = -3;
+			gripper_out.data = -5;
 		else	
 			gripper_out.data = 0;
 
 	if(Abutton == 1)
-		yaw_out.data = 3;
+		yaw_out.data = 5;
 	else
 		if(Bbutton == 1)
-			yaw_out.data = -3;
+			yaw_out.data = -5;
 		else	
 			yaw_out.data = 0;
 }

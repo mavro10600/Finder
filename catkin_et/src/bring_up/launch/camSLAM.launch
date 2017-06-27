@@ -12,7 +12,7 @@
   
   <group ns="hardware">
     <node name="hokuyo_node" pkg="hokuyo_node" type="hokuyo_node" output="screen">
-      <param name="port" type="string" value="/dev/ttyACM0" />
+      <param name="port" type="string" value="/dev/hokuyo" />
       <param name="frame_id" type="string" value="laser" />
     </node>
   </group>

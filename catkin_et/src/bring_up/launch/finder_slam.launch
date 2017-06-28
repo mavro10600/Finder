@@ -95,4 +95,8 @@
 	  </node>
   <!-- ********** FIN: hector_geotiff.launch ********** -->
 
+  <node pkg="hector_imu_attitude_to_tf" type="imu_attitude_to_tf_node" name="hector_imu_attitude_to_tf_node">
+  	<!--param name=""/-->
+  </node>
+
 </launch>

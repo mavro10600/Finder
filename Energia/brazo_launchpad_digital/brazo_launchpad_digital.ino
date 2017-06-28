@@ -17,7 +17,7 @@
  * 
  * revisar funcionamiento de sensores
  * 
- * 
+ * uint16_t ReadMainBatteryVoltage(uint8_t address,bool *valid=NULL);
  * 
  * 
  * 
@@ -116,7 +116,7 @@ int pitch=0;
 int yaw=0;
 int gripper=0;
 
-
+int battery=12;
 
 ///////////////////////////////////////
 //Motor speed
@@ -203,7 +203,7 @@ void loop() {
   Update_Time();
   Update_Motors();  
   Update_Encoders();
-  
+  Update_Battery();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,6 +222,10 @@ void Read_From_Serial()
     } 
     
 }
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //OnMssg Complete function definition
@@ -340,6 +344,20 @@ roboclaw.ForwardBackwardM1(address,shoulder_out);
 roboclaw.ForwardBackwardM2(address,elbow_out);
 rc.ForwardBackwardM1(address,roll_out);
 rc.ForwardBackwardM2(address,pitch_out);
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///Update battery
+
+void Update_Battery()
+{
+  uint16_t batt;
+  bool validate;
+  batt=rc.ReadMainBatteryVoltage(address, &validate);
+  if(validate) battery=batt;
+  Serial.print("b");
+  Serial.print("\t");
+  Serial.print(battery);
+  Serial.print("\n");
 }
 
 

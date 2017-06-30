@@ -411,8 +411,17 @@ if(flagEndstopBase1==LOW && flagEndstopBase2==LOW)
   base.writeMicroseconds(base_out);
 if(flagEndstopBase1==HIGH || flagEndstopBase2==HIGH)
   base.writeMicroseconds(1500);
+  
+if (flagEndstopShoulder1==LOW && flagEndstopShoulder2==LOW)
 roboclaw.ForwardBackwardM1(address,shoulder_out);
+if(flagEndstopShoulder1==HIGH || flagEndstopShoulder2==HIGH )
+roboclaw.ForwardBackwardM1(address,64);  
+
+if (flagEndstopElbow1==LOW && flagEndstopElbow2==LOW)
 roboclaw.ForwardBackwardM2(address,elbow_out);
+if (flagEndstopElbow1==HIGH || flagEndstopElbow2==HIGH)
+roboclaw.ForwardBackwardM2(address,64);
+
 rc.ForwardBackwardM1(address,roll_out);
 rc.ForwardBackwardM2(address,pitch_out);
 }

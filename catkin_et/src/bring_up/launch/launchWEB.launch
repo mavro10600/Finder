@@ -1,22 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find finder_description)/urdf/finder.xacro"/>
-  <node name="joint_state_publisher" pkg="teleoperation" type="joint_state_publisher" output="screen"/>
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
-  <node name="base_link_laser_publisher" pkg="tf" type="static_transform_publisher" args="0.40075 0 0.2924 0 0 0 base_link laser 100"/>
-
-  <group ns="hri">
-      <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/config/rviz_config.rviz"/-->
-  </group>
   
-  <group ns="hardware">
-    <node name="hokuyo_node" pkg="hokuyo_node" type="hokuyo_node" output="screen">
-      <param name="port" type="string" value="/dev/ttyACM0" />
-      <param name="frame_id" type="string" value="laser" />
-    </node>
-  </group>
-
     <node name="usb_cam1" pkg="usb_cam" type="usb_cam_node" output="screen" >
     <param name="video_device" value="/dev/video1" />
     <param name="image_width" value="640" />
@@ -65,7 +50,6 @@
 
   
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-  <include file="$(find bring_up)/launch/finder_slam.launch"/>
   <node name="video_server" pkg="web_video_server" type="web_video_server" output="screen" />
   <include file="$(find roswww)/launch/roswww.launch"/>
 </launch>

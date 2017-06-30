@@ -517,7 +517,8 @@ void set_status()
 
 void Update_Endstops()
 {
-  int endBasetemp1,endBasetemp2,endShouldertemp1,endShouldertemp2;
+  int endBasetemp1,endBasetemp2,endShouldertemp1,endShouldertemp2,endElbowtemp1,endElbowtemp2;
+  int endRolltemp1,endRolltemp2,endPitchtemp1,endPitchtemp2,endYawtemp1,endYawtemp2;
 
   if(flagEndstopBase1){
     endBasetemp1=1;
@@ -543,6 +544,54 @@ void Update_Endstops()
     endShouldertemp2=0;
   }
 
+  if(flagEndstopElbow1){
+    endElbowtemp1=1;
+  }else{
+    endElbowtemp1=0;
+  }
+
+   if(flagEndstopElbow2){
+    endElbowtemp2=1;
+  }else{
+    endElbowtemp2=0;
+  }
+
+ if(flagEndstopRoll1){
+    endRolltemp1=1;
+  }else{
+    endRolltemp1=0;
+  }
+
+  if(flagEndstopRoll2){
+    endRolltemp2=1;
+  }else{
+    endRolltemp2=0;
+  }
+
+  if(flagEndstopPitch1){
+    endPitchtemp1=1;
+  }else{
+    endPitchtemp1=0;
+  }
+
+  if(flagEndstopPitch2){
+    endPitchtemp2=1;
+  }else{
+    endPitchtemp2=0;
+  }
+
+  if(flagEndstopYaw1){
+    endYawtemp1=1;
+  }else{
+    endYawtemp1=0;
+  }
+
+  if(flagEndstopYaw2){
+    endYawtemp2=1;
+  }else{
+    endYawtemp2=0;
+  }
+  
   Serial.print("n");
   Serial.print("\t");
   Serial.print(endBasetemp1);
@@ -552,6 +601,22 @@ void Update_Endstops()
   Serial.print(endShouldertemp1);
   Serial.print("\t");
   Serial.print(endShouldertemp2);
+  Serial.print("\t");
+  Serial.print(endElbowtemp1);
+  Serial.print("\t");
+  Serial.print(endElbowtemp2);
+  Serial.print("\t");
+  Serial.print(endRolltemp1);
+  Serial.print("\t");
+  Serial.print(endRolltemp2);
+  Serial.print("\t");
+  Serial.print(endPitchtemp1);
+  Serial.print("\t");
+  Serial.print(endPitchtemp2);
+  Serial.print("\t");
+  Serial.print(endYawtemp1);
+  Serial.print("\t");
+  Serial.print(endYawtemp2);
   Serial.print("\n");
 }
 

@@ -401,10 +401,26 @@ void Update_Motors()
 
 LEFT.write(left_out);
 RIGHT.write(right_out);
+if (endstp1==true)
+roboclaw.ForwardBackwardM1(address,64);
+if (endstp1==false)
 roboclaw.ForwardBackwardM1(address,flipper1_out);
+
+if (endstp2==true)
+roboclaw.ForwardBackwardM2(address,64);
+if (endstp2==false)
 roboclaw.ForwardBackwardM2(address,flipper2_out);
+
+if (endstp3==true)
+rc.ForwardBackwardM1(address,64);
+if (endstp3==false)
 rc.ForwardBackwardM1(address,flipper3_out);
+
+if (endstp4==true)
+rc.ForwardBackwardM2(address,64);
+if (endstp4==false)
 rc.ForwardBackwardM2(address,flipper4_out);
+
 }
 
 
@@ -551,6 +567,7 @@ void end2()
   if (endstop2)
   endstp2=false; 
 }
+
 void end3()
 {
   if(endstop3==HIGH)
@@ -558,6 +575,7 @@ void end3()
   if (endstop3==LOW)
   endstp3=false; 
 }
+
 void end4()
 {
   if(endstop4==HIGH)

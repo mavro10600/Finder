@@ -8,6 +8,8 @@ var cam4 = 'usb_cam4', quality4 = '20', width4 = '640', height4 = '480';
 var cam5 = 'usb_cam5', quality5 = '20', width5 = '640', height5 = '480';
 
 var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
+var led1Publish;
+var led2Publish;
 
 function principal(){
 	//-----------ROS Connection
@@ -35,10 +37,12 @@ function principal(){
 	$('input').eq(4).on('change',setResolution2);
 	$('input').eq(5).on('change',setQuality3);
 	$('input').eq(6).on('change',setResolution3);
-	$('input').eq(7).on('change',setQuality4);
-	$('input').eq(8).on('change',setResolution4);
-	$('input').eq(10).on('change',setQuality5);
-	$('input').eq(11).on('change',setResolution5);
+	$('input').eq(7).on('change',setLed1);
+	$('input').eq(8).on('change',setLed2);
+	$('input').eq(9).on('change',setQuality4);
+	$('input').eq(10).on('change',setResolution4);
+	$('input').eq(12).on('change',setQuality5);
+	$('input').eq(13).on('change',setResolution5);
 
 	// Set cams
 	$('select').eq(0).on('click', setCam1);
@@ -46,6 +50,32 @@ function principal(){
 	$('select').eq(2).on('click', setCam3);
 	$('select').eq(3).on('click', setCam4);
 	$('select').eq(4).on('click', setCam5);
+
+	//pub
+  	led1Publish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/led1',
+		messageType : 'std_msgs/Int32'
+	});
+
+	led2Publish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/led2',
+		messageType : 'std_msgs/Int32'
+	});
+
+
+
+	led1Publish.publish(
+		new ROSLIB.Message({
+			data : 0
+		}) 
+	);
+	led2Publish.publish(
+		new ROSLIB.Message({
+			data : 0
+		}) 
+	);
 
 	//Subscribe battery
 	var batteryListener = new ROSLIB.Topic({
@@ -213,6 +243,10 @@ function setGeneralQuality(){
 	$('#Q3').html($(this).val() + ' %');
 	$('#Q4').html($(this).val() + ' %');
 	$('#Q5').html($(this).val() + ' %');
+
+
+	
+
 }
 
 function setQuality1(){
@@ -290,4 +324,30 @@ function setResolution5(){
 	var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
 	$('.img-responsive').eq(4).attr('src', src);
 	$('#R5').html(width5+' x '+height5);
+}
+
+function setLed1(){
+	var led = $(this).val();
+
+	led1Publish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		}) 
+	);
+
+	$('#L1').html(led+"%");
+
+}
+
+function setLed2(){
+	var led = $(this).val();
+
+	led2Publish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		}) 
+	);
+
+	$('#L2').html(led+"%");
+
 }

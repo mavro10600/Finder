@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find finder_description)/urdf/finder.xacro"/>
+  <node name="joint_state_publisher" pkg="teleoperation" type="joint_state_publisher" output="screen"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+  <node name="base_link_laser_publisher" pkg="tf" type="static_transform_publisher" args="0.40075 0 0.2924 0 0 0 base_link laser 100"/>
+
+  <group ns="hardware">
+    <node name="hokuyo_node" pkg="hokuyo_node" type="hokuyo_node" output="screen">
+      <param name="port" type="string" value="/dev/hokuyo" />
+      <param name="frame_id" type="string" value="laser" />
+    </node>
+  </group>
+
+
+  <include file="$(find bring_up)/launch/finder_slam.launch"/>
+
+</launch>

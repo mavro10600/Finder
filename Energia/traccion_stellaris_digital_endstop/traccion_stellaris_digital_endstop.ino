@@ -62,7 +62,10 @@ Loop
 #define pinclk4 PA_3
 #define pincsn4 PA_2 
 
-#define pinendstop PB_6
+#define endstop1 PE_5
+#define endstop2 PF_0
+#define endstop3 PF_4
+#define endstop4 PE_0
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //(pinpwm1,pinpwm2,umbral, maxpwmsense)
@@ -139,6 +142,12 @@ int flip4_lec=0;
 //Agregar variables de la corriente de los motores y 
 //de los finales de carrera, son dos de los motores y dos finales de carrera
 
+
+
+bool endstp1;
+bool endstp2;
+bool endstp3;
+bool endstp4;
 
 //////////////////////////////////////////////////////////////////////
 //Roboclaws
@@ -231,20 +240,23 @@ void SetupReset()
 void SetupEndstop()
 {
 
-  pinMode(PB_7,INPUT_PULLUP);
+  pinMode(endstop1,INPUT_PULLUP);
 
- // pinMode(pinendstop,OUTPUT);
-  //digitalWrite(pinendstop,HIGH);
-
-  attachInterrupt(PB_7,end1,CHANGE);
+  attachInterrupt(endstop1,end1,CHANGE);
 
   
-  pinMode(PB_6,INPUT_PULLUP);
+  pinMode(endstop2,INPUT_PULLUP);
+  attachInterrupt(endstop2,end2,CHANGE);
 
- // pinMode(pinendstop,OUTPUT);
-  //digitalWrite(pinendstop,HIGH);
+  
+  pinMode(endstop3,INPUT_PULLUP);
 
-  attachInterrupt(PB_6,end1,CHANGE);
+
+  attachInterrupt(endstop3,end3,CHANGE);
+  
+  pinMode(endstop4,INPUT_PULLUP);
+
+  attachInterrupt(endstop4,end4,CHANGE);
 }
 
  
@@ -256,7 +268,7 @@ void loop() {
   Update_Time();
   Update_Motors();  
   Update_Encoders();
-  
+  Update_Endstops();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,12 +513,56 @@ void set_status()
 }
 
 
-void end1()
+
+void Update_Endstops()
 {
+  int endtemp1,endtemp2,endtemp3,endtemp4;
+
+  if(end1){endtemp1=1;} else {endtemp1=0;}
+  if(end2){endtemp2=1;} else {endtemp2=0;}
+  if(end3){endtemp3=1;} else {endtemp3=0;}
+  if(end4){endtemp4=1;} else {endtemp4=0;}
+  
+  
   Serial.print("n");
   Serial.print("\t");
-  Serial.print("endstop reached");
-  Serial.print("\n");
-  
+  Serial.print(endtemp1);
+    Serial.print("\t");
+  Serial.print(endtemp2);
+    Serial.print("\t");
+  Serial.print(endtemp3);
+    Serial.print("\t");
+  Serial.print(endtemp4);
+  Serial.print("\n");  
+}
+
+void end1()
+{
+  if(endstop1)
+  {endstp1=true;}
+  if (endstop1)
+  {endstp1=false; }
+}
+
+void end2()
+{
+  if(endstop2)
+  endstp2=true;
+  if (endstop2)
+  endstp2=false; 
+}
+void end3()
+{
+  if(endstop3==HIGH)
+  endstp3=true;
+  if (endstop3==LOW)
+  endstp3=false; 
+}
+void end4()
+{
+  if(endstop4==HIGH)
+  {endstp4=true;}
+  if (endstop4==LOW)
+  {endstp4=false; }
 }
 

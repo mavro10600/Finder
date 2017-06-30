@@ -534,10 +534,10 @@ void Update_Endstops()
 {
   int endtemp1,endtemp2,endtemp3,endtemp4;
 
-  if(end1){endtemp1=1;} else {endtemp1=0;}
-  if(end2){endtemp2=1;} else {endtemp2=0;}
-  if(end3){endtemp3=1;} else {endtemp3=0;}
-  if(end4){endtemp4=1;} else {endtemp4=0;}
+  if(endstp1){endtemp1=1;} else {endtemp1=0;}
+  if(endstp2){endtemp2=1;} else {endtemp2=0;}
+  if(endstp3){endtemp3=1;} else {endtemp3=0;}
+  if(endstp4){endtemp4=1;} else {endtemp4=0;}
   
   
   Serial.print("n");

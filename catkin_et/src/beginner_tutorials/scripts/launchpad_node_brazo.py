@@ -25,6 +25,7 @@ class Launchpad_Class(object):
 ######################################
 #Variables de los sensores		
 		self._Counter=0
+		self.battery_value=0
 		
 		self.base_pos=0
 		self.shoulder_pos=0
@@ -68,7 +69,8 @@ class Launchpad_Class(object):
 		self._Roll_Encoder=rospy.Publisher('roll',Int64,queue_size=5)
 		self._Pitch_Encoder=rospy.Publisher('pitch',Int64,queue_size=5)
 		self._Yaw_Encoder=rospy.Publisher('yaw',Int64,queue_size=10)
-		self._Gripper_Encoder=rospy.Publisher('gripper',Int64,queue_size=10)		
+		self._Gripper_Encoder=rospy.Publisher('gripper',Int64,queue_size=10)
+		self._Battery_Level=rospy.Publisher('battery_level',Int64,queue_size=10)		
 								
 
 		
@@ -151,6 +153,11 @@ class Launchpad_Class(object):
 					self._Roll_Encoder.publish(self.roll)
 					self._Pitch_Encoder.publish(self.pitch)
 					self._Yaw_Encoder.publish(self.yaw)
+				
+				if(lineParts[0]=='b'):
+					
+					self.battery_value=int(lineParts[1])
+					self.Battery_Level.publish(self.battery_value)
 
 				
 			except:

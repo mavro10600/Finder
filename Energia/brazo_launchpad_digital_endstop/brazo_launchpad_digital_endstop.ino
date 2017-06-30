@@ -517,7 +517,7 @@ void set_status()
 
 void Update_Endstops()
 {
-  int endBasetemp1,endBasetemp2;
+  int endBasetemp1,endBasetemp2,endShouldertemp1,endShouldertemp2;
 
   if(flagEndstopBase1){
     endBasetemp1=1;
@@ -531,11 +531,27 @@ void Update_Endstops()
     endBasetemp2=0;
   }
 
+  if(flagEndstopShoulder1){
+    endShouldertemp1=1;
+  }else{
+    endShouldertemp1=0;
+  }
+
+  if(flagEndstopShoulder2){
+    endShouldertemp2=1;
+  }else{
+    endShouldertemp2=0;
+  }
+
   Serial.print("n");
   Serial.print("\t");
   Serial.print(endBasetemp1);
   Serial.print("\t");
   Serial.print(endBasetemp2);
+  Serial.print("\t");
+  Serial.print(endShouldertemp1);
+  Serial.print("\t");
+  Serial.print(endShouldertemp2);
   Serial.print("\n");
 }
 

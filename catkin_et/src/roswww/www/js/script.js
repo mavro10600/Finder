@@ -8,6 +8,8 @@ var cam4 = 'usb_cam4', quality4 = '20', width4 = '640', height4 = '480';
 var cam5 = 'usb_cam5', quality5 = '20', width5 = '640', height5 = '480';
 
 var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
+var led1Publish;
+var led2Publish;
 
 function principal(){
 	//-----------ROS Connection
@@ -35,10 +37,12 @@ function principal(){
 	$('input').eq(4).on('change',setResolution2);
 	$('input').eq(5).on('change',setQuality3);
 	$('input').eq(6).on('change',setResolution3);
-	$('input').eq(7).on('change',setQuality4);
-	$('input').eq(8).on('change',setResolution4);
-	$('input').eq(10).on('change',setQuality5);
-	$('input').eq(11).on('change',setResolution5);
+	$('input').eq(7).on('change',setLed1);
+	$('input').eq(8).on('change',setLed2);
+	$('input').eq(9).on('change',setQuality4);
+	$('input').eq(10).on('change',setResolution4);
+	$('input').eq(12).on('change',setQuality5);
+	$('input').eq(13).on('change',setResolution5);
 
 	// Set cams
 	$('select').eq(0).on('click', setCam1);
@@ -47,64 +51,176 @@ function principal(){
 	$('select').eq(3).on('click', setCam4);
 	$('select').eq(4).on('click', setCam5);
 
+	//pub
+  	led1Publish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/led1',
+		messageType : 'std_msgs/Int32'
+	});
+
+	led2Publish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/led2',
+		messageType : 'std_msgs/Int32'
+	});
+
+
+
+	led1Publish.publish(
+		new ROSLIB.Message({
+			data : 0
+		}) 
+	);
+	led2Publish.publish(
+		new ROSLIB.Message({
+			data : 0
+		}) 
+	);
+
 	//Subscribe battery
 	var batteryListener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/robot_state/battery',
+		name : '/hardware/robot_state/robotBattery',
 		messageType : 'std_msgs/Float32'
 	});
 
-	batteryListener.subscribe(function(message){
-	var levelBaterry = message.data;
-	if($('.progress-bar').hasClass('progress-bar-success')){
-	  $('.progress-bar').toggleClass('progress-bar-success');
-	}
-	if($('.progress-bar').hasClass('progress-bar-danger')){
-	  $('.progress-bar').toggleClass('progress-bar-danger');
-	}
-	var percent = Math.round(100*(levelBaterry-9.9)/2.7);
-	$('.progress-bar').css("width", percent + "%");
-	$('.progress-bar').html('<strong>' + percent + '%' +'</strong>');
-	if(percent>80.0){
-	  $('.progress-bar').toggleClass('progress-bar-success');
-	}
-	else if(percent>45.0){
-	}
-	else{
-	  $('.progress-bar').toggleClass('progress-bar-danger');
-	}
+	var co2Listener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/sensor/co2',
+		messageType : 'std_msgs/Int32'
 	});
+
+	var laptopBatteryListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/laptopBattery',
+		messageType : 'std_msgs/Int32'
+	});
+
+	batteryListener.subscribe(function(message){
+		var levelRobotBaterry = message.data;
+		console.log("Level battery:"+levelRobotBaterry);
+		if($('.progress-bar').eq(0).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(0).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelRobotBaterry-9.9)/2.7);
+		$('.progress-bar').eq(0).css("width", percent + "%");
+		$('.progress-bar').eq(0).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(0).toggleClass('progress-bar-danger');
+		}
+	});
+
+	co2Listener.subscribe(function(message){
+		var levelCo2 = message.data;
+		console.log("CO2:"+levelCo2);
+		if($('.progress-bar').eq(1).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(1).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelCo2/100));
+		$('.progress-bar').eq(1).css("width", percent + "%");
+		$('.progress-bar').eq(1).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+
+	});
+
+	laptopBatteryListener.subscribe(function(message){
+		var levelLaptopBaterry = message.data;
+
+		if($('.progress-bar').eq(2).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(2).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelLaptopBaterry/100));
+		$('.progress-bar').eq(2).css("width", percent + "%");
+		$('.progress-bar').eq(2).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
+		}
+
+	})
+
 }
 //http://192.168.100.239:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&quality=20
 //http:192.168.0.50:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&width=640&height=480&quality=20
 function setCam1(){
 	cam2 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
-	$('.img-responsive').eq(0).attr('src', src);
+	console.log("CAM2:_" + cam2+"_");
+	if (cam2=="empty") {
+		$('.img-responsive').eq(0).attr('src', "img/camera.jpg");
+
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam2 + '/image_raw&type=mjpeg&width=' + width1 +'&height=' + height1 + '&quality=' + quality1;
+		$('.img-responsive').eq(0).attr('src', src);
+	}
+
+	
 }
 
 function setCam2(){
 	cam1 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
-	$('.img-responsive').eq(1).attr('src', src);
+	console.log("CAM1:_" + cam1+"_");
+	if (cam1=="empty") {
+		$('.img-responsive').eq(1).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam1 + '/image_raw&type=mjpeg&width=' + width2 +'&height=' + height2 + '&quality=' + quality2;
+		$('.img-responsive').eq(1).attr('src', src);
+	}
 }
 
 function setCam3(){
 	cam3 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam3 + '/image_raw&type=mjpeg&width=' + width3 +'&height=' + height3 + '&quality=' + quality3;
-	$('.img-responsive').eq(2).attr('src', src);
+
+	if (cam3=="empty") {
+		$('.img-responsive').eq(2).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam3 + '/image_raw&type=mjpeg&width=' + width3 +'&height=' + height3 + '&quality=' + quality3;
+		$('.img-responsive').eq(2).attr('src', src);
+	}
 }
 
 function setCam4(){
 	cam4 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam4 + '/image_raw&type=mjpeg&width=' + width4 +'&height=' + height4 + '&quality=' + quality4;
-	$('.img-responsive').eq(3).attr('src', src);
+	if (cam4=="empty") {
+		$('.img-responsive').eq(3).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam4 + '/image_raw&type=mjpeg&width=' + width4 +'&height=' + height4 + '&quality=' + quality4;
+		$('.img-responsive').eq(3).attr('src', src);
+	}
 }
 
 function setCam5(){
 	cam5 = $(this).val();
-	var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
-	$('.img-responsive').eq(4).attr('src', src);
+	if (cam5=="empty") {
+		$('.img-responsive').eq(4).attr('src', "img/camera.jpg");
+	}else{
+		var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
+		$('.img-responsive').eq(4).attr('src', src);
+	}
 }
 
 
@@ -127,6 +243,10 @@ function setGeneralQuality(){
 	$('#Q3').html($(this).val() + ' %');
 	$('#Q4').html($(this).val() + ' %');
 	$('#Q5').html($(this).val() + ' %');
+
+
+	
+
 }
 
 function setQuality1(){
@@ -204,4 +324,30 @@ function setResolution5(){
 	var src = 'http://' + ip + ':8080/stream?topic=/' + cam5 + '/image_raw&type=mjpeg&width=' + width5 +'&height=' + height5 + '&quality=' + quality5;
 	$('.img-responsive').eq(4).attr('src', src);
 	$('#R5').html(width5+' x '+height5);
+}
+
+function setLed1(){
+	var led = $(this).val();
+
+	led1Publish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		}) 
+	);
+
+	$('#L1').html(led+"%");
+
+}
+
+function setLed2(){
+	var led = $(this).val();
+
+	led2Publish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		}) 
+	);
+
+	$('#L2').html(led+"%");
+
 }

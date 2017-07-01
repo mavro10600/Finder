@@ -25,6 +25,10 @@ class Launchpad_Class(object):
 ######################################
 #Variables de los sensores		
 		self._Counter=0
+		self._reset_flipper1_value=0;
+		self._reset_flipper2_value=0;
+		self._reset_flipper3_value=0;
+		self._reset_flipper4_value=0;
 		
 		self._left_encoder_value=0
 		self._left_wheel_speed=0
@@ -65,6 +69,14 @@ class Launchpad_Class(object):
 		self.deltat=0
 		self.lastUpdate=0
 		self._Right_Encoder=rospy.Publisher('right_lec',Int16,queue_size=10)
+		
+		self._Flipper1_Reset=rospy.Publisher('flipper1_reset',Int16,queue_size=10)
+		
+		self._Flipper2_Reset=rospy.Publisher('flipper2_reset',Int16,queue_size=10)
+		
+		self._Flipper3_Reset=rospy.Publisher('flipper3_reset',Int16,queue_size=10)
+		
+		self._Flipper4_Reset=rospy.Publisher('flipper4_reset',Int16,queue_size=10)
 		
 		self._Flipper1_Encoder=rospy.Publisher('flip1_lec',Int16,queue_size=10)
 		self._Flipper2_Encoder=rospy.Publisher('flip2_lec',Int16,queue_size=10)
@@ -137,7 +149,18 @@ class Launchpad_Class(object):
 					self._Flipper2_Encoder.publish(self._flipper2_encoder_value)
 					self._Flipper3_Encoder.publish(self._flipper3_encoder_value)
 					self._Flipper4_Encoder.publish(self._flipper4_encoder_value)
-										
+			
+				if(lineParts[0]=='n'):
+					self.reset_flipper1_value=int(lineParts[1])
+					self.reset_flipper2_value=int(lineParts[2])
+					self.reset_flipper3_value=int(lineParts[3])
+					self.reset_flipper4_value=int(lineParts[4])							
+					
+					self._Flipper1_Reset.publish(self.reset_flipper1_value)
+					self._Flipper2_Reset.publish(self.reset_flipper2_value)
+					self._Flipper3_Reset.publish(self.reset_flipper3_value)
+					self._Flipper4_Reset.publish(self.reset_flipper4_value)
+					
 			except:
 				rospy.logwarn("Error in sensor values")
 				rospy.logwarn(lineParts)

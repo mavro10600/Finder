@@ -37,6 +37,33 @@
 #define pinclk3 PA_3
 #define pincsn3 PA_2 
 
+//Definimos los pines de los finales de carrera
+#define pinendstopBase1 PB_5
+#define pinendstopBase2 PB_0
+#define pinendstopShoulder1 PB_1
+#define pinendstopShoulder2 PE_4
+#define pinendstopElbow1 PE_5
+#define pinendstopElbow2 PB_4
+#define pinendstopRoll1 PA_5
+#define pinendstopRoll2 PA_6
+#define pinendstopPitch1 PA_7
+#define pinendstopPitch2 PF_2
+#define pinendstopYaw1 PF_3
+#define pinendstopYaw2 PF_4
+
+//BANDERAS DE FINALES DE CARRERA
+bool flagEndstopBase1;
+bool flagEndstopBase2;
+bool flagEndstopShoulder1;
+bool flagEndstopShoulder2;
+bool flagEndstopElbow1;
+bool flagEndstopElbow2;
+bool flagEndstopRoll1;
+bool flagEndstopRoll2;
+bool flagEndstopPitch1;
+bool flagEndstopPitch2;
+bool flagEndstopYaw1;
+bool flagEndstopYaw2;
 
 Servo wrist_servo;
 Servo base;
@@ -153,6 +180,8 @@ void setup() {
   SetupReset();
 
   Messenger_Handler.attach(OnMssageCompleted);
+
+  SetupEndstop();
 }
 
 void SetupEncoders()
@@ -195,6 +224,44 @@ void SetupReset()
   ///Conectar el pin de reset al pin reset de la placa
   digitalWrite(RESET_PIN,HIGH);
 }
+
+void SetupEndstop(){
+  pinMode(pinendstopBase1,INPUT_PULLUP);
+  attachInterrupt(pinendstopBase1,ISRendBase1,CHANGE);
+  
+  pinMode(pinendstopBase2,INPUT_PULLUP);
+  attachInterrupt(pinendstopBase2,ISRendBase2,CHANGE);
+  
+  pinMode(pinendstopShoulder1,INPUT_PULLUP);
+  attachInterrupt(pinendstopShoulder1,ISRendShoulder1,CHANGE);
+  
+  pinMode(pinendstopShoulder2,INPUT_PULLUP);
+  attachInterrupt(pinendstopShoulder2,ISRendShoulder2,CHANGE);
+  
+  pinMode(pinendstopElbow1,INPUT_PULLUP);
+  attachInterrupt(pinendstopElbow1,ISRendElbow1,CHANGE);
+  
+  pinMode(pinendstopElbow2,INPUT_PULLUP);
+  attachInterrupt(pinendstopElbow2,ISRendElbow2,CHANGE);
+  
+  pinMode(pinendstopRoll1,INPUT_PULLUP);
+  attachInterrupt(pinendstopRoll1,ISRendRoll1,CHANGE);
+  
+  pinMode(pinendstopRoll2,INPUT_PULLUP);
+  attachInterrupt(pinendstopRoll2,ISRendRoll2,CHANGE);
+  
+  pinMode(pinendstopPitch1,INPUT_PULLUP);
+  attachInterrupt(pinendstopPitch1,ISRendPitch1,CHANGE);
+  
+  pinMode(pinendstopPitch2,INPUT_PULLUP);
+  attachInterrupt(pinendstopPitch2,ISRendPitch2,CHANGE);
+  
+  pinMode(pinendstopYaw1,INPUT_PULLUP);
+  attachInterrupt(pinendstopYaw1,ISRendYaw1,CHANGE);
+  
+  pinMode(pinendstopYaw2,INPUT_PULLUP);
+  attachInterrupt(pinendstopYaw2,ISRendYaw2,CHANGE);
+}
  
 
 void loop() {
@@ -204,6 +271,7 @@ void loop() {
   Update_Motors();  
   Update_Encoders();
   Update_Battery();
+  Update_Endstops();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,9 +407,21 @@ void displaySpeed_Servo()
 void Update_Motors()
 {
 //BASE.write(base_out);
-base.writeMicroseconds(base_out);
+if(flagEndstopBase1==LOW && flagEndstopBase2==LOW)
+  base.writeMicroseconds(base_out);
+if(flagEndstopBase1==HIGH || flagEndstopBase2==HIGH)
+  base.writeMicroseconds(1500);
+  
+if (flagEndstopShoulder1==LOW && flagEndstopShoulder2==LOW)
 roboclaw.ForwardBackwardM1(address,shoulder_out);
+if(flagEndstopShoulder1==HIGH || flagEndstopShoulder2==HIGH )
+roboclaw.ForwardBackwardM1(address,64);  
+
+if (flagEndstopElbow1==LOW && flagEndstopElbow2==LOW)
 roboclaw.ForwardBackwardM2(address,elbow_out);
+if (flagEndstopElbow1==HIGH || flagEndstopElbow2==HIGH)
+roboclaw.ForwardBackwardM2(address,64);
+
 rc.ForwardBackwardM1(address,roll_out);
 rc.ForwardBackwardM2(address,pitch_out);
 }
@@ -442,4 +522,229 @@ void set_status()
   if(stat1)  bitWrite(stat_complete,0,1); else bitWrite(stat_complete,0,0);
   if(stat2)  bitWrite(stat_complete,1,1); else bitWrite(stat_complete,1,0);
   if(stat3)  bitWrite(stat_complete,2,1); else bitWrite(stat_complete,2,0);
+}
+
+void Update_Endstops()
+{
+  int endBasetemp1,endBasetemp2,endShouldertemp1,endShouldertemp2,endElbowtemp1,endElbowtemp2;
+  int endRolltemp1,endRolltemp2,endPitchtemp1,endPitchtemp2,endYawtemp1,endYawtemp2;
+
+  if(flagEndstopBase1){
+    endBasetemp1=1;
+  }else{
+    endBasetemp1=0;
+  }
+
+  if(flagEndstopBase2){
+    endBasetemp2=1;
+  }else{
+    endBasetemp2=0;
+  }
+
+  if(flagEndstopShoulder1){
+    endShouldertemp1=1;
+  }else{
+    endShouldertemp1=0;
+  }
+
+  if(flagEndstopShoulder2){
+    endShouldertemp2=1;
+  }else{
+    endShouldertemp2=0;
+  }
+
+  if(flagEndstopElbow1){
+    endElbowtemp1=1;
+  }else{
+    endElbowtemp1=0;
+  }
+
+   if(flagEndstopElbow2){
+    endElbowtemp2=1;
+  }else{
+    endElbowtemp2=0;
+  }
+
+ if(flagEndstopRoll1){
+    endRolltemp1=1;
+  }else{
+    endRolltemp1=0;
+  }
+
+  if(flagEndstopRoll2){
+    endRolltemp2=1;
+  }else{
+    endRolltemp2=0;
+  }
+
+  if(flagEndstopPitch1){
+    endPitchtemp1=1;
+  }else{
+    endPitchtemp1=0;
+  }
+
+  if(flagEndstopPitch2){
+    endPitchtemp2=1;
+  }else{
+    endPitchtemp2=0;
+  }
+
+  if(flagEndstopYaw1){
+    endYawtemp1=1;
+  }else{
+    endYawtemp1=0;
+  }
+
+  if(flagEndstopYaw2){
+    endYawtemp2=1;
+  }else{
+    endYawtemp2=0;
+  }
+  
+  Serial.print("n");
+  Serial.print("\t");
+  Serial.print(endBasetemp1);
+  Serial.print("\t");
+  Serial.print(endBasetemp2);
+  Serial.print("\t");
+  Serial.print(endShouldertemp1);
+  Serial.print("\t");
+  Serial.print(endShouldertemp2);
+  Serial.print("\t");
+  Serial.print(endElbowtemp1);
+  Serial.print("\t");
+  Serial.print(endElbowtemp2);
+  Serial.print("\t");
+  Serial.print(endRolltemp1);
+  Serial.print("\t");
+  Serial.print(endRolltemp2);
+  Serial.print("\t");
+  Serial.print(endPitchtemp1);
+  Serial.print("\t");
+  Serial.print(endPitchtemp2);
+  Serial.print("\t");
+  Serial.print(endYawtemp1);
+  Serial.print("\t");
+  Serial.print(endYawtemp2);
+  Serial.print("\n");
+}
+
+void ISRendBase1()
+{
+  if(pinendstopBase1==HIGH){
+    flagEndstopBase1=true;
+  }
+  if(pinendstopBase1==LOW){
+    flagEndstopBase1=false;
+  }
+}
+
+void ISRendBase2()
+{
+  if(pinendstopBase2==HIGH){
+    flagEndstopBase2=true;
+  }
+  if(pinendstopBase2==LOW){
+    flagEndstopBase2=false;
+  }
+}
+
+void ISRendShoulder1()
+{
+  if(pinendstopShoulder1==HIGH){
+    flagEndstopShoulder1=true;
+  }
+  if(pinendstopShoulder1==LOW){
+    flagEndstopShoulder1=false;
+  }
+}
+
+void ISRendShoulder2()
+{
+  if(pinendstopShoulder2==HIGH){
+    flagEndstopShoulder2=true;
+  }
+  if(pinendstopShoulder2==LOW){
+    flagEndstopShoulder2=false;
+  }
+}
+
+void ISRendElbow1()
+{
+  if(pinendstopElbow1==HIGH){
+    flagEndstopElbow1=true;
+  }
+  if(pinendstopElbow1==LOW){
+    flagEndstopElbow1=false;
+  }
+}
+
+void ISRendElbow2()
+{
+  if(pinendstopElbow2==HIGH){
+    flagEndstopElbow2=true;
+  }
+  if(pinendstopElbow2==LOW){
+    flagEndstopElbow2=false;
+  }
+}
+
+void ISRendRoll1()
+{
+  if(pinendstopRoll1==HIGH){
+    flagEndstopRoll1=true;
+  }
+  if(pinendstopRoll1==LOW){
+    flagEndstopRoll1=false;
+  }
+}
+
+void ISRendRoll2()
+{
+  if(pinendstopRoll2==HIGH){
+    flagEndstopRoll2=true;
+  }
+  if(pinendstopRoll2==LOW){
+    flagEndstopRoll2=false;
+  }
+}
+
+void ISRendPitch1()
+{
+  if(pinendstopPitch1==HIGH){
+    flagEndstopPitch1=true;
+  }
+  if(pinendstopPitch1==LOW){
+    flagEndstopPitch1=false;
+  }
+}
+
+void ISRendPitch2()
+{
+  if(pinendstopPitch2==HIGH){
+    flagEndstopPitch2=true;
+  }
+  if(pinendstopPitch2==LOW){
+    flagEndstopPitch2=false;
+  }
+}
+
+void ISRendYaw1()
+{
+  if(pinendstopYaw1==HIGH){
+    flagEndstopYaw1=true;
+  }
+  if(pinendstopYaw1==LOW){
+    flagEndstopYaw1=false;
+  }
+}
+
+void ISRendYaw2()
+{
+  if(pinendstopYaw2==HIGH){
+    flagEndstopYaw2=true;
+  }
+  if(pinendstopYaw2==LOW){
+    flagEndstopYaw2=false;
+  }
 }

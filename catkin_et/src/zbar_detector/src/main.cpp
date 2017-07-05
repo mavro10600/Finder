@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 
   code = n.advertise<zbar_detector::Marker>("markers", 1000);
   //ros::Subscriber sub = n.subscribe("camera/image", 10, imageReceiver);
-  ros::Subscriber sub = n.subscribe("camera/image", 10, imageReceiver);
+  ros::Subscriber sub = n.subscribe("usb_cam1/image_raw", 10, imageReceiver);
 
   ros::spin();
 

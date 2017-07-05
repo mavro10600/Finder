@@ -4,6 +4,7 @@ import rospy
 import time
 from SerialDataGateway import SerialDataGateway
 from std_msgs.msg import Int16,Int32,Int64,Float32,String,Header,UInt64
+from termcolor import colored
 
 class Launchpad_Class(object):
 	
@@ -22,8 +23,8 @@ class Launchpad_Class(object):
 		self._Second_Since_Last_Update=0
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
-		port=rospy.get_param("~port","/dev/stellaris-dynamixel")
-#		port=rospy.get_param("~port","/dev/ttyACM0")
+		#port=rospy.get_param("~port","/dev/stellaris-dynamixel")
+		port=rospy.get_param("~port","/dev/ttyACM0")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 #########################################
@@ -113,8 +114,9 @@ if __name__=='__main__':
 	try:
 		rate = rospy.Rate(10) # 10hz
 		launchpad.Start()
-		print "Dynamixel and imu node successfully started"
-		print "Topics:'/imu/roll', '/imu/pitch', '/imu/yaw', '/co2/level', /gripper_rotation/"
+		print colored("Dynamixel and imu node successfully started",'green')
+
+		print colored("Topics:'\n- /imu/roll'\n- '/imu/pitch'\n- '/imu/yaw'\n- '/co2/level',\n- /gripper_rotation/","blue")
 		while not rospy.is_shutdown():
 			rate.sleep()
 		#rospy.spin()

@@ -29,6 +29,9 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 }
 void dynamixelCallback(const dynamixel_msgs::JointState::ConstPtr& dynamixel_status){
 	std::cout<< float(dynamixel_status->load) <<std::endl;
+	std::cout<< float(dynamixel_status->error) <<std::endl;
+	std::cout<< float(dynamixel_status->current_pos) << std::endl;
+
 	float load = 1;
 }
 
@@ -40,7 +43,7 @@ int main(int argc, char **argv){
 	ros::ServiceClient dynamixel_client = n.serviceClient<dynamixel_controllers::RestartController>("/restart_controller/ttyUSB0");
 	
 	dynamixel_controllers::RestartController dynamixel_srv;
-  	dynamixel_srv.request.port_name = "ttyUSB0";
+  	//dynamixel_srv.request.port_name = "ttyUSB0";
 	//dynamixel_srv.request. 
 
   	ros::Publisher gripper_position_pub = n.advertise<std_msgs::Float64>("/tilt_controller/command", 1000);

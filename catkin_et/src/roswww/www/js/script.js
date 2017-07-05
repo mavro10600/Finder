@@ -96,6 +96,18 @@ function principal(){
 		messageType : 'std_msgs/Int32'
 	});
 
+	var termalListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/termalData',
+		messageType : 'std_msgs/Int16MultiArray'
+	});
+
+	var qrListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/markers',
+		messageType : 'zbar_detector/Marker'
+	});
+
 	batteryListener.subscribe(function(message){
 		var levelRobotBaterry = message.data;
 		console.log("Level battery:"+levelRobotBaterry);
@@ -162,7 +174,36 @@ function principal(){
 		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
 		}
 
-	})
+	});
+
+	termalListener.subscribe(function(message){
+		var termalData = message.data;
+		var cadena = "<table ><tr>";
+		var colores =["#040530","#0e127c","#1a41bf","#1a72bf","#22bee5","#e9ed28","#edc528","#ed8a28","#c6441f","#c61f1f"];
+		var temp = 0;
+		for (i=0;i<termalData.length;i++){
+			temp= Math.round(termalData[i]/29);
+			//console.log("Dato:"+temp);
+			cadena+="<td  bgcolor="+colores[temp]+"></td>"
+			if( (i+1)%16 == 0 ){
+				cadena+="</tr><tr>";
+			}
+		}
+		cadena+="</tr></table>"
+
+		$('#TERM').html(cadena);
+	});
+
+	qrListener.subscribe(function(message){
+		var qrData = message.data;
+		console.log("markers:"+qrData);
+
+		var cadena = "<table ><tr><td bgcolor=\"#FFFFFF\">QR data:<br>"+qrData+"</td></tr></table>";
+
+
+		$('#textQR').html(cadena);
+	});
+
 
 }
 //http://192.168.100.239:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&quality=20

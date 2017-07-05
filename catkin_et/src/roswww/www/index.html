@@ -27,6 +27,8 @@
     <script src="js/ros3d.min.js"></script>
     <script src="js/roslib.min.js"></script>
 
+    <script type="text/javascript" src="Concurrent.Thread.js"></script>
+
     <script type="text/javascript" src="js/jquery/jquery-latest.js"></script>
 <script type="text/javascript" src="js/ros/ros.js"></script>
 <script type="text/javascript" src="js/ros/common.js"></script>
@@ -78,13 +80,13 @@
                 <table>
                   <tr>
                     <td>
-                      <h3>Right cam</h3>
+                      <h3>RIGHT</h3>
                       <select name="" id="">
-                        <option value="usb_cam1">Camera 1</option>
-                        <option value="usb_cam2" selected="selected">Camera 2</option>
-                        <option value="usb_cam3">Camera 3</option>
-                        <option value="usb_cam4">Camera 4</option>
-                        <option value="usb_cam5">Camera 5</option>
+                        <option value="usb_cam1">Cam 1</option>
+                        <option value="usb_cam2" selected="selected">Cam 2</option>
+                        <option value="usb_cam3">Cam 3</option>
+                        <option value="usb_cam4">Cam 4</option>
+                        <option value="usb_cam5">Cam 5</option>
                         <option value="empty">Empty</option>
                       </select>
                     </td>
@@ -112,13 +114,13 @@
                 <table>
                   <tr>
                     <td>
-                      <h3>Arm cam</h3>
+                      <h3>ARM</h3>
                       <select name="" id="">
-                        <option value="usb_cam1" selected="selected">Camera 1</option>
-                        <option value="usb_cam2">Camera 2</option>
-                        <option value="usb_cam3">Camera 3</option>
-                        <option value="usb_cam4">Camera 4</option>
-                        <option value="usb_cam5">Camera 5</option>
+                        <option value="usb_cam1" selected="selected">Cam 1</option>
+                        <option value="usb_cam2">Cam 2</option>
+                        <option value="usb_cam3">Cam 3</option>
+                        <option value="usb_cam4">Cam 4</option>
+                        <option value="usb_cam5">Cam 5</option>
                         <option value="empty">Empty</option>
                       </select>
                     </td>
@@ -144,13 +146,13 @@
                 <table>
                   <tr>
                     <td>
-                      <h3>Left cam</h3>
+                      <h3>LEFT</h3>
                       <select name="" id="">
-                        <option value="usb_cam1">Camera 1</option>
-                        <option value="usb_cam2">Camera 2</option>
-                        <option value="usb_cam3" selected="selected">Camera 3</option>
-                        <option value="usb_cam4">Camera 4</option>
-                        <option value="usb_cam5">Camera 5</option>
+                        <option value="usb_cam1">Cam 1</option>
+                        <option value="usb_cam2">Cam 2</option>
+                        <option value="usb_cam3" selected="selected">Cam 3</option>
+                        <option value="usb_cam4">Cam 4</option>
+                        <option value="usb_cam5">Cam 5</option>
                         <option value="empty">Empty</option>
                       </select>
                     </td>
@@ -207,11 +209,12 @@
 
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
                 <span class="label label-primary">LED 1</span>
-                
               </span>
+
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
               <span class="label label-success" id="L1">0 %</span>
               </span>
+
               <div class="progress" class="col-sm-6 col-md-6 col-lg-6">
                 <input type="range" min="0" max="100" value="0"/>
               </div>
@@ -242,13 +245,13 @@
                  <table>
                   <tr>
                     <td>
-                      <h3>Backward</h3>
+                      <h3>BW</h3>
                       <select name="" id="">
-                        <option value="usb_cam1">Camera 1</option>
-                        <option value="usb_cam2">Camera 2</option>
-                        <option value="usb_cam3">Camera 3</option>
-                        <option value="usb_cam4" selected="selected">Camera 4</option>
-                        <option value="usb_cam5">Camera 5</option>
+                        <option value="usb_cam1">Cam 1</option>
+                        <option value="usb_cam2">Cam 2</option>
+                        <option value="usb_cam3">Cam 3</option>
+                        <option value="usb_cam4" selected="selected">Cam 4</option>
+                        <option value="usb_cam5">Cam 5</option>
                         <option value="empty">Empty</option>
                       </select>
                     </td>
@@ -273,6 +276,103 @@
           <div class="col-sm-3 col-md-3 col-lg-3">
                 <input id="box-toggle" type="checkbox">
                 <label for="box-toggle">Show robot</label>
+
+                <span class="row">
+                  <span class="label label-primary">TERMICO:</span>
+                </span>
+
+                <span class="row">
+                <span id="TERM" >
+                  <table >
+                    <tr>
+                      <td  bgcolor="#000000"></td>
+                      <td  bgcolor="#101010"></td>
+                      <td  bgcolor="#202020"></td>
+                      <td  bgcolor="#303030"></td>
+                      <td  bgcolor="#404040"></td>
+                      <td  bgcolor="#505050"></td>
+                      <td  bgcolor="#606060"></td>
+                      <td  bgcolor="#707070"></td>
+                      <td  bgcolor="#808080"></td>
+                      <td  bgcolor="#909090"></td>
+                      <td  bgcolor="#A0A0A0"></td>
+                      <td  bgcolor="#B0B0B0"></td>
+                      <td  bgcolor="#C0C0C0"></td>
+                      <td  bgcolor="#D0D0D0"></td>
+                      <td  bgcolor="#E0E0E0"></td>
+                      <td  bgcolor="#F0F0F0"></td>
+                    </tr>
+                    <tr>
+                      <td  bgcolor="#000000"></td>
+                      <td  bgcolor="#101010"></td>
+                      <td  bgcolor="#202020"></td>
+                      <td  bgcolor="#303030"></td>
+                      <td  bgcolor="#404040"></td>
+                      <td  bgcolor="#505050"></td>
+                      <td  bgcolor="#606060"></td>
+                      <td  bgcolor="#707070"></td>
+                      <td  bgcolor="#808080"></td>
+                      <td  bgcolor="#909090"></td>
+                      <td  bgcolor="#A0A0A0"></td>
+                      <td  bgcolor="#B0B0B0"></td>
+                      <td  bgcolor="#C0C0C0"></td>
+                      <td  bgcolor="#D0D0D0"></td>
+                      <td  bgcolor="#E0E0E0"></td>
+                      <td  bgcolor="#F0F0F0"></td>
+                    </tr>
+                    <tr>
+                      <td  bgcolor="#000000"></td>
+                      <td  bgcolor="#101010"></td>
+                      <td  bgcolor="#202020"></td>
+                      <td  bgcolor="#303030"></td>
+                      <td  bgcolor="#404040"></td>
+                      <td  bgcolor="#505050"></td>
+                      <td  bgcolor="#606060"></td>
+                      <td  bgcolor="#707070"></td>
+                      <td  bgcolor="#808080"></td>
+                      <td  bgcolor="#909090"></td>
+                      <td  bgcolor="#A0A0A0"></td>
+                      <td  bgcolor="#B0B0B0"></td>
+                      <td  bgcolor="#C0C0C0"></td>
+                      <td  bgcolor="#D0D0D0"></td>
+                      <td  bgcolor="#E0E0E0"></td>
+                      <td  bgcolor="#F0F0F0"></td>
+                    </tr>
+                    <tr>
+                      <td  bgcolor="#000000"></td>
+                      <td  bgcolor="#101010"></td>
+                      <td  bgcolor="#202020"></td>
+                      <td  bgcolor="#303030"></td>
+                      <td  bgcolor="#404040"></td>
+                      <td  bgcolor="#505050"></td>
+                      <td  bgcolor="#606060"></td>
+                      <td  bgcolor="#707070"></td>
+                      <td  bgcolor="#808080"></td>
+                      <td  bgcolor="#909090"></td>
+                      <td  bgcolor="#A0A0A0"></td>
+                      <td  bgcolor="#B0B0B0"></td>
+                      <td  bgcolor="#C0C0C0"></td>
+                      <td  bgcolor="#D0D0D0"></td>
+                      <td  bgcolor="#E0E0E0"></td>
+                      <td  bgcolor="#F0F0F0"></td>
+                    </tr>
+                  </table>
+                </span>
+                </span>
+
+                <span class="row">
+                  <span id=textQR>
+                  <table>
+                    <tr>
+                      <td bgcolor="#FFFFFF">
+                        QR data:
+                        <br><br>
+                      </td>
+                    </tr>
+                  </table>
+                  </span>
+                </span>
+
           </div>
 
 
@@ -280,13 +380,13 @@
                 <table>
                   <tr>
                     <td>
-                      <h3>Forward</h3>
+                      <h3>FW</h3>
                       <select name="" id="">
-                        <option value="usb_cam1">Camera 1</option>
-                        <option value="usb_cam2">Camera 2</option>
-                        <option value="usb_cam3">Camera 3</option>
-                        <option value="usb_cam4">Camera 4</option>
-                        <option value="usb_cam5" selected="selected">Camera 5</option>
+                        <option value="usb_cam1">Cam 1</option>
+                        <option value="usb_cam2">Cam 2</option>
+                        <option value="usb_cam3">Cam 3</option>
+                        <option value="usb_cam4">Cam 4</option>
+                        <option value="usb_cam5" selected="selected">Cam 5</option>
                         <option value="empty">Empty</option>
                       </select>
                     </td>

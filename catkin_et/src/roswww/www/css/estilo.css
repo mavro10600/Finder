@@ -31,3 +31,8 @@ body {
 th,td{
   padding: 11px;
 }
+
+h3{
+  font-family: Verdana;
+  color:white;
+}

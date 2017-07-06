@@ -27,14 +27,10 @@
     <script src="js/ros3d.min.js"></script>
     <script src="js/roslib.min.js"></script>
 
-<<<<<<< HEAD
-    <script type="text/javascript" src="Concurrent.Thread.js"></script>
-
-=======
->>>>>>> 7f450a9aa81be49c106cf5eb303050b471e005de
-    <script type="text/javascript" src="js/jquery/jquery-latest.js"></script>
-<script type="text/javascript" src="js/ros/ros.js"></script>
-<script type="text/javascript" src="js/ros/common.js"></script>
+    <!--script type="text/javascript" src="Concurrent.Thread.js"></script-->
+    <script type="text/javascript" src="js/jquery-latest.js"></script>
+    <!--script type="text/javascript" src="js/ros/ros.js"></script-->
+    <!--script type="text/javascript" src="js/ros/common.js"></script-->
 
   </head>
 
@@ -212,31 +208,25 @@
 
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
                 <span class="label label-primary">LED 1</span>
-<<<<<<< HEAD
               </span>
 
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
               <span class="label label-success" id="L1">0 %</span>
               </span>
 
-=======
-                
-              </span>
-              <span class="col-sm-2 col-md-2 col-lg-2 text-center">
-              <span class="label label-success" id="L1">0 %</span>
-              </span>
->>>>>>> 7f450a9aa81be49c106cf5eb303050b471e005de
               <div class="progress" class="col-sm-6 col-md-6 col-lg-6">
                 <input type="range" min="0" max="100" value="0"/>
               </div>
 
+
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
                 <span class="label label-primary">LED 2</span>
-                
               </span>
+
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
-              <span class="label label-success" id="L2">0 %</span>
+                <span class="label label-success" id="L2">0 %</span>
               </span>
+
               <div class="progress" class="col-sm-6 col-md-6 col-lg-6">
                 <input type="range" min="0" max="100" value="0"/>
               </div>
@@ -417,6 +407,16 @@
                 <img src="http://192.168.100.50:8080/stream?topic=/usb_cam5/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
 
           </div>
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
+            <span class="row">
+              <span class="label label-primary text-left" >Proccessed Image</span>
+            </span>
+                               
+            <img src="img/camera.jpg" id="imageQR" class="img-responsive">
+
+          </div>
+
         </div>
 
 

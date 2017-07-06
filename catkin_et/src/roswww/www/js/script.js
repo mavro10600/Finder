@@ -15,7 +15,7 @@ function principal(){
 	//-----------ROS Connection
 	// Connect to ROS.
 	ros = new ROSLIB.Ros({
-	url : 'ws://localhost:9090'
+	url : 'ws://192.168.100.50:9090'
 	});
 
 	ros.on('connection', function() {
@@ -106,6 +106,12 @@ function principal(){
 		ros : ros,
 		name : '/markers',
 		messageType : 'zbar_detector/Marker'
+	});
+
+	var imageQRListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam1/image_raw/compressed',
+    	messageType : 'sensor_msgs/CompressedImage'
 	});
 
 	batteryListener.subscribe(function(message){
@@ -202,6 +208,13 @@ function principal(){
 
 
 		$('#textQR').html(cadena);
+	});
+
+	imageQRListener.subscribe(function(message){
+		console.log("hay imagen");
+		var ImageData1="data:image/jpeg;base64,"+message.data;
+		displayImage = document.getElementById("imageQR");
+		displayImage.setAttribute('src', ImageData1);
 	});
 
 

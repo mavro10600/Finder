@@ -75,14 +75,7 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
 	<material name="White">
         <color rgba="1.0 1.0 1.0 1.0"/>
     </material>
-<!--//////////////////////////  base footprint //////////////////-->
-	<link name="base_footprint"/>
-	<joint name="base_footprint_joint" type="fixed">
-    	<origin rpy="0 0 0" xyz="0 0 0.04"/>
-    	<!--axis xyz="1 0 0"/-->
-    	<parent link="base_footprint"/>
-    	<child link="base_link"/>
-  </joint>
+
 <!--//////////////////////////  base link //////////////////-->
 	<link name = "base_link"/>
 
@@ -97,11 +90,13 @@ NOTA: NO utilizar acentos en codigo ni en comentarios, de lo contrario no se pod
     	</collision>
 	</link>
 
+	<!--Esta transformacion se hace para que los datos del SLAM correspondan a la correcta orientacion del robot-->
 	<joint name = "adjustment" type="fixed">
 		<parent link = "base_link"/>
 		<child	link = "traction"/>
 		<origin rpy="0 0 ${pi/2}"/>
 	</joint>
+
 <!--////////////////// juntas de los brazos laterales del chasis //////////////////-->
 	<!-- junta del brazo frontal derecho -->
 	<xacro:arms_joints name="right_front_flipper" child="right_front_arm" origin="-0.3264 -0.30255 0.1556"/>

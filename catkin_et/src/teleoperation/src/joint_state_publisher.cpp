@@ -6,20 +6,22 @@
 #include <std_msgs/Float32MultiArray.h>
 	
 // message declarations
-geometry_msgs::TransformStamped odom_trans;
+geometry_msgs::TransformStamped roll_pitch_trans;
 sensor_msgs::JointState joint_state;
 
-/*void imuCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
+void imuCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
 	//update FinDER base orientation 
-	odom_trans.transform.rotation = tf::createQuaternionMsgFromRollPitchYaw(imu_msg->orientation.x,
+	roll_pitch_trans.transform.rotation = tf::createQuaternionMsgFromRollPitchYaw(imu_msg->orientation.x,
 																 			imu_msg->orientation.y, 
-																 			imu_msg->orientation.z );
-}*/
+																 			0.0);
+}
+/*
 void imuCallback(const std_msgs::Float32MultiArray::ConstPtr& imu_msg){
 	odom_trans.transform.rotation = tf::createQuaternionMsgFromRollPitchYaw(imu_msg->data[0],
 																 			imu_msg->data[1], 
 																 			imu_msg->data[2] );
-}
+}*/
+
 void rf_flipper_cb(const std_msgs::Int16::ConstPtr& flipper){
 	joint_state.position[0] = flipper->data;
 }
@@ -68,8 +70,8 @@ int main(int argc, char** argv) {
 					pitch_subscriber 		= n.subscribe<std_msgs::Int16>("pitch",100,pitchCallback),
 					yaw_subscriber 			= n.subscribe<std_msgs::Int16>("yaw",100,yawCallback),
 					gripper_subscriber 		= n.subscribe<std_msgs::Int16>("gripper",100,gripperCallback),
-					//imu_sub 				= n.subscribe<sensor_msgs::Imu>("imu/raw_data",1000,imuCallback);
-					imu_sub 				= n.subscribe<std_msgs::Float32MultiArray>("imu/raw_data",1000,imuCallback);
+					imu_sub 				= n.subscribe<sensor_msgs::Imu>("imu/raw_data",1000,imuCallback);
+					//imu_sub 				= n.subscribe<std_msgs::Float32MultiArray>("imu/raw_data",1000,imuCallback);
 
     ros::Publisher joint_state_publisher 	= n.advertise<sensor_msgs::JointState>("joint_states", 10);
     tf::TransformBroadcaster broadcaster;
@@ -90,21 +92,21 @@ int main(int argc, char** argv) {
     joint_state.name[9] = "roll_rotation_2";
     joint_state.name[10] = "gripper_rotation";
 
-  	/*odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id = "base_link";*/
-    //Supongo que habría que actualizar estos datos de translación provenientes del SLAM
-    /*odom_trans.transform.translation.x = 0.0;
-    odom_trans.transform.translation.y = 0.0;
-    odom_trans.transform.translation.z = 0.0;*/
+  	roll_pitch_trans.header.frame_id = "base_footprint";
+    roll_pitch_trans.child_frame_id = "base_link";
+    roll_pitch_trans.transform.rotation = tf::createQuaternionMsgFromRollPitchYaw(0.0,0.0,0.0);
+    roll_pitch_trans.transform.translation.x = 0.0;
+    roll_pitch_trans.transform.translation.y = 0.0;
+    roll_pitch_trans.transform.translation.z = 0.0;
 
 	std::cout<<"Starting to publish FinDER joint states and pose"<<std::endl;
 
     while (ros::ok()) {
         //update joint_state and odom_trans time 
         joint_state.header.stamp = ros::Time::now();
-        /*odom_trans.header.stamp = ros::Time::now();*/
+        roll_pitch_trans.header.stamp = ros::Time::now();
         // update joint state and transform
-        /*broadcaster.sendTransform(odom_trans);*/
+        broadcaster.sendTransform(roll_pitch_trans);
         joint_state_publisher.publish(joint_state);
         ros::spinOnce();
         loop_rate.sleep();

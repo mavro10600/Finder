@@ -4,6 +4,7 @@ import rospy
 import time
 from SerialDataGateway import SerialDataGateway
 from std_msgs.msg import Int16,Int32,Int64,Float32,String,Header,UInt64
+from sensor_msgs.msg import Imu
 from termcolor import colored
 
 class Launchpad_Class(object):
@@ -13,9 +14,10 @@ class Launchpad_Class(object):
 ######################################
 #Variables de los sensores			
 		self.gripper = 0.0
-		self.roll = 0.0
-		self.pitch = 0.0
-		self.yaw = 0.0
+		self.q_x = 0.0
+		self.q_y = 0.0
+		self.q_z = 0.0
+		self.q_w = 0.0
 		self.co2=0
 		self.dynamixel_pos = 0.0
 
@@ -23,8 +25,8 @@ class Launchpad_Class(object):
 		self._Second_Since_Last_Update=0
 #########################################
 #Asignamos valores del puerto y baudios de la stellaris
-		#port=rospy.get_param("~port","/dev/stellaris-dynamixel")
-		port=rospy.get_param("~port","/dev/ttyACM0")
+		port=rospy.get_param("~port","/dev/stellaris-dynamixel")
+		#port=rospy.get_param("~port","/dev/ttyACM0")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 #########################################
@@ -36,11 +38,35 @@ class Launchpad_Class(object):
 #publisher y suscribers
 		self.deltat=0
 		self.lastUpdate=0
-		self._Imu_Roll_Publisher = rospy.Publisher("/imu/roll",Float32,queue_size=5)
-		self._Imu_Pitch_Publisher = rospy.Publisher("/imu/pitch",Float32,queue_size=5)
-		self._Imu_Yaw_Publisher = rospy.Publisher("/imu/yaw",Float32,queue_size=5)
-		self.co2_level_publisher = rospy.Publisher("/co2/level",Int32,queue_size=5)
-		self.gripper_pos_publisher = rospy.Publisher("gripper",Int32,queue_size=5)
+		'''
+		self._Imu_Roll_Publisher = rospy.Publisher("hardware/sensors/imu/roll",Float32,queue_size=5)
+		self._Imu_Pitch_Publisher = rospy.Publisher("hardware/sensors/imu/pitch",Float32,queue_size=5)
+		self._Imu_Yaw_Publisher = rospy.Publisher("hardware/sensors/imu/yaw",Float32,queue_size=5)
+		'''
+		'''
+		self._Imu_Qx_Publisher = rospy.Publisher("hardware/sensors/imu/q_x",Float32,queue_size=5)
+		self._Imu_Qy_Publisher = rospy.Publisher("hardware/sensors/imu/q_y",Float32,queue_size=5)
+		self._Imu_Qz_Publisher = rospy.Publisher("hardware/sensors/imu/q_z",Float32,queue_size=5)
+		self._Imu_Qw_Publisher = rospy.Publisher("hardware/sensors/imu/q_w",Float32,queue_size=5)
+		'''
+		
+		self.frame_id = '/imu'
+		'''
+	    self.cal_offset = 0.0
+        self.orientation = 0.0
+        self.cal_buffer =[]
+        self.cal_buffer_length = 1000
+        self.imu_data = Imu(header=rospy.Header(frame_id="base_link"))
+        self.imu_data.orientation_covariance = [1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e-6]
+	    self.imu_data.angular_velocity_covariance = [1e6, 0, 0, 0, 1e6, 0, 0, 0, 1e-6]
+        self.imu_data.linear_acceleration_covariance = [-1,0,0,0,0,0,0,0,0]
+        self.gyro_measurement_range = 150.0 
+        self.gyro_scale_correction = 1.35
+        '''
+		self.imu_pub = rospy.Publisher("thumper_imu",Imu,queue_size=10);
+		
+		self.co2_level_publisher = rospy.Publisher("/hardware/sensors/co2",Int32,queue_size=5)
+		self.gripper_pos_publisher = rospy.Publisher("hardware/gripper",Int32,queue_size=5)
 
 		self.gripper_out=rospy.Subscriber('gripper_out',Int16,self._Update_Dynamixel)	
 		
@@ -61,19 +87,41 @@ class Launchpad_Class(object):
 			lineParts=line.split('\t')
 			try:
 				if(lineParts[0]=='e'):
-					self.roll = float(lineParts[1])
-					self.pitch = float(lineParts[2])
-					self.yaw = float(lineParts[3])
-					self.co2 = int(lineParts[4])
-					self.dynamixel_pos  = int(lineParts[5])
+					self.q_x = float(lineParts[1])
+					self.q_y = float(lineParts[2])
+					self.q_z = float(lineParts[3])
+					self.q_w = float(lineParts[4])
 
-					self._Imu_Roll_Publisher.publish(self.roll)
-					self._Imu_Pitch_Publisher.publish(self.pitch)
-					self._Imu_Yaw_Publisher.publish(self.yaw)
+					imu_msg = Imu()
+					h = Header()
+					h.stamp = rospy.Time.now()
+					h.frame_id = self.frame_id
+
+					imu_msg.header = h
+
+					imu_msg.orientation_covariance = (-1., )*9	
+					imu_msg.angular_velocity_covariance = (-1., )*9
+					imu_msg.linear_acceleration_covariance = (-1., )*9
+
+					imu_msg.orientation.x = self.q_x
+					imu_msg.orientation.y = self.q_y
+					imu_msg.orientation.z = self.q_z
+					imu_msg.orientation.w = self.q_w
+					self.imu_pub.publish(imu_msg)
+
+					self.co2 = int(lineParts[5])
+					self.dynamixel_pos  = int(lineParts[6])
+
+					'''
+					self._Imu_Qx_Publisher.publish(self.q_x)
+					self._Imu_Qy_Publisher.publish(self.q_y)
+					self._Imu_Qz_Publisher.publish(self.q_z)
+					self._Imu_Qw_Publisher.publish(self.q_w)
+					'''
+
 					self.co2_level_publisher.publish(self.co2)
 					self.gripper_pos_publisher.publish(self.dynamixel_pos)
 					#time.sleep(0.01)
-					
 
 			except:
 				rospy.logwarn("Error in sensor values")
@@ -116,7 +164,7 @@ if __name__=='__main__':
 		launchpad.Start()
 		print colored("Dynamixel and imu node successfully started",'green')
 
-		print colored("Topics:'\n- /imu/roll'\n- '/imu/pitch'\n- '/imu/yaw'\n- '/co2/level',\n- /gripper_rotation/","blue")
+		print colored("Topics:'\n- /thumper_imu', \n- '/co2/level',\n- /gripper_rotation/","blue")
 		while not rospy.is_shutdown():
 			rate.sleep()
 		#rospy.spin()

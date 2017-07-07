@@ -9,11 +9,13 @@
 
 #define RESET_PIN PB_2
 #define INTERRUPT_PIN PB_5  // use pin 2 on Arduino Uno & most boards
-#define DATA_CONTROL_PIN PB_7 //Data control pin for dynamixel 
+#define DATA_CONTROL_PIN PA_3 //Data control pin for dynamixel
+ 
+//#define OUTPUT_READABLE_YAWPITCHROLL
+#define OUTPUT_READABLE_QUATERNION
 
-#define USING_IMU false 
-#define USING_CO2_SENSOR true
-#define ARDUINO_COMM false
+#define USING_IMU true 
+#define USING_CO2_SENSOR false
 #define USING_DYNAMIXEL false
 
 Messenger messengerHandler = Messenger();
@@ -26,6 +28,7 @@ unsigned long CurrentMicrosecs=0;
 unsigned long MicrosecsSinceLastUpdate=0;
 float SecondsSinceLastUpdate=0;
 unsigned long elapsedTimeMicros = 0;
+unsigned long lastTimeCO2read = 0;
 ////////////////////////////////////////////////////////////////////////////////////
 // ================================================================
 // ===               SETUP AND READ IMU FUNCTIONS               ===
@@ -69,12 +72,16 @@ void setupIMU(){
     
     pinMode(INTERRUPT_PIN, INPUT);
     devStatus = mpu.dmpInitialize();
-    mpu.setXAccelOffset(2226);
-    mpu.setYAccelOffset(572);
-    mpu.setZAccelOffset(1637);
-    mpu.setXGyroOffset(104);
-    mpu.setYGyroOffset(-44);
-    mpu.setZGyroOffset(40);
+    /*
+    Sensor readings with offsets:  -11 7 16388 0 1 0
+    Your offsets: -3271 380 767 217 -2  27
+    */
+    mpu.setXAccelOffset(-3271);
+    mpu.setYAccelOffset(380);
+    mpu.setZAccelOffset(767);
+    mpu.setXGyroOffset(217);
+    mpu.setYGyroOffset(-2);
+    mpu.setZGyroOffset(27);
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
       // turn on the DMP, now that it's ready
@@ -96,16 +103,15 @@ void readIMU(){
   mpuIntStatus = mpu.getIntStatus();
   // get current FIFO count
   fifoCount = mpu.getFIFOCount();
-
   // check for overflow (this should never happen unless our code is too inefficient)
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
     // reset so we can continue cleanly
     mpu.resetFIFO();
-
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
   } 
   else 
   if (mpuIntStatus & 0x02) {
+    
     // wait for correct available data length, should be a VERY short wait
     while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
       // read a packet from FIFO
@@ -114,20 +120,21 @@ void readIMU(){
       // track FIFO count here in case there is > 1 packet available
       // (this lets us immediately read more without waiting for an interrupt)
       fifoCount -= packetSize;
-      // update Euler angles in degrees
-      mpu.dmpGetQuaternion(&q, fifoBuffer);
-      mpu.dmpGetGravity(&gravity, &q);
-      mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-        
-      // update real acceleration, adjusted to remove gravity
-      mpu.dmpGetQuaternion(&q, fifoBuffer);
-      mpu.dmpGetAccel(&aa, fifoBuffer);
-      mpu.dmpGetGravity(&gravity, &q);
-      mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-      roll=ypr[2];
-      pitch=ypr[1];
-      yaw=ypr[0];
 
+     
+    // update Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    #ifdef OUTPUT_READABLE_YAWPITCHROLL
+        mpu.dmpGetGravity(&gravity, &q);
+        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+        
+        // update real acceleration, adjusted to remove gravity
+        mpu.dmpGetQuaternion(&q, fifoBuffer);
+        mpu.dmpGetAccel(&aa, fifoBuffer);
+        mpu.dmpGetGravity(&gravity, &q);
+        mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+      #endif
+      
       // blink LED to indicate activity
       blinkState = !blinkState;
       digitalWrite(GREEN_LED, blinkState); 
@@ -143,16 +150,16 @@ int gripper_out = -100,
 
 bool ledDynamixel = false;
 
-  //Dynamixell inicialization, pines Serial3 
-
+ 
 #if USING_DYNAMIXEL
+//Dynamixell inicialization, pines Serial3
 DynamixelClass dynamixel_obj(&Serial3, DATA_CONTROL_PIN);//Cambiar a serial1 en si se usa arduino leonardo
 SimpleDynamixelClass dynamixel(&dynamixel_obj, 600, 850, 100);//ancho de pulso minimo 600, ancho de pulso maximo 850, operacion de -100 a 100
 
 void setupDynamixel(){
     dynamixel_obj.begin(1000000UL, DATA_CONTROL_PIN);
-    dynamixel_obj.setMaxTorque(1, 1023);//Se define el maximo par disponible
-    dynamixel.write(gripper_out);//Start dynamixel totally open
+    //dynamixel_obj.setMaxTorque(1, 1023);//Se define el maximo par disponible
+    //dynamixel.write(gripper_out);//Start dynamixel totally open
     delay(100);
   }
 
@@ -162,7 +169,6 @@ void updateDynamixel(){
       delay(100);
       gripper_out=-100;
       setupDynamixel();
-      
   }
   gripper_load = dynamixel_obj.readLoad(1);
   gripper_pos = dynamixel_obj.readPosition(1);
@@ -190,24 +196,28 @@ double multiplier = 4;// 1 for 2% =20000 PPM, 10 for 20% = 200,000 PPM
 uint8_t buffer[25];
 uint8_t ind =0;
 uint8_t index_ =0;
+bool blinkCO2 = false;
 
 void setupCO2Sensor(){
     ///////////CO2 set-up
     Serial2.begin(9600);
+    //Serial2.setTimeout(10);
     Serial2.println("K 0");  // Set Command mode
     Serial2.println("M 6"); // send Mode for Z and z outputs
     // "Z xxxxx z xxxxx" (CO2 filtered and unfiltered)
     Serial2.println("K 1");  // set streaming mode
+    pinMode(RED_LED,OUTPUT);
 }
 void fill_buffer(void){
   // Fill buffer with sensor ascii data
   ind = 0;
-  while(buffer[ind-1] != 0x0A){  // Read sensor and fill buffer up to 0XA = CR
-    if(Serial2.available()){
+  while(buffer[ind-1] != 0x0A&& Serial2.available() ){  // Read sensor and fill buffer up to 0XA = CR
+    if(Serial2.available()) {
       buffer[ind] = Serial2.read();
       ind++;
-      Serial.println(ind);
-    } 
+      blinkCO2 = !blinkCO2;
+      digitalWrite(RED_LED,blinkCO2);
+    }
   }
   // buffer() now filled with sensor ascii data
   // ind contains the number of characters loaded into buffer up to 0xA =  CR
@@ -229,16 +239,6 @@ void readCO2sensor(){
 }
 #endif
 
-#if ARDUINO_COMM
-void setupSerialCommArduino(){
-  Serial3.begin(57600);
-  
-  }
-void serialCommArduino(){
-  
-  ;
-  }
-#endif
 
 // ================================================================
 // ===               Serial Reading Function                    ===
@@ -296,17 +296,30 @@ void onMessageCompleted(){
      //This will set the servos angle
   }
 }
-
-
 void updateData(){
   Serial.print('e');
   Serial.print("\t");
-  Serial.print(roll);
-  Serial.print("\t");
-  Serial.print(pitch);
-  Serial.print("\t");
-  Serial.print(yaw);
-  Serial.print("\t");
+  
+  #ifdef OUTPUT_READABLE_YAWPITCHROLL
+    Serial.print(ypr[2]);//roll
+    Serial.print("\t");
+    Serial.print(ypr[1]);//pitch
+    Serial.print("\t");
+    Serial.print(ypr[0]);//yaw
+    Serial.print("\t");
+  #endif
+  
+  #ifdef OUTPUT_READABLE_QUATERNION
+    Serial.print(q.x);
+    Serial.print("\t");
+    Serial.print(q.y);
+    Serial.print("\t");
+    Serial.print(q.z);
+    Serial.print("\t");
+    Serial.print(q.w);
+    Serial.print("\t");
+  #endif
+  
   Serial.print(co2);
   Serial.print("\t");
   Serial.print(gripper_pos);
@@ -330,33 +343,35 @@ void setup() {
   #if USING_DYNAMIXEL
     setupDynamixel();
   #endif
-  
+
   #if USING_IMU
     setupIMU();
   #endif
+  
 }
 
 void loop() {
-  readFromSerial();
+ readFromSerial();
   
   updateTime(); 
-   
+  
+  #if USING_DYNAMIXEL
+    updateDynamixel();
+  #endif
+
   #if USING_IMU
     if( !(!mpuInterrupt && fifoCount < packetSize) )//imu ready-to-read condition
       readIMU();
   #endif
   
   #if USING_CO2_SENSOR
-    if(CurrentMicrosecs - elapsedTimeMicros > 500000){//Se lee el sensor de CO2 cada 0.5 segundos
+    if(CurrentMicrosecs - elapsedTimeMicros > 500000){//Time to read CO2?
       elapsedTimeMicros = LastUpdateMicrosecs;
       readCO2sensor();
     }
   #endif
-  
-  #if USING_DYNAMIXEL
-    updateDynamixel();
-  #endif
-  
+
   updateData();//send data to computer  
+  //delay(5);
   
 }

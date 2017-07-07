@@ -27,7 +27,7 @@
     <script src="js/ros3d.min.js"></script>
     <script src="js/roslib.min.js"></script>
 
-    <!--script type="text/javascript" src="Concurrent.Thread.js"></script-->
+    <script type="text/javascript" src="js/Concurrent.Thread.js"></script>
     <script type="text/javascript" src="js/jquery-latest.js"></script>
     <!--script type="text/javascript" src="js/ros/ros.js"></script-->
     <!--script type="text/javascript" src="js/ros/common.js"></script-->
@@ -103,7 +103,7 @@
                   </tr>
                 </table>
                                 
-                <img src="http://192.168.100.50:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
+                <img src="img/camera.jpg" class="img-responsive">
 
                 
           </div>
@@ -137,7 +137,7 @@
                   </tr>
                 </table>
 
-                <img src="http://192.168.100.50:8080/stream?topic=/usb_cam1/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
+                <img src="img/camera.jpg" class="img-responsive">
 
                 
           </div>
@@ -169,7 +169,7 @@
                   </tr>
                 </table>
 
-                <img src="http://192.168.100.50:8080/stream?topic=/usb_cam3/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
+                <img src="img/camera.jpg" class="img-responsive">
 
           </div>
 
@@ -187,14 +187,7 @@
                 </div>
               </div>
 
-              <span class="col-sm-4 col-md-4 col-lg-3 text-center">
-                <span class="label label-success">CO2</span> 
-              </span>
-              <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
-                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                  UNKNOWN
-                </div>
-              </div>
+              
 
               <span class="col-sm-4 col-md-4 col-lg-3 text-center">
                 <span class="label label-success">Laptop battery</span> 
@@ -204,6 +197,17 @@
                   UNKNOWN
                 </div>
               </div>
+
+
+              <span class="col-sm-4 col-md-4 col-lg-3 text-center">
+                  <span class="label label-success">CO2</span> 
+                </span>
+
+                <div class="progress" class="col-sm-8 col-md-8 col-lg-9">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    UNKNOWN
+                  </div>
+                </div>
 
 
               <span class="col-sm-2 col-md-2 col-lg-2 text-center">
@@ -232,57 +236,7 @@
               </div>
 
 
-
-            </div>
-
-          </div>
-
-        </div>
-
-        
-
-        <div class="row">
-          <div class="col-sm-3 col-md-3 col-lg-3">
-                 <table>
-                  <tr>
-                    <td>
-                      <h3>BW</h3>
-                      <select name="" id="">
-                        <option value="usb_cam1">Cam 1</option>
-                        <option value="usb_cam2">Cam 2</option>
-                        <option value="usb_cam3">Cam 3</option>
-                        <option value="usb_cam4" selected="selected">Cam 4</option>
-                        <option value="usb_cam5">Cam 5</option>
-                        <option value="empty">Empty</option>
-                      </select>
-                    </td>
-                    <td>
-                      <span class="label label-primary">Quality</span>
-                      <span class="label label-success" id="Q4">20 %</span>
-                      <input type="range" min="0" max="100" value="20"/>
-                    </td>
-                    <td>_</td>
-                    <td>
-                      <span class="label label-primary">Resolution</span>
-                      <span class="label label-success" id="R4">640 x 480</span>
-                      <input type="range" min="0" max="100" value="100"/>
-                    </td>
-                  </tr>
-                </table>
-
-                <img src="http://192.168.100.50:8080/stream?topic=/usb_cam4/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
-
-          </div>
-
-          <div class="col-sm-3 col-md-3 col-lg-3">
-                <input id="box-toggle" type="checkbox">
-                <label for="box-toggle">Show robot</label>
-
-                <span class="row">
-                  <span class="label label-primary">TERMICO:</span>
-                </span>
-
-                <span class="row">
+              <span class="row">
                 <span id="TERM" >
                   <table >
                     <tr>
@@ -361,18 +315,91 @@
                 </span>
                 </span>
 
-                <span class="row">
-                  <span id=textQR>
-                  <table>
-                    <tr>
-                      <td bgcolor="#FFFFFF">
-                        QR data:
-                        <br><br>
-                      </td>
-                    </tr>
-                  </table>
-                  </span>
-                </span>
+
+                
+
+            </div>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="row">
+          <div class="col-sm-3 col-md-3 col-lg-3">
+                 <table>
+                  <tr>
+                    <td>
+                      <h3>BW</h3>
+                      <select name="" id="">
+                        <option value="usb_cam1">Cam 1</option>
+                        <option value="usb_cam2">Cam 2</option>
+                        <option value="usb_cam3">Cam 3</option>
+                        <option value="usb_cam4" selected="selected">Cam 4</option>
+                        <option value="usb_cam5">Cam 5</option>
+                        <option value="empty">Empty</option>
+                      </select>
+                    </td>
+                    <td>
+                      <span class="label label-primary">Quality</span>
+                      <span class="label label-success" id="Q4">20 %</span>
+                      <input type="range" min="0" max="100" value="20"/>
+                    </td>
+                    <td>_</td>
+                    <td>
+                      <span class="label label-primary">Resolution</span>
+                      <span class="label label-success" id="R4">640 x 480</span>
+                      <input type="range" min="0" max="100" value="100"/>
+                    </td>
+                  </tr>
+                </table>
+
+                <img src="img/camera.jpg" class="img-responsive">
+
+          </div>
+
+          <div class="col-sm-3 col-md-3 col-lg-3">
+
+          <table>
+            <tr>
+              <th>Sensor</th>
+              <th>Status</th>
+            </tr>
+
+            <tr bgcolor="white">
+              <td>Thermal:</td>
+              <td id="thermalStatus">-</td>
+            </tr>
+
+            <tr bgcolor="white">
+              <td>Movements:</td>
+              <td id="movementStatus">-</td>
+            </tr>
+            <tr bgcolor="white">
+              <td>CO2 level:</td>
+              <td id="co2Status">-</td>
+            </tr>
+            <tr bgcolor="white">
+              <td>QR:</td>
+              <td id="statusQR">-</td>
+            </tr>
+            <tr bgcolor="white">
+              <td>Signals:</td>
+              <td id="signalStatus">-</td>
+            </tr>
+            <tr bgcolor="white">
+              <td>Faces:</td>
+              <td id="faceStatus">-</td>
+            </tr>
+            <tr bgcolor="#A0A0A0">
+              <td>Victim:</td>
+              <td id="victimStatus">-</td>
+            </tr>
+
+
+          </table>
+
 
           </div>
 
@@ -404,7 +431,7 @@
                     </td>
                   </tr>
                 </table>                
-                <img src="http://192.168.100.50:8080/stream?topic=/usb_cam5/image_raw&type=mjpeg&width=640&height=480&quality=20" class="img-responsive">
+                <img src="img/camera.jpg" class="img-responsive">
 
           </div>
 

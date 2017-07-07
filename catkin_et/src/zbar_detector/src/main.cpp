@@ -24,9 +24,15 @@ cv_bridge::CvImagePtr bridge;
 IplImage * frame = 0;
 ImageScanner scanner;
 ros::Publisher code;
+
 uint message_sequence = 0;
 
 void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
+
+  ros::NodeHandle nh;
+  image_transport::ImageTransport it(nh);
+  image_transport::Publisher pub = it.advertise("output/QRcodeResult", 1);
+  sensor_msgs::ImagePtr res;
 
   try {
     bridge = cv_bridge::toCvCopy(image, enc::MONO8);
@@ -74,13 +80,20 @@ void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
     msg.center_x = (x1 + x2) / 2; 
     msg.center_y = (y1 + y2) / 2; 
     msg.width = (x2 - x1); 
-    msg.height = (y2 + y1); 
+    msg.height = (y2 + y1);
+
+    cv::Mat cv_bgr(cv_matrix.size(), CV_8UC3);
+    cvtColor(cv_matrix, cv_bgr, CV_GRAY2BGR);
 
     if(1) {
       cv::rectangle(cv_matrix, cv::Point(x1,y1), cv::Point(x2,y2), cv::Scalar(255), 2);
+      cv::rectangle(cv_bgr, cv::Point(x1,y1), cv::Point(x2,y2), cv::Scalar(0,255,0), 2);
     }
 
 	  code.publish(msg);
+    
+    res = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cv_bgr).toImageMsg();
+    pub.publish(res);
   }
 
   //Show image in CV window
@@ -109,7 +122,7 @@ int main(int argc, char **argv)
   scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1); 
 
   code = n.advertise<zbar_detector::Marker>("markers", 1000);
-  //ros::Subscriber sub = n.subscribe("camera/image", 10, imageReceiver);
+  
   ros::Subscriber sub = n.subscribe("usb_cam1/image_raw", 10, imageReceiver);
 
   ros::spin();

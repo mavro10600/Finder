@@ -28,9 +28,24 @@ body {
   width: 100%;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%
+}
+
 th,td{
   padding: 11px;
+  text-align: left;
+  color: #0000A0;
+  font-family: Consola;
 }
+
+th {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+}
+
 
 h3{
   font-family: Verdana;

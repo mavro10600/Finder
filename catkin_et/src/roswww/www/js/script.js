@@ -14,8 +14,9 @@ var led2Publish;
 function principal(){
 	//-----------ROS Connection
 	// Connect to ROS.
+	var urlROS = 'ws://'+ip+':9090'
 	ros = new ROSLIB.Ros({
-	url : 'ws://192.168.100.50:9090'
+	url : urlROS
 	});
 
 	ros.on('connection', function() {
@@ -41,8 +42,8 @@ function principal(){
 	$('input').eq(8).on('change',setLed2);
 	$('input').eq(9).on('change',setQuality4);
 	$('input').eq(10).on('change',setResolution4);
-	$('input').eq(12).on('change',setQuality5);
-	$('input').eq(13).on('change',setResolution5);
+	$('input').eq(11).on('change',setQuality5);
+	$('input').eq(12).on('change',setResolution5);
 
 	// Set cams
 	$('select').eq(0).on('click', setCam1);
@@ -50,6 +51,14 @@ function principal(){
 	$('select').eq(2).on('click', setCam3);
 	$('select').eq(3).on('click', setCam4);
 	$('select').eq(4).on('click', setCam5);
+
+	$('.img-responsive').eq(0).attr('src', "http://"+ip+":8080/stream?topic=/"+cam2+"/image_raw&type=mjpeg&width="+width2+"&height="+height2+"&quality="+quality2);
+	$('.img-responsive').eq(1).attr('src', "http://"+ip+":8080/stream?topic=/"+cam1+"/image_raw&type=mjpeg&width="+width1+"&height="+height1+"&quality="+quality1);
+	$('.img-responsive').eq(2).attr('src', "http://"+ip+":8080/stream?topic=/"+cam3+"/image_raw&type=mjpeg&width="+width3+"&height="+height3+"&quality="+quality3);
+	$('.img-responsive').eq(3).attr('src', "http://"+ip+":8080/stream?topic=/"+cam4+"/image_raw&type=mjpeg&width="+width4+"&height="+height4+"&quality="+quality4);
+	$('.img-responsive').eq(4).attr('src', "http://"+ip+":8080/stream?topic=/"+cam5+"/image_raw&type=mjpeg&width="+width5+"&height="+height5+"&quality="+quality5);
+
+
 
 	//pub
   	led1Publish = new ROSLIB.Topic({
@@ -96,9 +105,9 @@ function principal(){
 		messageType : 'std_msgs/Int32'
 	});
 
-	var termalListener = new ROSLIB.Topic({
+	var thermalListener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/robot_state/termalData',
+		name : '/hardware/robot_state/thermalData',
 		messageType : 'std_msgs/Int16MultiArray'
 	});
 
@@ -110,8 +119,44 @@ function principal(){
 
 	var imageQRListener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/usb_cam1/image_raw/compressed',
+		name : '/output/QRcodeResult/compressed',
     	messageType : 'sensor_msgs/CompressedImage'
+	});
+
+	var thermalStatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/thermalStatus',
+		messageType : 'std_msgs/String'
+	});
+
+	var movementStatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/movementStatus',
+		messageType : 'std_msgs/String'
+	});	
+
+	var co2StatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/co2Status',
+		messageType : 'std_msgs/String'
+	});
+
+	var signalStatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/signalStatus',
+		messageType : 'std_msgs/String'
+	});
+
+	var faceStatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/faceStatus',
+		messageType : 'std_msgs/String'
+	});
+
+	var victimStatusListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/robot_state/victimStatus',
+		messageType : 'std_msgs/String'
 	});
 
 	batteryListener.subscribe(function(message){
@@ -139,36 +184,13 @@ function principal(){
 	co2Listener.subscribe(function(message){
 		var levelCo2 = message.data;
 		console.log("CO2:"+levelCo2);
-		if($('.progress-bar').eq(1).hasClass('progress-bar-success')){
-		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
-		}
-		if($('.progress-bar').eq(1).hasClass('progress-bar-danger')){
-		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
-		}
-		var percent = Math.round(100*(levelCo2/100));
-		$('.progress-bar').eq(1).css("width", percent + "%");
-		$('.progress-bar').eq(1).html('<strong>' + percent + '%' +'</strong>');
-		if(percent>80.0){
-		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
-		}
-		else if(percent>45.0){
-		}
-		else{
-		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
-		}
-
-	});
-
-	laptopBatteryListener.subscribe(function(message){
-		var levelLaptopBaterry = message.data;
-
 		if($('.progress-bar').eq(2).hasClass('progress-bar-success')){
 		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');
 		}
 		if($('.progress-bar').eq(2).hasClass('progress-bar-danger')){
 		  $('.progress-bar').eq(2).toggleClass('progress-bar-danger');
 		}
-		var percent = Math.round(100*(levelLaptopBaterry/100));
+		var percent = Math.round(100*(levelCo2/100));
 		$('.progress-bar').eq(2).css("width", percent + "%");
 		$('.progress-bar').eq(2).html('<strong>' + percent + '%' +'</strong>');
 		if(percent>80.0){
@@ -182,13 +204,36 @@ function principal(){
 
 	});
 
-	termalListener.subscribe(function(message){
-		var termalData = message.data;
+	laptopBatteryListener.subscribe(function(message){
+		var levelLaptopBaterry = message.data;
+
+		if($('.progress-bar').eq(1).hasClass('progress-bar-success')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		if($('.progress-bar').eq(1).hasClass('progress-bar-danger')){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+		var percent = Math.round(100*(levelLaptopBaterry/100));
+		$('.progress-bar').eq(1).css("width", percent + "%");
+		$('.progress-bar').eq(1).html('<strong>' + percent + '%' +'</strong>');
+		if(percent>80.0){
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-success');
+		}
+		else if(percent>45.0){
+		}
+		else{
+		  $('.progress-bar').eq(1).toggleClass('progress-bar-danger');
+		}
+
+	});
+
+	thermalListener.subscribe(function(message){
+		var thermalData = message.data;
 		var cadena = "<table ><tr>";
 		var colores =["#040530","#0e127c","#1a41bf","#1a72bf","#22bee5","#e9ed28","#edc528","#ed8a28","#c6441f","#c61f1f"];
 		var temp = 0;
-		for (i=0;i<termalData.length;i++){
-			temp= Math.round(termalData[i]/29);
+		for (i=0;i<thermalData.length;i++){
+			temp= Math.round(thermalData[i]/29);
 			//console.log("Dato:"+temp);
 			cadena+="<td  bgcolor="+colores[temp]+"></td>"
 			if( (i+1)%16 == 0 ){
@@ -204,10 +249,10 @@ function principal(){
 		var qrData = message.data;
 		console.log("markers:"+qrData);
 
-		var cadena = "<table ><tr><td bgcolor=\"#FFFFFF\">QR data:<br>"+qrData+"</td></tr></table>";
+		var cadena = qrData;
 
 
-		$('#textQR').html(cadena);
+		$('#statusQR').html(cadena);
 	});
 
 	imageQRListener.subscribe(function(message){
@@ -216,6 +261,32 @@ function principal(){
 		displayImage = document.getElementById("imageQR");
 		displayImage.setAttribute('src', ImageData1);
 	});
+
+	thermalStatusListener.subscribe(function(message){
+		$('#thermalStatus').html(message.data);
+	});
+
+	movementStatusListener.subscribe(function(message){
+		$('#movementStatus').html(message.data);
+	});
+
+	co2StatusListener.subscribe(function(message){
+		$('#co2Status').html(message.data);
+	});
+
+	signalStatusListener.subscribe(function(message){
+		$('#signalStatus').html(message.data);
+	});
+
+	faceStatusListener.subscribe(function(message){
+		$('#faceStatus').html(message.data);
+	});
+
+	victimStatusListener.subscribe(function(message){
+		$('#victimStatus').html(message.data);
+	});
+
+
 
 
 }

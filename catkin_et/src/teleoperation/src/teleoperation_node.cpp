@@ -24,15 +24,12 @@ using namespace std;
 #define DpadH joy->axes[6]
 
 
-<<<<<<< HEAD
 std::vector<int> flipper_order;
 //initialize flipper vect
 std::vector<int> sentido;
 
 		
 	
-=======
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 
 std_msgs::Int16 base_out,
 				shoulder_out,
@@ -62,7 +59,6 @@ las instrucciones así, de maera directa, y luego repensar la programacion orien
 void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 float sens=0.1;
 float tsens=0.2;
-<<<<<<< HEAD
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Rutinas que mueven los flippers
@@ -134,8 +130,6 @@ float tsens=0.2;
 */
 
 
-=======
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Rutinas que mueven los flippers
@@ -147,7 +141,6 @@ float tsens=0.2;
 			flipper1_out.data = 0;
 		else
 			{
-<<<<<<< HEAD
 			
 			if(LBbutton && RBbutton && joy->axes[int(flipper_order[0])]>tsens)
 			{ 
@@ -167,13 +160,6 @@ float tsens=0.2;
 			}
 			
 			if( (LBbutton &&  RBbutton && joy->axes[int(flipper_order[0])]<=tsens && joy->axes[int(flipper_order[0])]>=-tsens) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[0])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[0])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[0])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[0])]<-tsens) ) 
-=======
-			if(LBbutton && RBbutton && LAHstick>tsens) 
-			flipper1_out.data=round(64+50*LAHstick);
-			if(LBbutton && RBbutton && LAHstick<-tsens) 
-			flipper1_out.data=round(64+50*LAHstick);
-			if(RTbutton &&  RBbutton && LAHstick<=tsens && LAHstick>=-tsens) 
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			flipper1_out.data=64;
 			}
 		}			
@@ -187,7 +173,6 @@ float tsens=0.2;
 			flipper2_out.data = 0;
 		else
 			{
-<<<<<<< HEAD
 			if(LBbutton && RBbutton && joy->axes[int(flipper_order[1])]>tsens)
 			{ 
 				if(sentido[1]==0){ 
@@ -206,13 +191,6 @@ float tsens=0.2;
 			}
 						
 			if((LBbutton &&  RBbutton && joy->axes[int(flipper_order[1])]<=tsens && joy->axes[int(flipper_order[1])]>=-tsens  ) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[1])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[1])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[1])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[1])]<-tsens)) 
-=======
-			if(LBbutton && RBbutton && LAVstick>tsens) 
-			flipper2_out.data=round(64+50*LAVstick);
-			if(LBbutton && RBbutton && LAVstick<-tsens) 
-			flipper2_out.data=round(64+50*LAVstick);
-			if(RTbutton &&  RBbutton && LAVstick<=tsens && LAVstick>=-tsens) 
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			flipper2_out.data=64;
 			}
 		}			
@@ -224,7 +202,6 @@ float tsens=0.2;
 			flipper3_out.data = 0;
 		else
 			{
-<<<<<<< HEAD
 			if(LBbutton && RBbutton && joy->axes[flipper_order[2]]>tsens) 
 			{
 							if(sentido[2]==0){ 
@@ -242,13 +219,6 @@ float tsens=0.2;
 
 			}
 			if((LBbutton &&  RBbutton && joy->axes[flipper_order[2]]<=tsens && joy->axes[int(flipper_order[2])]>=-tsens)   ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[2])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[2])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[2])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[2])]<-tsens)) 
-=======
-			if(LBbutton && RBbutton && RAHstick>tsens) 
-			flipper3_out.data=round(64+50*RAHstick);
-			if(LBbutton && RBbutton && RAHstick<-tsens) 
-			flipper3_out.data=round(64+50*RAHstick);
-			if(RTbutton &&  RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			flipper3_out.data=64;
 			}
 		}			
@@ -260,19 +230,11 @@ float tsens=0.2;
 			flipper4_out.data = 0;
 		else
 {
-<<<<<<< HEAD
 			if(LBbutton && RBbutton && joy->axes[int(flipper_order[3])]>tsens) 
 			flipper4_out.data=round(64+50*joy->axes[int(flipper_order[3])]);
 			if(LBbutton && RBbutton && joy->axes[int(flipper_order[3])]<-tsens) 
 			flipper4_out.data=round(64+50*joy->axes[int(flipper_order[3])]);
 			if((LBbutton &&  RBbutton && joy->axes[int(flipper_order[3])]<=tsens && joy->axes[int(flipper_order[3])]>=-tsens  ) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[3])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[3])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[3])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[3])]<-tsens)) 
-=======
-			if(LBbutton && RBbutton && RAVstick>tsens) 
-			flipper4_out.data=round(64+50*RAVstick);
-			if(LBbutton && RBbutton && RAVstick<-tsens) 
-			flipper4_out.data=round(64+50*RAVstick);
-			if(RTbutton &&  RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			flipper4_out.data=64;
 			}
 		}			
@@ -358,21 +320,12 @@ float tsens=0.2;
 			if((!LBbutton && !RBbutton && LAHstick>tsens) || (!LBbutton && !RBbutton && LAVstick>tsens) || (!LBbutton && !RBbutton && DpadV>0.9) || (!LBbutton && !RBbutton && DpadH>0.9)) 
 			{
 			if(LAHstick>tsens || LAVstick> tsens)
-<<<<<<< HEAD
 			{
 			angular_rate=LAHstick*100;
 			linear_rate=LAVstick*100;
 			}
 			if(DpadV >0.9 || DpadH > 0.9)
 			{
-=======
-			{
-			angular_rate=LAHstick*100;
-			linear_rate=LAVstick*100;
-			}
-			if(DpadV >0.9 || DpadH > 0.9)
-			{
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			angular_rate=0.5*100;
 			linear_rate=0.5*100;
 			}
@@ -380,7 +333,6 @@ float tsens=0.2;
 			left_out.data=linear_rate-angular_rate;
 			}
 			if((!LBbutton && !RBbutton && LAHstick<-tsens )|| ( !LBbutton && !RBbutton && DpadV<-0.9) || ( !LBbutton && !RBbutton && DpadH<-0.9) ||  ( !LBbutton && !RBbutton && DpadV<-0.9)) 
-<<<<<<< HEAD
 			{
 			if(LAHstick< -tsens || LAVstick< -tsens)
 			{
@@ -389,16 +341,6 @@ float tsens=0.2;
 			}
 			if(DpadV < -0.9 || DpadH < -0.9)
 			{
-=======
-			{
-			if(LAHstick< -tsens || LAVstick< -tsens)
-			{
-			angular_rate=LAHstick*100;
-			linear_rate=LAVstick*100;
-			}
-			if(DpadV < -0.9 || DpadH < -0.9)
-			{
->>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			angular_rate=0.5*100;
 			linear_rate=0.5*100;
 			}

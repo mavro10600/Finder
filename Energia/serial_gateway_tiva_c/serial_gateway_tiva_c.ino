@@ -12,11 +12,11 @@
 #define DATA_CONTROL_PIN PA_3 //Data control pin for dynamixel
  
 //#define OUTPUT_READABLE_YAWPITCHROLL
-#define OUTPUT_READABLE_QUATERNION
+//#define OUTPUT_READABLE_QUATERNION
 
-#define USING_IMU true 
+#define USING_IMU false
 #define USING_CO2_SENSOR false
-#define USING_DYNAMIXEL false
+#define USING_DYNAMIXEL true
 
 Messenger messengerHandler = Messenger();
 
@@ -319,6 +319,14 @@ void updateData(){
     Serial.print(q.w);
     Serial.print("\t");
   #endif
+      Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(1.0);
+    Serial.print("\t");
   
   Serial.print(co2);
   Serial.print("\t");

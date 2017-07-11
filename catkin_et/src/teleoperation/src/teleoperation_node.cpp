@@ -3,6 +3,9 @@
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32.h>
 #include <math.h>  
+#include <iostream>
+#include <vector>
+using namespace std;
 //Definicion de los botones y ejes del control de Xbox
 //lalalalalala
 #define Abutton joy->buttons[0]
@@ -21,6 +24,15 @@
 #define DpadH joy->axes[6]
 
 
+<<<<<<< HEAD
+std::vector<int> flipper_order;
+//initialize flipper vect
+std::vector<int> sentido;
+
+		
+	
+=======
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 
 std_msgs::Int16 base_out,
 				shoulder_out,
@@ -50,10 +62,11 @@ las instrucciones así, de maera directa, y luego repensar la programacion orien
 void joyCallback(const sensor_msgs::Joy::ConstPtr& joy){
 float sens=0.1;
 float tsens=0.2;
+<<<<<<< HEAD
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Rutinas que mueven los flippers
-			
+/*
 	if(flipper1_out.data > 127)
 		flipper1_out.data = 127;
 	else{
@@ -61,11 +74,11 @@ float tsens=0.2;
 			flipper1_out.data = 0;
 		else
 			{
-			if(LBbutton && RBbutton && LAHstick>tsens) 
-			flipper1_out.data=round(64+50*LAHstick);
-			if(LBbutton && RBbutton && LAHstick<-tsens) 
-			flipper1_out.data=round(64+50*LAHstick);
-			if(RTbutton &&  RBbutton && LAHstick<=tsens && LAHstick>=-tsens) 
+			if(LBbutton && RBbutton && RAVstick>tsens) 
+			flipper1_out.data=round(64+50*RAVstick);
+			if(LBbutton && RBbutton && RAVstick<-tsens) 
+			flipper1_out.data=round(64+50*RAVstick);
+			if( (LBbutton &&  RBbutton && RAVstick>=-tsens && RAVstick<=tsens) ||(!LBbutton && !RBbutton && RAVstick>tsens) || (!LBbutton && !RBbutton && RAVstick<-tsens) || ((!LBbutton || !RBbutton) && RAVstick>tsens) || ((!LBbutton || !RBbutton) && RAVstick<-tsens) ) 
 			flipper1_out.data=64;
 			}
 		}			
@@ -77,11 +90,11 @@ float tsens=0.2;
 			flipper2_out.data = 0;
 		else
 			{
-			if(LBbutton && RBbutton && LAVstick>tsens) 
-			flipper2_out.data=round(64+50*LAVstick);
-			if(LBbutton && RBbutton && LAVstick<-tsens) 
-			flipper2_out.data=round(64+50*LAVstick);
-			if(RTbutton &&  RBbutton && LAVstick<=tsens && LAVstick>=-tsens) 
+			if(LBbutton && RBbutton && RAHstick>tsens) 
+			flipper2_out.data=round(64+50*RAHstick);
+			if(LBbutton && RBbutton && RAHstick<-tsens) 
+			flipper2_out.data=round(64+50*RAHstick);
+			if((LBbutton &&  RBbutton && RAHstick>=-tsens && RAHstick<=tsens  ) ||(!LBbutton && !RBbutton && RAHstick>tsens) || (!LBbutton && !RBbutton && RAHstick<-tsens) || ((!LBbutton || !RBbutton) && RAHstick>tsens) || ((!LBbutton || !RBbutton) && RAHstick<-tsens)) 
 			flipper2_out.data=64;
 			}
 		}			
@@ -93,11 +106,11 @@ float tsens=0.2;
 			flipper3_out.data = 0;
 		else
 			{
-			if(LBbutton && RBbutton && RAHstick>tsens) 
-			flipper3_out.data=round(64+50*RAHstick);
-			if(LBbutton && RBbutton && RAHstick<-tsens) 
-			flipper3_out.data=round(64+50*RAHstick);
-			if(RTbutton &&  RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
+			if(LBbutton && RBbutton && LAVstick>tsens) 
+			flipper3_out.data=round(64+50*LAVstick);
+			if(LBbutton && RBbutton && LAVstick<-tsens) 
+			flipper3_out.data=round(64+50*LAVstick);
+			if((LBbutton &&  RBbutton && LAVstick<=tsens && LAVstick>=-tsens)   ||(!LBbutton && !RBbutton && LAVstick>tsens) || (!LBbutton && !RBbutton && LAVstick<-tsens) || ((!LBbutton || !RBbutton) && LAVstick>tsens) || ((!LBbutton || !RBbutton) && LAVstick<-tsens)) 
 			flipper3_out.data=64;
 			}
 		}			
@@ -109,11 +122,157 @@ float tsens=0.2;
 			flipper4_out.data = 0;
 		else
 {
+			if(LBbutton && RBbutton && LAHstick>tsens) 
+			flipper4_out.data=round(64+50*LAHstick);
+			if(LBbutton && RBbutton && LAHstick<-tsens) 
+			flipper4_out.data=round(64+50*LAHstick);
+			if((LBbutton &&  RBbutton && LAHstick>=-tsens && LAHstick<=tsens  ) ||(!LBbutton && !RBbutton && LAHstick>tsens) || (!LBbutton && !RBbutton && LAHstick<-tsens) || ((!LBbutton || !RBbutton) && LAHstick>tsens) || ((!LBbutton || !RBbutton) && LAHstick<-tsens)) 
+			flipper4_out.data=64;
+			}
+		}			
+
+*/
+
+
+=======
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Rutinas que mueven los flippers
+	
+	if(flipper1_out.data > 127)
+		flipper1_out.data = 127;
+	else{
+		if(flipper1_out.data <= 0)
+			flipper1_out.data = 0;
+		else
+			{
+<<<<<<< HEAD
+			
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[0])]>tsens)
+			{ 
+			if(sentido[0]==0){ 
+				flipper1_out.data=round(64+50*joy->axes[int(flipper_order[0])]);}
+			if(sentido[0]==1){ 
+				flipper1_out.data=round(64+50*(-joy->axes[int(flipper_order[0])]));}
+
+			}
+			
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[0])]<-tsens)
+			{
+				if(sentido[0]==0){ 
+				flipper1_out.data=round(64+50*joy->axes[int(flipper_order[0])]);}
+				if(sentido[0]==1){ 
+				flipper1_out.data=round(64+50*(-joy->axes[int(flipper_order[0])]));}
+			}
+			
+			if( (LBbutton &&  RBbutton && joy->axes[int(flipper_order[0])]<=tsens && joy->axes[int(flipper_order[0])]>=-tsens) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[0])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[0])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[0])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[0])]<-tsens) ) 
+=======
+			if(LBbutton && RBbutton && LAHstick>tsens) 
+			flipper1_out.data=round(64+50*LAHstick);
+			if(LBbutton && RBbutton && LAHstick<-tsens) 
+			flipper1_out.data=round(64+50*LAHstick);
+			if(RTbutton &&  RBbutton && LAHstick<=tsens && LAHstick>=-tsens) 
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
+			flipper1_out.data=64;
+			}
+		}			
+		
+		
+		
+	if(flipper2_out.data > 127)
+		flipper2_out.data = 127;
+	else{
+		if(flipper2_out.data <= 0)
+			flipper2_out.data = 0;
+		else
+			{
+<<<<<<< HEAD
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[1])]>tsens)
+			{ 
+				if(sentido[1]==0){ 
+				flipper2_out.data=round(64+50*joy->axes[int(flipper_order[1])]);}
+				if(sentido[1]==1){ 
+				flipper2_out.data=round(64+50*(-joy->axes[int(flipper_order[1])]));}
+
+			}
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[1])]<-tsens)
+			{ 
+				if(sentido[1]==0){ 
+				flipper2_out.data=round(64+50*joy->axes[int(flipper_order[1])]);}
+				if(sentido[1]==1){ 
+				flipper2_out.data=round(64+50*(-joy->axes[int(flipper_order[1])]));}
+			
+			}
+						
+			if((LBbutton &&  RBbutton && joy->axes[int(flipper_order[1])]<=tsens && joy->axes[int(flipper_order[1])]>=-tsens  ) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[1])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[1])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[1])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[1])]<-tsens)) 
+=======
+			if(LBbutton && RBbutton && LAVstick>tsens) 
+			flipper2_out.data=round(64+50*LAVstick);
+			if(LBbutton && RBbutton && LAVstick<-tsens) 
+			flipper2_out.data=round(64+50*LAVstick);
+			if(RTbutton &&  RBbutton && LAVstick<=tsens && LAVstick>=-tsens) 
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
+			flipper2_out.data=64;
+			}
+		}			
+		
+			if(flipper3_out.data > 127)
+		flipper3_out.data = 127;
+	else{
+		if(flipper3_out.data <= 0)
+			flipper3_out.data = 0;
+		else
+			{
+<<<<<<< HEAD
+			if(LBbutton && RBbutton && joy->axes[flipper_order[2]]>tsens) 
+			{
+							if(sentido[2]==0){ 
+				flipper3_out.data=round(64+50*joy->axes[int(flipper_order[2])]);}
+				if(sentido[2]==1){ 
+				flipper3_out.data=round(64+50*(-joy->axes[int(flipper_order[2])]));}
+
+			}
+			if(LBbutton && RBbutton && joy->axes[flipper_order[2]]<-tsens)
+			{ 
+							if(sentido[2]==0){ 
+				flipper3_out.data=round(64+50*joy->axes[int(flipper_order[2])]);}
+				if(sentido[2]==1){ 
+				flipper3_out.data=round(64+50*(-joy->axes[int(flipper_order[2])]));}
+
+			}
+			if((LBbutton &&  RBbutton && joy->axes[flipper_order[2]]<=tsens && joy->axes[int(flipper_order[2])]>=-tsens)   ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[2])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[2])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[2])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[2])]<-tsens)) 
+=======
+			if(LBbutton && RBbutton && RAHstick>tsens) 
+			flipper3_out.data=round(64+50*RAHstick);
+			if(LBbutton && RBbutton && RAHstick<-tsens) 
+			flipper3_out.data=round(64+50*RAHstick);
+			if(RTbutton &&  RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
+			flipper3_out.data=64;
+			}
+		}			
+		
+			if(flipper4_out.data > 127)
+		flipper4_out.data = 127;
+	else{
+		if(flipper4_out.data <= 0)
+			flipper4_out.data = 0;
+		else
+{
+<<<<<<< HEAD
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[3])]>tsens) 
+			flipper4_out.data=round(64+50*joy->axes[int(flipper_order[3])]);
+			if(LBbutton && RBbutton && joy->axes[int(flipper_order[3])]<-tsens) 
+			flipper4_out.data=round(64+50*joy->axes[int(flipper_order[3])]);
+			if((LBbutton &&  RBbutton && joy->axes[int(flipper_order[3])]<=tsens && joy->axes[int(flipper_order[3])]>=-tsens  ) ||(!LBbutton && !RBbutton && joy->axes[int(flipper_order[3])]>tsens) || (!LBbutton && !RBbutton && joy->axes[int(flipper_order[3])]<-tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[3])]>tsens) || ((!LBbutton || !RBbutton) && joy->axes[int(flipper_order[3])]<-tsens)) 
+=======
 			if(LBbutton && RBbutton && RAVstick>tsens) 
 			flipper4_out.data=round(64+50*RAVstick);
 			if(LBbutton && RBbutton && RAVstick<-tsens) 
 			flipper4_out.data=round(64+50*RAVstick);
 			if(RTbutton &&  RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			flipper4_out.data=64;
 			}
 		}			
@@ -199,12 +358,21 @@ float tsens=0.2;
 			if((!LBbutton && !RBbutton && LAHstick>tsens) || (!LBbutton && !RBbutton && LAVstick>tsens) || (!LBbutton && !RBbutton && DpadV>0.9) || (!LBbutton && !RBbutton && DpadH>0.9)) 
 			{
 			if(LAHstick>tsens || LAVstick> tsens)
+<<<<<<< HEAD
 			{
 			angular_rate=LAHstick*100;
 			linear_rate=LAVstick*100;
 			}
 			if(DpadV >0.9 || DpadH > 0.9)
 			{
+=======
+			{
+			angular_rate=LAHstick*100;
+			linear_rate=LAVstick*100;
+			}
+			if(DpadV >0.9 || DpadH > 0.9)
+			{
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			angular_rate=0.5*100;
 			linear_rate=0.5*100;
 			}
@@ -212,6 +380,7 @@ float tsens=0.2;
 			left_out.data=linear_rate-angular_rate;
 			}
 			if((!LBbutton && !RBbutton && LAHstick<-tsens )|| ( !LBbutton && !RBbutton && DpadV<-0.9) || ( !LBbutton && !RBbutton && DpadH<-0.9) ||  ( !LBbutton && !RBbutton && DpadV<-0.9)) 
+<<<<<<< HEAD
 			{
 			if(LAHstick< -tsens || LAVstick< -tsens)
 			{
@@ -220,6 +389,16 @@ float tsens=0.2;
 			}
 			if(DpadV < -0.9 || DpadH < -0.9)
 			{
+=======
+			{
+			if(LAHstick< -tsens || LAVstick< -tsens)
+			{
+			angular_rate=LAHstick*100;
+			linear_rate=LAVstick*100;
+			}
+			if(DpadV < -0.9 || DpadH < -0.9)
+			{
+>>>>>>> b4564c9379edf8682b5b5910884169e4e6f14b84
 			angular_rate=0.5*100;
 			linear_rate=0.5*100;
 			}
@@ -344,11 +523,97 @@ float tsens=0.2;
 			yaw_out.data = 0;
 }
 
+void mapeo(std::vector<int>  order,std::vector<int> &flipper_order)
+{
+//std::vector<int>::iterator i;
+	for (int i=0;i<4;i++)
+	{
+		if (order[i]==1){flipper_order[i]=4;}
+		if (order[i]==2)
+		{//flipper_order.insert(i,3);
+		flipper_order[i]=3;
+		cout<<"order:"<<i;}
+		if (order[i]==3){
+		flipper_order[i]=1;
+		//flipper_order.insert(i,1);
+		cout<<"order"<<i;}
+		if (order[i]==4){
+		flipper_order[i]=0;
+		//flipper_order.insert(i,0);
+		cout<<"order="<<i<<endl;}
+	}
+	cout<<flipper_order[0]<<endl;
+	cout<<flipper_order[1]<<endl;
+	cout<<flipper_order[2]<<endl;	
+	cout<<flipper_order[3]<<endl;
+}
+
 //Función principal
 int main(int argc, char **argv){
+
+
 	std::cout << "Iniciallizing teleoperation FinDER node"<< std::endl;
 	ros::init(argc,argv,"teleoperation_finder");
 	ros::NodeHandle n;
+	std::vector<int> order;
+
+
+  flipper_order.push_back(4);
+  flipper_order.push_back(3);
+  flipper_order.push_back(1);
+  flipper_order.push_back(0); 
+ cout<<"flipper_order"<<endl;
+    cout<<flipper_order[0]<<endl;
+	cout<<flipper_order[1]<<endl;
+	cout<<flipper_order[2]<<endl;	
+	cout<<flipper_order[3]<<endl;
+
+if(ros::param::has("sentido"))
+{
+	n.getParam("sentido",sentido);
+cout<<"sentido"<<endl;
+	cout<<sentido[0]<<endl;
+	cout<<sentido[1]<<endl;
+	cout<<sentido[2]<<endl;	
+	cout<<sentido[3]<<endl;
+}
+else
+{
+	sentido.push_back(0);
+	sentido.push_back(0);
+	sentido.push_back(0);
+	sentido.push_back(0);
+	cout <<"No param found, using default values for sentido"<<endl;
+}	
+
+
+  
+
+if(ros::param::has("order"))
+{
+	n.getParam("order",order);
+cout<<"order"<<endl;
+	cout<<order[0]<<endl;
+	cout<<order[1]<<endl;
+	cout<<order[2]<<endl;	
+	cout<<order[3]<<endl;
+}
+else
+{
+	order.push_back(1);
+	order.push_back(2);
+	order.push_back(3);
+	order.push_back(4);
+	cout <<"No param found, using default values"<<endl;
+}	
+	
+mapeo(order,flipper_order);
+/*cout<<"flipper_order"<<endl;
+    cout<<flipper_order[0]<<endl;
+	cout<<flipper_order[1]<<endl;
+	cout<<flipper_order[2]<<endl;	
+	cout<<flipper_order[3]<<endl;
+	*/
 	ros::Subscriber subJoy 		= n.subscribe<sensor_msgs::Joy>("joy",10,joyCallback);
 
 	ros::Publisher 	base_pub 	= n.advertise<std_msgs::Int16>("base_out",10),

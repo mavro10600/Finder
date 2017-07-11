@@ -18,3 +18,5 @@ $ catkin_make -DCMAKE_BUILD_TYPE=Release
 Luego 
 
 $ source ./devel/setup.bash
+finder@finder-Dell-System-XPS-15Z:~ .->rosparam set /order "[ 1,2,3,4]"
+finder@finder-Dell-System-XPS-15Z:~ .->rosparam set /sentido "[1,0,0,0]"

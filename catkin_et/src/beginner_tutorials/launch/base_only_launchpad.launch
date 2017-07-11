@@ -2,6 +2,9 @@
 	
 	 <node name="base_launchpad_node" pkg="beginner_tutorials" type="base_launchpad.py" output="screen" respawn="true"/>
 		
+<node name="launchpad_node_brazo" pkg="beginner_tutorials" type="launchpad_node_brazo.py" output="screen" respawn="true"/>
+
+
 	<node pkg="teleoperation" type="teleoperation_node" name="teleoperation_node" respawn="true" />	
 	
 	<!--node pkg="joy" type="joy_node" name="joy_node" respawn="true"/-->

@@ -9,14 +9,25 @@
 
 #define RESET_PIN PB_2
 #define INTERRUPT_PIN PB_5  // use pin 2 on Arduino Uno & most boards
-#define DATA_CONTROL_PIN PA_3 //Data control pin for dynamixel
- 
-//#define OUTPUT_READABLE_YAWPITCHROLL
-#define OUTPUT_READABLE_QUATERNION
+#define DATA_CONTROL_PIN PA_2 //Data control pin for dynamixel
+#define PAN_PIN PC_4
+#define TILT_PIN  PC_5
+#define LED1_PIN PB_0
+#define LED2_PIN PB_1
+int led1,led2;
 
-#define USING_IMU true 
+//#define OUTPUT_READABLE_YAWPITCHROLL
+//#define OUTPUT_READABLE_QUATERNION
+
+
+#define USING_IMU false 
 #define USING_CO2_SENSOR false
-#define USING_DYNAMIXEL false
+#define USING_DYNAMIXEL true
+
+#if !USING_IMU
+  #undef OUTPUT_READABLE_YAWPITCHROLL
+  #undef OUTPUT_READABLE_QUATERNION
+#endif
 
 Messenger messengerHandler = Messenger();
 
@@ -67,21 +78,20 @@ void dmpDataReady() {
 void setupIMU(){
     Wire.begin();
     Wire.setModule(3);
+    Wire.setTimeout(1);
     //Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     mpu.initialize();
-    
     pinMode(INTERRUPT_PIN, INPUT);
     devStatus = mpu.dmpInitialize();
     /*
-    Sensor readings with offsets:  -11 7 16388 0 1 0
-    Your offsets: -3271 380 767 217 -2  27
+    Your offsets:  -3301 -385  693 148 -33 -19
     */
-    mpu.setXAccelOffset(-3271);
-    mpu.setYAccelOffset(380);
-    mpu.setZAccelOffset(767);
-    mpu.setXGyroOffset(217);
-    mpu.setYGyroOffset(-2);
-    mpu.setZGyroOffset(27);
+    mpu.setXAccelOffset(-3301);
+    mpu.setYAccelOffset(-385);
+    mpu.setZAccelOffset(693);
+    mpu.setXGyroOffset(148);
+    mpu.setYGyroOffset(-33);
+    mpu.setZGyroOffset(-19);
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
       // turn on the DMP, now that it's ready
@@ -158,33 +168,37 @@ SimpleDynamixelClass dynamixel(&dynamixel_obj, 600, 850, 100);//ancho de pulso m
 
 void setupDynamixel(){
     dynamixel_obj.begin(1000000UL, DATA_CONTROL_PIN);
-    //dynamixel_obj.setMaxTorque(1, 1023);//Se define el maximo par disponible
-    //dynamixel.write(gripper_out);//Start dynamixel totally open
+    dynamixel_obj.setMaxTorque(1, 1023);//Se define el maximo par disponible
+    dynamixel.write(gripper_out);//Start dynamixel totally open
     delay(100);
   }
 
 void updateDynamixel(){
   if (dynamixel_obj.ping(1) != 0) {
-      dynamixel_obj.reset(1);
-      delay(100);
-      gripper_out=-100;
-      setupDynamixel();
+    dynamixel_obj.reset(1);
+    setupDynamixel();
   }
-  gripper_load = dynamixel_obj.readLoad(1);
-  gripper_pos = dynamixel_obj.readPosition(1);
-  if(gripper_load < 1400 || gripper_inc < 0){
-    gripper_out += gripper_inc; 
-    gripper_out = constrain(gripper_out,-100,100);
-    dynamixel.write(gripper_out);
-    ledDynamixel = !ledDynamixel;
-    digitalWrite(BLUE_LED,ledDynamixel);
+  else{
+    gripper_load = dynamixel_obj.readLoad(1);
+    gripper_pos = dynamixel_obj.readPosition(1);
+    
+    if(gripper_load < 1400 || gripper_inc < 0){
+      gripper_out += gripper_inc; 
+      gripper_inc=0;
+      gripper_out = constrain(gripper_out,-100,100);
+      dynamixel.write(gripper_out);
+      ledDynamixel = !ledDynamixel;
+      digitalWrite(BLUE_LED,ledDynamixel);
+    }
   }
 }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////
 //pan-tilt servo angles
-int pan,tilt;
+Servo pan,tilt;
+int pan_angle=90,tilt_angle=90;
+
 // ================================================================
 // ===               CO2 SENSOR FUNCTIONS                       ===
 // ================================================================
@@ -201,6 +215,7 @@ bool blinkCO2 = false;
 void setupCO2Sensor(){
     ///////////CO2 set-up
     Serial2.begin(9600);
+    Serial2.setTimeout(1);
     //Serial2.setTimeout(10);
     Serial2.println("K 0");  // Set Command mode
     Serial2.println("M 6"); // send Mode for Z and z outputs
@@ -211,7 +226,7 @@ void setupCO2Sensor(){
 void fill_buffer(void){
   // Fill buffer with sensor ascii data
   ind = 0;
-  while(buffer[ind-1] != 0x0A&& Serial2.available() ){  // Read sensor and fill buffer up to 0XA = CR
+  while(buffer[ind-1] != 0x0A && Serial2.available() ){  // Read sensor and fill buffer up to 0XA = CR
     if(Serial2.available()) {
       buffer[ind] = Serial2.read();
       ind++;
@@ -247,9 +262,11 @@ void readFromSerial(){
    while(Serial.available() > 0){
        int data = Serial.read();
        messengerHandler.process(data);
-       //led=!led;
-       //digitalWrite(GREEN_LED,led);
        gripper_inc = messengerHandler.readLong();
+       pan_angle = messengerHandler.readLong();
+       tilt_angle = messengerHandler.readLong();
+       led1 = messengerHandler.readLong();
+       led2 = messengerHandler.readLong();
     }  
 }
 
@@ -297,9 +314,8 @@ void onMessageCompleted(){
   }
 }
 void updateData(){
-  Serial.print('e');
-  Serial.print("\t");
-  
+    Serial.print('e');
+    Serial.print("\t");
   #ifdef OUTPUT_READABLE_YAWPITCHROLL
     Serial.print(ypr[2]);//roll
     Serial.print("\t");
@@ -308,7 +324,6 @@ void updateData(){
     Serial.print(ypr[0]);//yaw
     Serial.print("\t");
   #endif
-  
   #ifdef OUTPUT_READABLE_QUATERNION
     Serial.print(q.x);
     Serial.print("\t");
@@ -319,10 +334,21 @@ void updateData(){
     Serial.print(q.w);
     Serial.print("\t");
   #endif
-  
+
+  #if !USING_IMU
+    Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(0.0);
+    Serial.print("\t");
+    Serial.print(0.0);
+    Serial.print("\t");
+  #endif
+
   Serial.print(co2);
   Serial.print("\t");
-  Serial.print(gripper_pos);
+  Serial.print(led1);
   Serial.print("\n");
 }
 
@@ -331,7 +357,8 @@ void setup() {
   pinMode(GREEN_LED,OUTPUT);
   pinMode(RESET_PIN,OUTPUT);
   pinMode(BLUE_LED,OUTPUT);
-  
+  pinMode(LED1_PIN,OUTPUT);
+  pinMode(LED2_PIN,OUTPUT);
   ///Conectar el pin de reset al pin reset de la placa si se usa arduino
   digitalWrite(RESET_PIN,HIGH);
   messengerHandler.attach(onMessageCompleted);
@@ -347,11 +374,14 @@ void setup() {
   #if USING_IMU
     setupIMU();
   #endif
-  
+  pan.attach(PAN_PIN);
+  tilt.attach(TILT_PIN);
+
+  Serial3.setTimeout(1);
 }
 
 void loop() {
- readFromSerial();
+  readFromSerial();
   
   updateTime(); 
   
@@ -370,8 +400,11 @@ void loop() {
       readCO2sensor();
     }
   #endif
-
+  pan.write(pan_angle);
+  tilt.write(tilt_angle);
+  analogWrite(LED1_PIN,led1);
+  analogWrite(LED2_PIN,led2);
   updateData();//send data to computer  
-  //delay(5);
+  delay(5);
   
 }

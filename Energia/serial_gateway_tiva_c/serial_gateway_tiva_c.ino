@@ -17,7 +17,8 @@
 int led1,led2;
 
 //#define OUTPUT_READABLE_YAWPITCHROLL
-#define OUTPUT_READABLE_QUATERNION
+//#define OUTPUT_READABLE_QUATERNION
+
 
 #define USING_IMU false 
 #define USING_CO2_SENSOR false
@@ -333,6 +334,7 @@ void updateData(){
     Serial.print(q.w);
     Serial.print("\t");
   #endif
+
   #if !USING_IMU
     Serial.print(0.0);
     Serial.print("\t");
@@ -343,6 +345,7 @@ void updateData(){
     Serial.print(0.0);
     Serial.print("\t");
   #endif
+
   Serial.print(co2);
   Serial.print("\t");
   Serial.print(led1);

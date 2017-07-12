@@ -11,6 +11,49 @@ var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
 var led1Publish;
 var led2Publish;
 
+var flipper1_reset = 0;
+var flipper2_reset = 0;
+var flipper3_reset = 0;
+var flipper4_reset = 0;
+
+var flipper1_lec = 0.0;
+var flipper2_lec = 0.0;
+var flipper3_lec = 0.0;
+var flipper4_lec = 0.0;
+
+var flipper1_color = "white";
+var flipper2_color = "white";
+var flipper3_color = "white";
+var flipper4_color = "white";
+
+
+var base_start_reset = 0;
+var shoulder_start_reset = 0;
+var elbow_start_reset = 0;
+var roll_start_reset = 0;
+var pitch_start_reset = 0;
+
+var base_end_reset = 0;
+var shoulder_end_reset = 0;
+var elbow_end_reset = 0;
+var roll_end_reset = 0;
+var pitch_end_reset = 0;
+
+var base_lec = 0;
+var shoulder_lec = 0;
+var elbow_lec = 0;
+var roll_lec = 0;
+var pitch_lec = 0;
+
+var base_color = "white";
+var shoulder_color = "white";
+var elbow_color = "white";
+var roll_color = "white";
+var pitch_color = "white";
+
+
+
+
 function principal(){
 	//-----------ROS Connection
 	// Connect to ROS.
@@ -61,8 +104,10 @@ function principal(){
 	$('.img-responsive').eq(4).attr('src', "http://"+ip+":8080/stream?topic=/"+cam5+"/image_raw&type=mjpeg&width="+width5+"&height="+height5+"&quality="+quality5);
 
 
+	setTable();
 
-	//pub
+	//Publish Topics
+	//--------------------------------
   	led1Publish = new ROSLIB.Topic({
 		ros : ros,
 		name : '/hardware/set/led_a',
@@ -85,7 +130,6 @@ function principal(){
 		name : '/hardware/set/camPan',
 		messageType : 'std_msgs/Int16'
 	});
-
 
 
 	led1Publish.publish(
@@ -111,7 +155,8 @@ function principal(){
 		})
 	);
 
-	//Subscribe battery
+	// Subscribe Topics
+	// -----------------------
 	var batteryListener = new ROSLIB.Topic({
 		ros : ros,
 		name : '/hardware/robot_state/robotBattery',
@@ -183,6 +228,151 @@ function principal(){
 		name : '/hardware/robot_state/victimStatus',
 		messageType : 'std_msgs/String'
 	});
+
+
+	//// Flippers -------------------------------------
+	var flipLFResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'flipper1_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var flipLBResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'flipper2_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var flipRFResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'flipper3_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var flipRBResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'flipper4_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+
+	// Base --------------------------------------------
+	var baseStartResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'base_start_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var baseEndResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'base_end_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	// shoulder --------------------------------------------
+	var shoulderStartResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'shoulder_start_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var shoulderEndResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'shoulder_end_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	// elbow --------------------------------------------
+	var elbowStartResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'elbow_start_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var elbowEndResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'elbow_end_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	// roll --------------------------------------------
+	var rollStartResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'roll_start_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var rollEndResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'roll_end_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	// pitch --------------------------------------------
+	var pitchStartResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'pitch_start_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+	var pitchEndResetListener = new ROSLIB.Topic({
+		ros :ros,
+		name : 'pitch_end_reset',
+		messageType : 'std_msgs/Int16'
+	});
+
+
+
+	var flipLFPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'flipper1_lec',
+		messageType : 'std_msgs/Float32'
+	});
+
+	var flipLBPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'flipper2_lec',
+		messageType : 'std_msgs/Float32'
+	});
+
+	var flipRFPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'flipper3_lec',
+		messageType : 'std_msgs/Float32'
+	});
+
+	var flipRBPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'flipper4_lec',
+		messageType : 'std_msgs/Float32'
+	});
+
+	
+	var basePosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'base_lec',
+		messageType : 'std_msgs/Float32'
+	});
+	var shoulderPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'shoulder_lec',
+		messageType : 'std_msgs/Float32'
+	});
+	var elbowPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'elbow_lec',
+		messageType : 'std_msgs/Float32'
+	});	
+	var rollPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'roll_lec',
+		messageType : 'std_msgs/Float32'
+	});	
+	var pitchPosListener = new ROSLIB.Topic({
+		ros : ros,
+		name : 'pitch_lec',
+		messageType : 'std_msgs/Float32'
+	});	
 
 
 
@@ -311,6 +501,223 @@ function principal(){
 
 	victimStatusListener.subscribe(function(message){
 		$('#victimStatus').html(message.data);
+	});
+
+	// Service
+	// ----------------------
+
+//	var addTwoIntsClient = new ROSLIB.Service({
+//		ros : ros,
+//		name : '/add_two_ints',
+//		serviceType : 'rospy_tutorials/AddTwoInts'
+//	});
+//
+//	var request = new ROSLIB.ServiceRequest({
+//		a : 1,
+//		b : 2
+//	});
+//
+//	addTwoIntsClient.callService(request,function(result){
+//		console.log('Result for service call on'
+//			+ addTwoIntsClient.name
+//			+ ': '
+//			+ result.sum);
+//	});
+	
+
+	// flipper 1 ---------------------------------------
+	flipLFResetListener.subscribe(function(message){
+		console.log("Data:"+message.data);
+		if(message.data==1){
+			flipper1_color="red";
+		}else{
+			flipper1_color="white";
+		}
+		setTable();
+	});
+
+	// flipper 2 ---------------------------------------
+	flipLBResetListener.subscribe(function(message){
+		console.log("Data:"+message.data);
+		if(message.data==1){
+			flipper2_color="red";
+		}else{
+			flipper2_color="white";
+		}
+		setTable();
+	});
+
+	// flipper 3 ---------------------------------------
+	flipRFResetListener.subscribe(function(message){
+		console.log("Data:"+message.data);
+		if(message.data==1){
+			flipper3_color="red";
+		}else{
+			flipper3_color="white";
+		}
+		setTable();
+	});
+
+	// flipper 4 ---------------------------------------
+	flipRBResetListener.subscribe(function(message){
+		console.log("Data:"+message.data);
+		if(message.data==1){
+			flipper4_color="red";
+		}else{
+			flipper4_color="white";
+		}
+		setTable();
+	});
+
+	// base ---------------------------------------
+	baseStartResetListener.subscribe(function(message){
+		base_start_reset = message.data;
+		if(base_start_reset==1){
+			base_color="red";
+		}
+		if(base_start_reset==0 && base_end_reset==0){
+			base_color="white";
+		}
+		setTable();
+	});
+	baseEndResetListener.subscribe(function(message){
+		base_end_reset = message.data;
+		if(base_end_reset==1){
+			base_color="orange";
+		}
+		if(base_start_reset==0 && base_end_reset==0){
+			base_color="white";
+		}
+		setTable();
+	});
+
+	// shoulder ---------------------------------------
+	shoulderStartResetListener.subscribe(function(message){
+		shoulder_start_reset = message.data;
+		if(shoulder_start_reset==1){
+			shoulder_color="red";
+		}
+		if(shoulder_start_reset==0 && shoulder_end_reset==0){
+			shoulder_color="white";
+		}
+		setTable();
+	});
+	shoulderEndResetListener.subscribe(function(message){
+		shoulder_end_reset = message.data;
+		if(shoulder_end_reset==1){
+			shoulder_color="orange";
+		}
+		if(shoulder_start_reset==0 && shoulder_end_reset==0){
+			shoulder_color="white";
+		}
+		setTable();
+	});
+
+	// elbow ---------------------------------------
+	elbowStartResetListener.subscribe(function(message){
+		elbow_start_reset = message.data;
+		if(elbow_start_reset==1){
+			elbow_color="red";
+		}
+		if(elbow_start_reset==0 && elbow_end_reset==0){
+			elbow_color="white";
+		}
+		setTable();
+	});
+	elbowEndResetListener.subscribe(function(message){
+		elbow_end_reset = message.data;
+		if(elbow_end_reset==1){
+			elbow_color="orange";
+		}
+		if(elbow_start_reset==0 && elbow_end_reset==0){
+			elbow_color="white";
+		}
+		setTable();
+	});
+
+	// roll ---------------------------------------
+	rollStartResetListener.subscribe(function(message){
+		roll_start_reset = message.data;
+		if(roll_start_reset==1){
+			roll_color="red";
+		}
+		if(roll_start_reset==0 && roll_end_reset==0){
+			roll_color="white";
+		}
+		setTable();
+	});
+	rollEndResetListener.subscribe(function(message){
+		roll_end_reset = message.data;
+		if(roll_end_reset==1){
+			roll_color="orange";
+		}
+		if(roll_start_reset==0 && roll_end_reset==0){
+			roll_color="white";
+		}
+		setTable();
+	});
+
+	// pitch ---------------------------------------
+	pitchStartResetListener.subscribe(function(message){
+		pitch_start_reset = message.data;
+		if(pitch_start_reset==1){
+			pitch_color="red";
+		}
+		if(pitch_start_reset==0 && pitch_end_reset==0){
+			pitch_color="white";
+		}
+		setTable();
+	});
+	pitchEndResetListener.subscribe(function(message){
+		pitch_end_reset = message.data;
+		if(pitch_end_reset==1){
+			pitch_color="orange";
+		}
+		if(pitch_start_reset==0 && pitch_end_reset==0){
+			pitch_color="white";
+		}
+		setTable();
+	});
+
+
+
+	// Flipper pos
+	flipLFPosListener.subscribe(function(message){
+		flipper1_lec = Math.round(message.data);
+		setTable();
+	});
+	flipLBPosListener.subscribe(function(message){
+		flipper2_lec = Math.round(message.data);
+		setTable();
+	});
+	flipRFPosListener.subscribe(function(message){
+		flipper3_lec = Math.round(message.data);
+		setTable();
+	});
+	flipRBPosListener.subscribe(function(message){
+		flipper4_lec = Math.round(message.data);
+		setTable();
+	});
+
+	basePosListener.subscribe(function(message){
+		base_lec = Math.round(message.data);
+		setTable();
+	});
+	shoulderPosListener.subscribe(function(message){
+		shoulder_lec = Math.round(message.data);
+		setTable();
+	});
+	elbowPosListener.subscribe(function(message){
+		elbow_lec = Math.round(message.data);
+		setTable();
+	});
+	rollPosListener.subscribe(function(message){
+		roll_lec = Math.round(message.data);
+		setTable();
+	});	
+	pitchPosListener.subscribe(function(message){
+		pitch_lec = Math.round(message.data);
+		setTable();
 	});
 
 
@@ -527,4 +934,21 @@ function setPan(){
 	);
 
 	$('#PAN').html(pan+"°");
+}
+
+
+function setTable(){
+	var tabla;
+	tabla = "<table><tr><td bgcolor='"+flipper1_color+"'>flipLF: "+flipper1_lec;
+	tabla+=      "°</td><td bgcolor='"+flipper2_color+"'>flipLB: "+flipper2_lec;
+	tabla+=      "°</td><td bgcolor='"+flipper3_color+"'>flipRF: "+flipper3_lec;
+	tabla+=      "°</td><td bgcolor='"+flipper4_color+"'>flipRB: "+flipper4_lec;
+	tabla+=      "°</td><td bgcolor='"+base_color+"'>base: "+base_lec;
+	tabla+=      "°</td><td bgcolor='"+shoulder_color+"'>shoulder: "+shoulder_lec;
+	tabla+=      "°</td><td bgcolor='"+elbow_color+"'>elbow: "+elbow_lec;
+	tabla+=      "°</td><td bgcolor='"+roll_color+"'>roll: "+roll_lec;
+	tabla+=      "°</td><td bgcolor='"+pitch_color+"'>pitch: "+pitch_lec+"°</td></tr></table>";
+
+	$('#posTable').html( tabla);
+
 }

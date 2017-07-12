@@ -1,5 +1,5 @@
 $(document).ready(principal);
-var ip = '192.168.100.50';
+var ip = '192.168.100.1';
 //var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
 var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';
@@ -42,8 +42,10 @@ function principal(){
 	$('input').eq(8).on('change',setLed2);
 	$('input').eq(9).on('change',setQuality4);
 	$('input').eq(10).on('change',setResolution4);
-	$('input').eq(11).on('change',setQuality5);
-	$('input').eq(12).on('change',setResolution5);
+	$('input').eq(11).on('change',setTilt);
+	$('input').eq(12).on('change',setQuality5);
+	$('input').eq(13).on('change',setResolution5);
+	$('input').eq(14).on('change',setPan);
 
 	// Set cams
 	$('select').eq(0).on('click', setCam1);
@@ -63,14 +65,25 @@ function principal(){
 	//pub
   	led1Publish = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/set/led1',
-		messageType : 'std_msgs/Int32'
+		name : '/hardware/set/led_a',
+		messageType : 'std_msgs/Int16'
 	});
 
 	led2Publish = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/set/led2',
-		messageType : 'std_msgs/Int32'
+		name : '/hardware/set/led_b',
+		messageType : 'std_msgs/Int16'
+	});
+
+	tiltPublish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/camTilt',
+		messageType : 'std_msgs/Int16'
+	});
+	panPublish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/hardware/set/camPan',
+		messageType : 'std_msgs/Int16'
 	});
 
 
@@ -84,6 +97,18 @@ function principal(){
 		new ROSLIB.Message({
 			data : 0
 		}) 
+	);
+
+	tiltPublish.publish(
+		new ROSLIB.Message({
+			data : 90
+		})
+	);
+
+	panPublish.publish(
+		new ROSLIB.Message({
+			data : 90
+		})
 	);
 
 	//Subscribe battery
@@ -107,8 +132,8 @@ function principal(){
 
 	var thermalListener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/robot_state/thermalData',
-		messageType : 'std_msgs/Int16MultiArray'
+		name : '/hardware/sensors/thermal',
+		messageType : 'std_msgs/Float32MultiArray'
 	});
 
 	var qrListener = new ROSLIB.Topic({
@@ -158,6 +183,8 @@ function principal(){
 		name : '/hardware/robot_state/victimStatus',
 		messageType : 'std_msgs/String'
 	});
+
+
 
 	batteryListener.subscribe(function(message){
 		var levelRobotBaterry = message.data;
@@ -456,7 +483,7 @@ function setLed1(){
 
 	led1Publish.publish(
 		new ROSLIB.Message({
-			data : Math.round( $(this).val())
+			data : Math.round( $(this).val()*2.5)
 		}) 
 	);
 
@@ -469,10 +496,35 @@ function setLed2(){
 
 	led2Publish.publish(
 		new ROSLIB.Message({
-			data : Math.round( $(this).val())
+			data : Math.round( $(this).val()*2.5)
 		}) 
 	);
 
 	$('#L2').html(led+"%");
 
+}
+
+function setTilt(){
+	var tilt = $(this).val();
+
+	tiltPublish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		})
+	);
+
+	$('#TILT').html(tilt+"°");
+
+}
+
+function setPan(){
+	var pan = $(this).val();
+
+	panPublish.publish(
+		new ROSLIB.Message({
+			data : Math.round( $(this).val())
+		})
+	);
+
+	$('#PAN').html(pan+"°");
 }

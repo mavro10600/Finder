@@ -1,5 +1,5 @@
 $(document).ready(principal);
-var ip = '192.168.100.1';
+var ip = '192.168.100.50';
 //var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
 var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';

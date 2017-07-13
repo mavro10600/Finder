@@ -19,9 +19,9 @@ int led1,led2;
 //#define OUTPUT_READABLE_YAWPITCHROLL
 #define OUTPUT_READABLE_QUATERNION
 
-#define USING_IMU false 
+#define USING_IMU true 
 #define USING_CO2_SENSOR true
-#define USING_DYNAMIXEL false
+#define USING_DYNAMIXEL true
 
 #if !USING_IMU
   #undef OUTPUT_READABLE_YAWPITCHROLL
@@ -203,50 +203,29 @@ int co2;
 #if USING_CO2_SENSOR
 ////////////////////////////////////////////////////////////////////////////////////
 //CO2 sensor variables
-double multiplier = 4;// 1 for 2% =20000 PPM, 10 for 20% = 200,000 PPM
-uint8_t buffer[25];
-uint8_t ind =0;
-uint8_t index_ =0;
+double multiplier = 5;// 1 for 2% =20000 PPM, 10 for 20% = 200,000 PPM
 bool blinkCO2 = false;
 
 void setupCO2Sensor(){
     ///////////CO2 set-up
-    Serial2.begin(9600);
-    //Serial2.setTimeout(1);
+    Serial2.begin(9600); // Start serial communications with sensor
+    Serial2.setTimeout(3);
     Serial2.println("K 0");  // Set Command mode
-    Serial2.println("M 6"); // send Mode for Z and z outputs
-    // "Z xxxxx z xxxxx" (CO2 filtered and unfiltered)
-    Serial2.println("K 1");  // set streaming mode
+    Serial2.println("K 2");  // set polling mode
+    Serial2.readString(); 
     pinMode(RED_LED,OUTPUT);
 }
-void fill_buffer(void){
-  // Fill buffer with sensor ascii data
-  ind = 0;
-  while(buffer[ind-1] != 0x0A){// && Serial2.available() ){  // Read sensor and fill buffer up to 0XA = CR
-    if(Serial2.available()) {
-      buffer[ind] = Serial2.read();
-      ind++;
-      blinkCO2 = !blinkCO2;
-      digitalWrite(RED_LED,blinkCO2);
+
+void readCO2sensor(){
+  Serial2.println("Z");
+  //while(!Serial2.available())
+  if(Serial2.available()){
+    if(Serial2.read() == 'Z'){
+      Serial2.read();//read the white space
+      co2 = Serial2.readStringUntil('Z').toInt()*multiplier;
+      Serial2.readString(); 
     }
   }
-  // buffer() now filled with sensor ascii data
-  // ind contains the number of characters loaded into buffer up to 0xA =  CR
-  ind = ind -2; // decrement buffer to exactly match last numerical character
-}
-
-void format_output(){ // read buffer, extract 6 ASCII chars, convert to PPM and print
-  co2 = buffer[15-index_]-0x30;
-  co2 = co2+((buffer[14-index_]-0x30)*10);
-  co2 +=(buffer[13-index_]-0x30)*100;
-  co2 +=(buffer[12-index_]-0x30)*1000;
-  co2 +=(buffer[11-index_]-0x30)*10000;
-}
-void readCO2sensor(){
-  fill_buffer();  // function call that reads CO2 sensor and fills buffer
-  index_ = 8;  // In ASCII buffer, filtered value is offset from raw by 8 bytes
-  format_output();
-  co2 = co2*multiplier;
 }
 #endif
 

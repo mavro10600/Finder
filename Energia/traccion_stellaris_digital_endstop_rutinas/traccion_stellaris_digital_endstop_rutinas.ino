@@ -268,6 +268,9 @@ void SetupEndstop()
   pinMode(endstop4,INPUT_PULLUP);
 
   attachInterrupt(endstop4,end4,CHANGE);
+
+
+
 if (digitalRead(endstop1)==HIGH){endstp1prev==true;}
 if (digitalRead(endstop1)==LOW){endstp1prev==false;}
 
@@ -431,6 +434,10 @@ void Update_Motors()
 
 LEFT.write(left_out);
 RIGHT.write(right_out);
+
+
+//////////////////////////////////////////////////////////////////////////
+
 if (endstp1==true)
 {
   //roboclaw.ForwardBackwardM1(address,64);
@@ -439,8 +446,9 @@ if (endstp1==true)
 }
 
 if (endstp1==false)
-
 roboclaw.ForwardBackwardM1(address,flipper1_out);
+
+////////////////////////////////////////////////////////////////////////////
 
 if (endstp2==true)
 //roboclaw.ForwardBackwardM2(address,64);
@@ -450,9 +458,10 @@ if (endstp2==true)
   if(fl2_stat==false){if(flipper2_out>64){roboclaw.ForwardBackwardM2(address,64);}else {roboclaw.ForwardBackwardM2(address,flipper2_out);}}
 }
 
-
 if (endstp2==false)
 roboclaw.ForwardBackwardM2(address,flipper2_out);
+
+/////////////////////////////////////////////////////////////////////////
 
 if (endstp3==true)
 //rc.ForwardBackwardM1(address,64);
@@ -465,6 +474,8 @@ if (endstp3==true)
 if (endstp3==false)
 rc.ForwardBackwardM1(address,flipper3_out);
 
+//////////////////////////////////////////////////////////////////
+//
 if (endstp4==true)
 //rc.ForwardBackwardM2(address,64);
 {
@@ -472,7 +483,6 @@ if (endstp4==true)
   if(fl4_stat==true){if(flipper4_out<64){rc.ForwardBackwardM2(address,flipper4_out);}else {rc.ForwardBackwardM2(address,64);}}
   if(fl4_stat==false){if(flipper4_out>64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM2(address,flipper4_out);}}
 }
-
 
 if (endstp4==false)
 rc.ForwardBackwardM2(address,flipper4_out);
@@ -482,6 +492,7 @@ rc.ForwardBackwardM2(address,flipper4_out);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Update time function
+
 void Update_Time()
 {
   CurrentMicrosecs = micros();

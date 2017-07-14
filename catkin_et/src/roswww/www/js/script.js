@@ -165,7 +165,7 @@ function principal(){
 
 	var co2Listener = new ROSLIB.Topic({
 		ros : ros,
-		name : '/hardware/sensor/co2',
+		name : '/hardware/sensors/co2',
 		messageType : 'std_msgs/Int32'
 	});
 
@@ -259,65 +259,65 @@ function principal(){
 	// Base --------------------------------------------
 	var baseStartResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'base_start_reset',
+		name : 'base1_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	var baseEndResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'base_end_reset',
+		name : 'base2_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	// shoulder --------------------------------------------
 	var shoulderStartResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'shoulder_start_reset',
+		name : 'shoulder1_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	var shoulderEndResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'shoulder_end_reset',
+		name : 'shoulder2_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	// elbow --------------------------------------------
 	var elbowStartResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'elbow_start_reset',
+		name : 'elbow1_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	var elbowEndResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'elbow_end_reset',
+		name : 'elbow2_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	// roll --------------------------------------------
 	var rollStartResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'roll_start_reset',
+		name : 'roll1_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	var rollEndResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'roll_end_reset',
+		name : 'roll2_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	// pitch --------------------------------------------
 	var pitchStartResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'pitch_start_reset',
+		name : 'pitch1_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
 	var pitchEndResetListener = new ROSLIB.Topic({
 		ros :ros,
-		name : 'pitch_end_reset',
+		name : 'pitch2_reset',
 		messageType : 'std_msgs/Int16'
 	});
 
@@ -399,7 +399,7 @@ function principal(){
 	});
 
 	co2Listener.subscribe(function(message){
-		var levelCo2 = message.data;
+		var levelCo2 = message.data/10;
 		console.log("CO2:"+levelCo2);
 		if($('.progress-bar').eq(2).hasClass('progress-bar-success')){
 		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');

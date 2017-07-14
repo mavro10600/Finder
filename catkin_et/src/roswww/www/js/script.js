@@ -160,7 +160,7 @@ function principal(){
 	var batteryListener = new ROSLIB.Topic({
 		ros : ros,
 		name : '/hardware/robot_state/robotBattery',
-		messageType : 'std_msgs/Float32'
+		messageType : 'std_msgs/Int64'
 	});
 
 	var co2Listener = new ROSLIB.Topic({
@@ -385,9 +385,9 @@ function principal(){
 		if($('.progress-bar').eq(0).hasClass('progress-bar-danger')){
 		  $('.progress-bar').eq(0).toggleClass('progress-bar-danger');
 		}
-		var percent = Math.round(100*(levelRobotBaterry-9.9)/2.7);
+		var percent = Math.round(10*(levelRobotBaterry-100)/4);
 		$('.progress-bar').eq(0).css("width", percent + "%");
-		$('.progress-bar').eq(0).html('<strong>' + percent + '%' +'</strong>');
+		$('.progress-bar').eq(0).html('<strong>' + percent + '% - '+(levelRobotBaterry/10) +' V</strong>');
 		if(percent>80.0){
 		  $('.progress-bar').eq(0).toggleClass('progress-bar-success');
 		}

@@ -97,7 +97,7 @@ class Launchpad_Class(object):
 		self._Pitch_Encoder=rospy.Publisher('pitch',Int64,queue_size=5)
 		self._Yaw_Encoder=rospy.Publisher('yaw',Int64,queue_size=10)
 		self._Gripper_Encoder=rospy.Publisher('gripper',Int64,queue_size=10)
-		self._Battery_Level=rospy.Publisher('battery_level',Int64,queue_size=10)		
+		self._Battery_Level=rospy.Publisher('/hardware/robot_state/robotBattery',Int64,queue_size=10)		
 								
 
 		

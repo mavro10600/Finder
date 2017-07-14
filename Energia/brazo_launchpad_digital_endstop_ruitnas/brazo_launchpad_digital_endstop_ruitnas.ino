@@ -567,19 +567,19 @@ roboclaw.ForwardBackwardM2(address,elbow_out);
 if (flagEndstopRoll1==true && flagEndstopRoll2==false)
 {
 if(roll_stat==true)
-{if(roll_out>64){rc.ForwardBackwardM1(address,roll_out);}else {rc.ForwardBackwardM1(address,64);}}
+{if(roll_out>64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,roll_out);}}
 
 if(roll_stat==false)
-{if(roll_out<64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,roll_out);}}
+{if(roll_out<64){rc.ForwardBackwardM1(address,roll_out);}else {rc.ForwardBackwardM1(address,64);}}
 }
 
 if(flagEndstopRoll2==true && flagEndstopRoll1==false)
 {
 if(roll_stat==true)
-{if(roll_out>64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,roll_out);}}
+{if(roll_out>64){rc.ForwardBackwardM1(address,roll_out);}else {rc.ForwardBackwardM1(address,64);}}
 
 if(roll_stat==false)
-{if(roll_out<64){rc.ForwardBackwardM1(address,roll_out);}else {rc.ForwardBackwardM1(address,64);}}
+{if(roll_out<64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,roll_out);}}
 }
 //roboclaw.ForwardBackwardM1(address,shoulder_out);
 if(flagEndstopRoll1==false && flagEndstopRoll2==false )
@@ -590,55 +590,55 @@ rc.ForwardBackwardM1(address,roll_out);
 //rc.ForwardBackwardM1(address,roll_out);
 
 ////////////////////////////////////////////////////////////////////////////////
-if (flagEndstopPitch1==true && flagEndstopPitch2==false)
+if (flagEndstopYaw1==true && flagEndstopYaw2==false)
 {
-if(pitch_stat==true)
-{if(pitch_out>64){rc.ForwardBackwardM2(address,pitch_out);}else {rc.ForwardBackwardM2(address,64);}}
+if(yaw_stat==true)
+{if(yaw_out>64){rc.ForwardBackwardM2(address,yaw_out);}else {rc.ForwardBackwardM2(address,64);}}
 
-if(pitch_stat==false)
-{if(pitch_out<64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM2(address,pitch_out);}}
+if(yaw_stat==false)
+{if(yaw_out<64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM2(address,yaw_out);}}
 }
 
-if(flagEndstopPitch2==true && flagEndstopPitch1==false)
+if(flagEndstopYaw2==true && flagEndstopYaw1==false)
 {
-if(pitch_stat==true)
-{if(pitch_out>64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM1(address,pitch_out);}}
+if(yaw_stat==true)
+{if(yaw_out>64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM1(address,yaw_out);}}
 
-if(pitch_stat==false)
-{if(pitch_out<64){rc.ForwardBackwardM2(address,pitch_out);}else {rc.ForwardBackwardM2(address,64);}}
+if(yaw_stat==false)
+{if(yaw_out<64){rc.ForwardBackwardM2(address,yaw_out);}else {rc.ForwardBackwardM2(address,64);}}
 }
 //roboclaw.ForwardBackwardM1(address,shoulder_out);
-if(flagEndstopPitch1==false && flagEndstopPitch2==false )
-rc.ForwardBackwardM2(address,pitch_out);  
+if(flagEndstopYaw1==false && flagEndstopYaw2==false )
+rc.ForwardBackwardM2(address,yaw_out);  
 
 
 
 //rc.ForwardBackwardM2(address,pitch_out);
 //TODO  agregar codigo del cytron correspondiente al yawXD
 
-if (flagEndstopYaw1==true && flagEndstopYaw2==false)
+if (flagEndstopPitch1==true && flagEndstopPitch2==false)
 {
-if(yaw_stat==true)
-{if(yaw_out>64){int yaw_temp=map(yaw_out,64,127,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,yaw_temp);}else {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}
+if(pitch_stat==true)
+{if(pitch_out>64){int pitch_temp=map(pitch_out,64,127,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,pitch_temp);}else {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}
 
-if(yaw_stat==false)
-{if(yaw_out<64){digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}else {int yaw_temp=map(yaw_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,yaw_temp);}
+if(pitch_stat==false)
+{if(pitch_out<64){digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}else {int pitch_temp=map(pitch_out,0,64,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,pitch_temp);}
 }
 
-if(flagEndstopYaw2==true && flagEndstopYaw1==false)
+if(flagEndstopPitch2==true && flagEndstopPitch1==false)
 {
-if(yaw_stat==true)
-{if(pitch_out>64) {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}  else {int yaw_temp=map(yaw_out,64,127,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,yaw_temp);}}
+if(pitch_stat==true)
+{if(pitch_out>64) {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}  else {int pitch_temp=map(pitch_out,64,127,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,pitch_temp);}}
 
-if(yaw_stat==false)
-{if(yaw_out<64) {int yaw_temp=map(yaw_out,0,64,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,yaw_temp);}  else {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}
+if(pitch_stat==false)
+{if(pitch_out<64) {int pitch_temp=map(pitch_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,pitch_temp);}  else {digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,0);}}
 }
 //roboclaw.ForwardBackwardM1(address,shoulder_out);
-if(flagEndstopYaw1==false && flagEndstopYaw2==false )
+if(flagEndstopPitch1==false && flagEndstopPitch2==false )
 {
- if(yaw_out>64){int yaw_temp=map(yaw_out,64,127,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,yaw_temp);} 
- if(yaw_out<64){int yaw_temp=map(yaw_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,yaw_temp);}
- if(yaw_out==64){int yaw_temp=map(yaw_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,0);}    
+ if(pitch_out>64){int pitch_temp=map(pitch_out,64,127,0,127); digitalWrite(pinCytronDir,HIGH);analogWrite(pinCytronPwm,pitch_temp);} 
+ if(pitch_out<64){int pitch_temp=map(pitch_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,pitch_temp);}
+ if(pitch_out==64){int pitch_temp=map(pitch_out,0,64,0,127); digitalWrite(pinCytronDir,LOW);analogWrite(pinCytronPwm,0);}    
 }  
 
 
@@ -935,11 +935,11 @@ void ISRendRoll1()
 {
 
   if(digitalRead(pinendstopRoll1)==LOW && flagEndstopRoll1prev==flagEndstopRoll1)
-  { delay (1);if(digitalRead(pinendstopRoll1)==LOW && flagEndstopRoll1prev==flagEndstopRoll1)
+  { if(digitalRead(pinendstopRoll1)==LOW && flagEndstopRoll1prev==flagEndstopRoll1)
     {flagEndstopRoll1=true; flagEndstopRoll1prev=!flagEndstopRoll1prev;}
   }
   if(digitalRead(pinendstopRoll1)==HIGH && flagEndstopRoll1prev==!flagEndstopRoll1)
-  { delay (1);if(digitalRead(pinendstopRoll1)==HIGH && flagEndstopRoll1prev==!flagEndstopRoll1)
+  { if(digitalRead(pinendstopRoll1)==HIGH && flagEndstopRoll1prev==!flagEndstopRoll1)
   {flagEndstopRoll1=false; flagEndstopRoll1prev=!flagEndstopRoll1prev;}
     }
 }

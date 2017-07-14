@@ -397,66 +397,66 @@ float tsens=0.2;
 			}
 		}
 
-	if(elbow_out.data > 127)
-		elbow_out.data = 127;
+	if(elbow_out.data > 100)
+		elbow_out.data = 100;
 	else{
-		if(elbow_out.data <= 0)
-			elbow_out.data = 0;
+		if(elbow_out.data <= 30)
+			elbow_out.data = 30;
 		else
 			{
 			if(LBbutton && !RBbutton && RAVstick>tsens) 
-			elbow_out.data=round(64+50*RAVstick);
+			elbow_out.data=round(64+20*RAVstick);
 			if(LBbutton && !RBbutton && RAVstick<-tsens) 
-			elbow_out.data=round(64+50*RAVstick);
+			elbow_out.data=round(64+20*RAVstick);
 			if(LBbutton && !RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			elbow_out.data=64;
 			}
 		}
 	
 	
-		if(roll_out.data > 127)
-		roll_out.data = 127;
+		if(roll_out.data > 100)
+		roll_out.data = 100;
 	else{
-		if(roll_out.data <= 0)
-			roll_out.data = 0;
+		if(roll_out.data <= 30)
+			roll_out.data = 30;
 		else
 			{
 			if(LBbutton && !RBbutton && RAHstick>tsens) 
-			roll_out.data=round(64+50*RAHstick);
+			roll_out.data=round(64+20*RAHstick);
 			if(LBbutton && !RBbutton && RAHstick<-tsens) 
-			roll_out.data=round(64+50*RAHstick);
+			roll_out.data=round(64+20*RAHstick);
 			if(LBbutton && !RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			roll_out.data=64;
 			}
 		}
 
-		if(pitch_out.data > 127)
-		pitch_out.data = 127;
+		if(pitch_out.data > 100)
+		pitch_out.data = 100;
 	else{
-		if(pitch_out.data <= 0)
-			pitch_out.data = 0;
+		if(pitch_out.data <= 30)
+			pitch_out.data = 30;
 		else
 			{
 			if(!LBbutton && RBbutton && RAHstick>tsens) 
-			pitch_out.data=round(64+50*RAHstick);
+			pitch_out.data=round(64+20*RAHstick);
 			if(!LBbutton && RBbutton && RAHstick<-tsens) 
-			pitch_out.data=round(64+50*RAHstick);
+			pitch_out.data=round(64+20*RAHstick);
 			if(!LBbutton && RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			pitch_out.data=64;
 			}
 		}			
 			
-		if(yaw_out.data > 127)
-		yaw_out.data = 127;
+		if(yaw_out.data > 100)
+		yaw_out.data = 100;
 	else{
-		if(yaw_out.data <= 0)
-			yaw_out.data = 0;
+		if(yaw_out.data <= 30)
+			yaw_out.data = 30;
 		else
 			{
 			if(!LBbutton && RBbutton && RAVstick>tsens) 
-			yaw_out.data=round(64+50*RAVstick);
+			yaw_out.data=round(64+20*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<-tsens) 
-			yaw_out.data=round(64+50*RAVstick);
+			yaw_out.data=round(64+20*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			yaw_out.data=64;
 			}

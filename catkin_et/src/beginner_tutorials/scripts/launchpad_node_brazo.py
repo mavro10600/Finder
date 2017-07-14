@@ -27,6 +27,19 @@ class Launchpad_Class(object):
 		self._Counter=0
 		self.battery_value=0
 		
+		self._reset_base1_value=0;
+		self._reset_base2_value=0;
+		self._reset_shoulder1_value=0;
+		self._reset_shoulder2_value=0;
+		self._reset_elbow1_value=0;
+		self._reset_elbow2_value=0;
+		self._reset_roll1_value=0;
+		self._reset_roll2_value=0;
+		self._reset_pitch1_value=0;
+		self._reset_pit1ch2_value=0;
+		self._reset_yaw1_value=0;
+		self._reset_yaw2_value=0;
+		
 		self.base_pos=0
 		self.shoulder_pos=0
 		self.elbow_pos=0
@@ -63,6 +76,20 @@ class Launchpad_Class(object):
 		self._SerialPublisher=rospy.Publisher('serial_arm',String,queue_size=10)
 		self.deltat=0
 		self.lastUpdate=0
+		
+		self._Base1_Reset=rospy.Publisher('base1_reset',Int16,queue_size=10)
+		self._Base2_Reset=rospy.Publisher('base2_reset',Int16,queue_size=10)
+		self._Shoulder1_Reset=rospy.Publisher('shoulder1_reset',Int16,queue_size=10)
+		self._Shoulder2_Reset=rospy.Publisher('shoulder2_reset',Int16,queue_size=10)
+		self._Elbow1_Reset=rospy.Publisher('elbow1_reset',Int16,queue_size=10)
+		self._Elbow2_Reset=rospy.Publisher('elbow2_reset',Int16,queue_size=10)
+		self._Roll1_Reset=rospy.Publisher('roll1_reset',Int16,queue_size=10)
+		self._Roll2_Reset=rospy.Publisher('roll2_reset',Int16,queue_size=10)
+		self._Pitch1_Reset=rospy.Publisher('pitch1_reset',Int16,queue_size=10)
+		self._Pitch2_Reset=rospy.Publisher('pitch2_reset',Int16,queue_size=10)
+		self._Yaw1_Reset=rospy.Publisher('yaw1_reset',Int16,queue_size=10)
+		self._Yaw2_Reset=rospy.Publisher('yaw2_reset',Int16,queue_size=10)
+		
 		self._Shoulder_Encoder=rospy.Publisher('shoulder',Int64,queue_size=5)
 		self._Base_Encoder=rospy.Publisher('base',Int64,queue_size=10)
 		self._Elbow_Encoder=rospy.Publisher('elbow',Int64,queue_size=5)
@@ -157,8 +184,35 @@ class Launchpad_Class(object):
 				if(lineParts[0]=='b'):
 					
 					self.battery_value=int(lineParts[1])
-					self.Battery_Level.publish(self.battery_value)
-
+					self._Battery_Level.publish(self.battery_value)
+				
+				if (lineParts[0]=='n'):
+					self.reset_base1_value=int(lineParts[1])
+					self.reset_base2_value=int(lineParts[2])
+					self.reset_shoulder1_value=int(lineParts[3])
+					self.reset_shoulder2_value=int(lineParts[4])
+					self.reset_elbow1_value=int(lineParts[5])
+					self.reset_elbow2_value=int(lineParts[6])
+					self.reset_roll1_value=int(lineParts[7])
+					self.reset_roll2_value=int(lineParts[8])
+					self.reset_pitch1_value=int(lineParts[9])
+					self.reset_pitch2_value=int(lineParts[10])
+					self.reset_yaw1_value=int(lineParts[11])
+					self.reset_yaw2_value=int(lineParts[12])
+					
+					self._Base1_Reset.publish(self.reset_base1_value)
+					self._Base2_Reset.publish(self.reset_base2_value)
+					self._Shoulder1_Reset.publish(self.reset_shoulder1_value)
+					self._Shoulder2_Reset.publish(self.reset_shoulder2_value)
+					self._Elbow1_Reset.publish(self.reset_elbow1_value)
+					self._Elbow2_Reset.publish(self.reset_elbow2_value)
+					self._Roll1_Reset.publish(self.reset_roll1_value)
+					self._Roll2_Reset.publish(self.reset_roll2_value)
+					self._Pitch1_Reset.publish(self.reset_pitch1_value)
+					self._Pitch2_Reset.publish(self.reset_pitch2_value)
+					self._Yaw1_Reset.publish(self.reset_yaw1_value)
+					self._Yaw2_Reset.publish(self.reset_yaw2_value)
+					
 				
 			except:
 				rospy.logwarn("Error in sensor values")

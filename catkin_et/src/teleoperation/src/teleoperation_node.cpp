@@ -332,7 +332,7 @@ float tsens=0.2;
 			right_out.data=linear_rate+angular_rate;
 			left_out.data=linear_rate-angular_rate;
 			}
-			if((!LBbutton && !RBbutton && LAHstick<-tsens )|| ( !LBbutton && !RBbutton && DpadV<-0.9) || ( !LBbutton && !RBbutton && DpadH<-0.9) ||  ( !LBbutton && !RBbutton && DpadV<-0.9)) 
+			if((!LBbutton && !RBbutton && LAHstick<-tsens )|| ( !LBbutton && !RBbutton && LAVstick<-tsens ) || ( !LBbutton && !RBbutton && DpadH<-0.9) ||  ( !LBbutton && !RBbutton && DpadV<-0.9)) 
 			{
 			if(LAHstick< -tsens || LAVstick< -tsens)
 			{
@@ -439,14 +439,30 @@ float tsens=0.2;
 			{
 			if(!LBbutton && RBbutton && RAHstick>tsens) 
 			pitch_out.data=round(64+50*RAHstick);
-			if(!LBbutton && RBbutton && RAVstick<-tsens) 
+			if(!LBbutton && RBbutton && RAHstick<-tsens) 
 			pitch_out.data=round(64+50*RAHstick);
 			if(!LBbutton && RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			pitch_out.data=64;
 			}
 		}			
 			
+		if(yaw_out.data > 127)
+		yaw_out.data = 127;
+	else{
+		if(yaw_out.data <= 0)
+			yaw_out.data = 0;
+		else
+			{
+			if(!LBbutton && RBbutton && RAVstick>tsens) 
+			yaw_out.data=round(64+50*RAVstick);
+			if(!LBbutton && RBbutton && RAVstick<-tsens) 
+			yaw_out.data=round(64+50*RAVstick);
+			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
+			yaw_out.data=64;
+			}
+		}
 
+		//yaw_out.data=64;
 	//agregado recien
 	if(Xbutton == 1)
 		gripper_out.data = 5;
@@ -456,13 +472,6 @@ float tsens=0.2;
 		else	
 			gripper_out.data = 0;
 
-	if(Abutton == 1)
-		yaw_out.data = 5;
-	else
-		if(Bbutton == 1)
-			yaw_out.data = -5;
-		else	
-			yaw_out.data = 0;
 }
 
 void mapeo(std::vector<int>  order,std::vector<int> &flipper_order)
@@ -578,6 +587,7 @@ mapeo(order,flipper_order);
 	shoulder_out.data = 64;
 	elbow_out.data=64;
 	pitch_out.data=64;
+	yaw_out.data=64;
 	flipper1_out.data=64;
 	flipper2_out.data=64;
 	flipper3_out.data=64;

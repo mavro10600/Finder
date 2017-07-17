@@ -10,7 +10,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <sensor_msgs/image_encodings.h>
 #include <zbar.h>
-#include "zbar_detector/Marker.h"
+
+#include "vision_msjs/Marker.h"
+#include "vision_msjs/qrDetect.h"
+#include "vision_msjs/imgQr.h"
+#include "vision_msjs/imgQrResponse.h"
 
 using namespace std;
 using namespace zbar;
@@ -25,14 +29,33 @@ IplImage * frame = 0;
 ImageScanner scanner;
 ros::Publisher code;
 
+ros::Publisher qrFlag;
+ros::ServiceServer qrsrv;
+image_transport::Publisher pub;
+
+cv::Mat cv_matrix;
+
 uint message_sequence = 0;
+
+bool giveImgRes(vision_msjs::imgQr::Request &req, vision_msjs::imgQr::Response &res){
+  vision_msjs::imgQr::Response resp_;
+  sensor_msgs::ImagePtr msg2;
+
+  msg2 = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cv_matrix).toImageMsg();
+  res = resp_;
+
+  res.imgqr = *msg2;
+  return true;
+}
 
 void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
 
-  ros::NodeHandle nh;
-  image_transport::ImageTransport it(nh);
-  image_transport::Publisher pub = it.advertise("output/QRcodeResult", 1);
-  sensor_msgs::ImagePtr res;
+  //ros::NodeHandle nh;
+  //image_transport::ImageTransport it(nh);
+  //image_transport::Publisher pub = it.advertise("usb_cam1/QRcodeResult", 1);
+  //sensor_msgs::ImagePtr res;
+  vision_msjs::qrDetect fQr;
+
 
   try {
     bridge = cv_bridge::toCvCopy(image, enc::MONO8);
@@ -42,7 +65,7 @@ void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
     return;
   }  
   
-  cv::Mat cv_matrix = bridge->image;
+  cv_matrix = bridge->image;
   int width = cv_matrix.cols; 
   int height = cv_matrix.rows;
 
@@ -54,6 +77,7 @@ void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
    	ROS_ERROR("Error occured while finding barcode");
    	return;
   }
+  fQr.qrDetectFlag = false;
 
   // extract results
   for(SymbolIterator symbol = scan_image.symbol_begin();
@@ -61,7 +85,7 @@ void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
             ++symbol) {
     std::stringstream ss;
   	//Publish msg on zbar topic 
-	  zbar_detector::Marker msg;
+	  vision_msjs::Marker msg;
 	  ss << symbol->get_data();
     msg.header.seq = message_sequence++;
     msg.header.stamp = ros::Time::now();
@@ -84,18 +108,17 @@ void imageReceiver(const sensor_msgs::ImageConstPtr &image) {
 
     cv::Mat cv_bgr(cv_matrix.size(), CV_8UC3);
     cvtColor(cv_matrix, cv_bgr, CV_GRAY2BGR);
+    fQr.qrDetectFlag = true;
 
     if(1) {
       cv::rectangle(cv_matrix, cv::Point(x1,y1), cv::Point(x2,y2), cv::Scalar(255), 2);
       cv::rectangle(cv_bgr, cv::Point(x1,y1), cv::Point(x2,y2), cv::Scalar(0,255,0), 2);
     }
-
+    qrFlag.publish(fQr);
 	  code.publish(msg);
-    
-    res = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cv_bgr).toImageMsg();
-    pub.publish(res);
   }
 
+  //leaqrFlag.publish(fQr);
   //Show image in CV window
   if(1) {
   //frame = new IplImage(bridge->image);
@@ -111,6 +134,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "barcode_detector");
   ros::NodeHandle n;
+  image_transport::ImageTransport it(n);
 
   //Set param
   n.param("barcode_detector/show_cv_window", true);
@@ -121,9 +145,13 @@ int main(int argc, char **argv)
   
   scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1); 
 
-  code = n.advertise<zbar_detector::Marker>("markers", 1000);
+  code = n.advertise<vision_msjs::Marker>("markers", 1000);
   
-  ros::Subscriber sub = n.subscribe("usb_cam1/image_raw", 10, imageReceiver);
+  ros::Subscriber sub = n.subscribe("camera/image", 10, imageReceiver);
+
+  qrFlag = n.advertise<vision_msjs::qrDetect>("qrflag",10);
+
+  qrsrv = n.advertiseService("qr_code_img", giveImgRes);
 
   ros::spin();
 

@@ -1,11 +1,20 @@
 $(document).ready(principal);
-var ip = '192.168.100.50';
+var ip = '192.168.100.1';
 //var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
 var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';
 var cam3 = 'usb_cam3', quality3 = '20', width3 = '640', height3 = '480';
 var cam4 = 'usb_cam4', quality4 = '20', width4 = '640', height4 = '480';
 var cam5 = 'usb_cam5', quality5 = '20', width5 = '640', height5 = '480';
+
+var cam1Alive = false;
+var cam2Alive = false;
+var cam3Alive = false;
+var cam4Alive = false;
+var cam5Alive = false;
+
+var t0CPattern = 0;
+var t0Labels = 0;
 
 var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
 var led1Publish;
@@ -51,6 +60,21 @@ var elbow_color = "white";
 var roll_color = "white";
 var pitch_color = "white";
 
+var nodeStatus1_color = "white";
+var nodeStatus2_color = "red";
+var nodeStatus3_color = "white";
+var nodeStatus4_color = "yellow";
+var nodeStatus5_color = "white";
+var nodeStatus6_color = "white";
+var nodeStatus7_color = "orange";
+var nodeStatus8_color = "white";
+var nodeStatus9_color = "white";
+var nodeStatus10_color = "white";
+var nodeStatus11_color = "white";
+var nodeStatus12_color = "white";
+var nodeStatus13_color = "green";
+var nodeStatus14_color = "white";
+var nodeStatus15_color = "white";
 
 
 
@@ -104,7 +128,8 @@ function principal(){
 	$('.img-responsive').eq(4).attr('src', "http://"+ip+":8080/stream?topic=/"+cam5+"/image_raw&type=mjpeg&width="+width5+"&height="+height5+"&quality="+quality5);
 
 
-	setTable();
+	setPosTable();
+	setStatusTable();
 
 	//Publish Topics
 	//--------------------------------
@@ -131,6 +156,12 @@ function principal(){
 		messageType : 'std_msgs/Int16'
 	});
 
+	tagsPublish = new ROSLIB.Topic({
+		ros : ros,
+		name : '/add_shape',
+		messageType : 'std_msgs/String'
+	});
+
 
 	led1Publish.publish(
 		new ROSLIB.Message({
@@ -154,6 +185,9 @@ function principal(){
 			data : 90
 		})
 	);
+
+
+
 
 	// Subscribe Topics
 	// -----------------------
@@ -230,6 +264,19 @@ function principal(){
 	});
 
 
+	var flagLabelsHazmateListener = new ROSLIB.Topic({
+		ros : ros,
+		name: '/flag_labels_hazmate',
+		messageType : 'vision_msjs/labelDetect'
+	});
+
+	var flagCPaternListener = new ROSLIB.Topic({
+		ros : ros,
+		name: '/flag_c_pattern',
+		messageType : 'vision_msjs/cPatternDetect'
+	});
+
+
 	//// Flippers -------------------------------------
 	var flipLFResetListener = new ROSLIB.Topic({
 		ros :ros,
@@ -254,6 +301,9 @@ function principal(){
 		name : 'flipper4_reset',
 		messageType : 'std_msgs/Int16'
 	});
+
+
+
 
 
 	// Base --------------------------------------------
@@ -374,6 +424,60 @@ function principal(){
 		messageType : 'std_msgs/Float32'
 	});	
 
+	var cam1InfoListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam1/camera_info',
+		messageType : 'sensor_msgs/CameraInfo'
+	});
+
+	var cam2InfoListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam2/camera_info',
+		messageType : 'sensor_msgs/CameraInfo'
+	});
+
+	var cam3InfoListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam3/camera_info',
+		messageType : 'sensor_msgs/CameraInfo'
+	});
+
+	var cam4InfoListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam4/camera_info',
+		messageType : 'sensor_msgs/CameraInfo'
+	});
+
+	var cam5InfoListener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/usb_cam5/camera_info',
+		messageType : 'sensor_msgs/CameraInfo'
+	});
+
+
+	//// Service
+
+	//img_labels_result
+	var imgLabelsResultClient = new ROSLIB.Service({
+		ros : ros,
+		name : '/img_labels_result',
+		serviceType : 'vision_msjs/imgLabels'
+	});
+
+	var requestImgLabel = new ROSLIB.ServiceRequest({
+
+	});
+
+	var imgCPatternResultClient = new ROSLIB.Service({
+		ros : ros,
+		name : '/img_cpattern_result',
+		serviceType : 'vision_msjs/imgCpattern'
+	});
+
+	var requestImgCPattern = new ROSLIB.ServiceRequest({
+
+	});	
+
 
 
 	batteryListener.subscribe(function(message){
@@ -450,7 +554,7 @@ function principal(){
 		var colores =["#040530","#0e127c","#1a41bf","#1a72bf","#22bee5","#e9ed28","#edc528","#ed8a28","#c6441f","#c61f1f"];
 		var temp = 0;
 		for (i=0;i<thermalData.length;i++){
-			temp= Math.round(thermalData[i]/29);
+			temp= Math.round((thermalData[i]+150)/29);
 			//console.log("Dato:"+temp);
 			cadena+="<td  bgcolor="+colores[temp]+"></td>"
 			if( (i+1)%16 == 0 ){
@@ -475,7 +579,7 @@ function principal(){
 	imageQRListener.subscribe(function(message){
 		console.log("hay imagen");
 		var ImageData1="data:image/jpeg;base64,"+message.data;
-		displayImage = document.getElementById("imageQR");
+		displayImage = document.getElementById("imageDetected");
 		displayImage.setAttribute('src', ImageData1);
 	});
 
@@ -502,6 +606,72 @@ function principal(){
 	victimStatusListener.subscribe(function(message){
 		$('#victimStatus').html(message.data);
 	});
+
+	flagLabelsHazmateListener.subscribe(function(message){
+		
+		imgLabelsResultClient.callService(requestImgLabel,function(result){
+			var labels ="";
+			if(result.label1!="nothing"){
+				labels+=result.label1+" ";
+			}
+			if(result.label2!="nothing"){
+				labels+=result.label2+" ";
+			}
+			if(result.label3!="nothing"){
+				labels+=result.label3+" ";
+			}
+			if(result.label4!="nothing"){
+				labels+=result.label4+" ";
+			}
+			
+			console.log("Imagen recibida de "+imgLabelsResultClient.name);
+			$('#signalStatus').html(labels);
+			displayImage = document.getElementById("imageDetected");
+			displayImage.setAttribute('src',"/roswww/img/labelDetected"+result.label1+result.label2+result.label3+result.label4+".jpg");
+
+			if ((new Date().getTime() - t0Labels) > 2000){
+				var res = "Labels: " + labels;
+				tagsPublish.publish(
+					new ROSLIB.Message({
+						data : res
+					})
+				);
+				t0Labels = new Date().getTime();
+			}
+
+		});
+	});
+
+	flagCPaternListener.subscribe(function(message){
+
+		imgCPatternResultClient.callService(requestImgCPattern,function(result){
+			$('#signalStatus').html("Gap angle: "+result.gap_angle+" rad");
+			displayImage = document.getElementById("imageDetected");
+			displayImage.setAttribute('src',"/roswww/img/cPatternDetected"+result.gap_angle+".jpg");
+			
+
+			if ((new Date().getTime() - t0CPattern) > 2000){
+				var res = "angle " + result.gap_angle+" rad";
+				tagsPublish.publish(
+					new ROSLIB.Message({
+						data : res
+					})
+				);
+				t0CPattern = new Date().getTime();
+			}
+
+			
+
+		});
+
+	});
+	
+//panPublish.publish(
+//		new ROSLIB.Message({
+//			data : 90
+//		})
+//	);
+	
 
 	// Service
 	// ----------------------
@@ -533,7 +703,7 @@ function principal(){
 		}else{
 			flipper1_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// flipper 2 ---------------------------------------
@@ -544,7 +714,7 @@ function principal(){
 		}else{
 			flipper2_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// flipper 3 ---------------------------------------
@@ -555,7 +725,7 @@ function principal(){
 		}else{
 			flipper3_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// flipper 4 ---------------------------------------
@@ -566,7 +736,7 @@ function principal(){
 		}else{
 			flipper4_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// base ---------------------------------------
@@ -578,7 +748,7 @@ function principal(){
 		if(base_start_reset==0 && base_end_reset==0){
 			base_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 	baseEndResetListener.subscribe(function(message){
 		base_end_reset = message.data;
@@ -588,7 +758,7 @@ function principal(){
 		if(base_start_reset==0 && base_end_reset==0){
 			base_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// shoulder ---------------------------------------
@@ -600,7 +770,7 @@ function principal(){
 		if(shoulder_start_reset==0 && shoulder_end_reset==0){
 			shoulder_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 	shoulderEndResetListener.subscribe(function(message){
 		shoulder_end_reset = message.data;
@@ -610,7 +780,7 @@ function principal(){
 		if(shoulder_start_reset==0 && shoulder_end_reset==0){
 			shoulder_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// elbow ---------------------------------------
@@ -622,7 +792,7 @@ function principal(){
 		if(elbow_start_reset==0 && elbow_end_reset==0){
 			elbow_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 	elbowEndResetListener.subscribe(function(message){
 		elbow_end_reset = message.data;
@@ -632,7 +802,7 @@ function principal(){
 		if(elbow_start_reset==0 && elbow_end_reset==0){
 			elbow_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// roll ---------------------------------------
@@ -644,7 +814,7 @@ function principal(){
 		if(roll_start_reset==0 && roll_end_reset==0){
 			roll_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 	rollEndResetListener.subscribe(function(message){
 		roll_end_reset = message.data;
@@ -654,7 +824,7 @@ function principal(){
 		if(roll_start_reset==0 && roll_end_reset==0){
 			roll_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 	// pitch ---------------------------------------
@@ -666,7 +836,7 @@ function principal(){
 		if(pitch_start_reset==0 && pitch_end_reset==0){
 			pitch_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 	pitchEndResetListener.subscribe(function(message){
 		pitch_end_reset = message.data;
@@ -676,7 +846,7 @@ function principal(){
 		if(pitch_start_reset==0 && pitch_end_reset==0){
 			pitch_color="white";
 		}
-		setTable();
+		setPosTable();
 	});
 
 
@@ -684,46 +854,108 @@ function principal(){
 	// Flipper pos
 	flipLFPosListener.subscribe(function(message){
 		flipper1_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	flipLBPosListener.subscribe(function(message){
 		flipper2_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	flipRFPosListener.subscribe(function(message){
 		flipper3_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	flipRBPosListener.subscribe(function(message){
 		flipper4_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 
 	basePosListener.subscribe(function(message){
 		base_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	shoulderPosListener.subscribe(function(message){
 		shoulder_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	elbowPosListener.subscribe(function(message){
 		elbow_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});
 	rollPosListener.subscribe(function(message){
 		roll_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
 	});	
 	pitchPosListener.subscribe(function(message){
 		pitch_lec = Math.round(message.data);
-		setTable();
+		setPosTable();
+	});
+
+	cam1InfoListener.subscribe(function(message){
+		cam1Alive = true;
+	});
+
+	cam2InfoListener.subscribe(function(message){
+		cam2Alive = true;
+	});
+
+	cam3InfoListener.subscribe(function(message){
+		cam3Alive = true;
+	});
+
+	cam4InfoListener.subscribe(function(message){
+		cam4Alive = true;
+	});
+
+	cam5InfoListener.subscribe(function(message){
+		cam5Alive = true;
 	});
 
 
+	Concurrent.Thread.create(function(){
+		sleep(3000);
+		if(cam1Alive==false)
+			$('.img-responsive').eq(1).attr('src', "img/camera.jpg");
+		if(cam2Alive==false)
+			$('.img-responsive').eq(0).attr('src', "img/camera.jpg");
+		if(cam3Alive==false)
+			$('.img-responsive').eq(2).attr('src', "img/camera.jpg");
+		if(cam4Alive==false)
+			$('.img-responsive').eq(3).attr('src', "img/camera.jpg");
+		if(cam5Alive==false)
+			$('.img-responsive').eq(4).attr('src', "img/camera.jpg");
+    	var i = 0;
+    	while ( 1 ) {
+    		
+    		$('#victimStatus').html("Count: "+i);
+       		i++;
+       		sleep(1000);
+
+    	}
+	});
 
 
 }
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+function getDatetime(){
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear()+"-"
+		+(currentdate.getMonth()+1)+"-"
+		+currentdate.getDate() + " "
+        + currentdate.getHours() + ":"  
+        + currentdate.getMinutes() + ":" 
+        + currentdate.getSeconds();
+    return datetime;
+}
+
 //http://192.168.100.239:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&quality=20
 //http:192.168.0.50:8080/stream?topic=/usb_cam2/image_raw&type=mjpeg&width=640&height=480&quality=20
 function setCam1(){
@@ -937,7 +1169,7 @@ function setPan(){
 }
 
 
-function setTable(){
+function setPosTable(){
 	var tabla;
 	tabla = "<table><tr><td bgcolor='"+flipper1_color+"'>flipLF: "+flipper1_lec;
 	tabla+=      "°</td><td bgcolor='"+flipper2_color+"'>flipLB: "+flipper2_lec;
@@ -952,3 +1184,29 @@ function setTable(){
 	$('#posTable').html( tabla);
 
 }
+
+function setStatusTable(){
+	
+	var tabla;
+	tabla = "<table><tr>";
+	tabla+= "<td bgcolor='white'><img src='img/logo-8.png'></td>";
+	tabla+= "<td bgcolor='" + nodeStatus1_color + "'>Node1</td>";
+	tabla+= "<td bgcolor='" + nodeStatus2_color + "'>Node2</td>";
+	tabla+= "<td bgcolor='" + nodeStatus3_color + "'>Node3</td>";
+	tabla+= "<td bgcolor='" + nodeStatus4_color + "'>Node4</td>";
+	tabla+= "<td bgcolor='" + nodeStatus5_color + "'>Node5</td>";
+	tabla+= "<td bgcolor='" + nodeStatus6_color + "'>Node6</td>";
+	tabla+= "<td bgcolor='" + nodeStatus7_color + "'>Node7</td>";
+	tabla+= "<td bgcolor='" + nodeStatus8_color + "'>Node8</td>";
+	tabla+= "<td bgcolor='" + nodeStatus9_color + "'>Node9</td>";
+	tabla+= "<td bgcolor='" + nodeStatus10_color + "'>Node10</td>";
+	tabla+= "<td bgcolor='" + nodeStatus11_color + "'>Node11</td>";
+	tabla+= "<td bgcolor='" + nodeStatus12_color + "'>Node12</td>";
+	tabla+= "<td bgcolor='" + nodeStatus13_color + "'>Node13</td>";
+	tabla+= "<td bgcolor='" + nodeStatus14_color + "'>Node14</td>";
+	tabla+= "<td bgcolor='" + nodeStatus15_color + "'>Node15</td></tr></table>";
+
+	$('#statusTable').html( tabla);
+
+}
+

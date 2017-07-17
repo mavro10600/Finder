@@ -1,0 +1,2 @@
+bool qrflag
+bool cflag

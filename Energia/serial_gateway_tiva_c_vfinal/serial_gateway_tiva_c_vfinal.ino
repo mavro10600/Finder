@@ -17,11 +17,10 @@
 int led1,led2;
 
 //#define OUTPUT_READABLE_YAWPITCHROLL
-//#define OUTPUT_READABLE_QUATERNION
+#define OUTPUT_READABLE_QUATERNION
 
-
-#define USING_IMU false 
-#define USING_CO2_SENSOR true
+#define USING_IMU true 
+#define USING_CO2_SENSOR false
 #define USING_DYNAMIXEL false
 
 #if !USING_IMU
@@ -78,11 +77,12 @@ void dmpDataReady() {
 void setupIMU(){
     Wire.begin();
     Wire.setModule(3);
-    Wire.setTimeout(1);
+    //Wire.setTimeout(3);
     //Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     mpu.initialize();
-    pinMode(INTERRUPT_PIN, INPUT);
+    pinMode(INTERRUPT_PIN, INPUT_PULLUP);
     devStatus = mpu.dmpInitialize();
+    delay(3000);
     /*
     Your offsets:  -3301 -385  693 148 -33 -19
     */
@@ -104,34 +104,51 @@ void setupIMU(){
       dmpReady = true;
       // get expected DMP packet size for later comparison
       packetSize = mpu.dmpGetFIFOPacketSize();
+      
     }
 }
 
 void readIMU(){
   // reset interrupt flag and get INT_STATUS bytes
   mpuInterrupt = false;
+  //Serial.print("OK1 ");
   mpuIntStatus = mpu.getIntStatus();
+  //Serial.print("OK2 ");
   // get current FIFO count
   fifoCount = mpu.getFIFOCount();
+  //Serial.print("OK3");
   // check for overflow (this should never happen unless our code is too inefficient)
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
     // reset so we can continue cleanly
+    //Serial.print("OK4 ");
     mpu.resetFIFO();
+   //Serial.println("OK5");
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
   } 
   else 
   if (mpuIntStatus & 0x02) {
     // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    int i = 0;
+    while (fifoCount < packetSize){ 
+      i++;
+      Serial.print("OK6 ");
+      fifoCount = mpu.getFIFOCount();
+      Serial.println("OK7");
+      setupIMU();
+      return;
+    }
       // read a packet from FIFO
+      Serial.print("OK8 ");
       mpu.getFIFOBytes(fifoBuffer, packetSize);
-        
+      Serial.println("OK9");
       // track FIFO count here in case there is > 1 packet available
       // (this lets us immediately read more without waiting for an interrupt)
       fifoCount -= packetSize;
 
-    // update Euler angles in degrees
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
+      // update Euler angles in degrees
+      
+      mpu.dmpGetQuaternion(&q, fifoBuffer);
+      Serial.println("OK10");
     #ifdef OUTPUT_READABLE_YAWPITCHROLL
         mpu.dmpGetGravity(&gravity, &q);
         mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
@@ -204,50 +221,29 @@ int co2;
 #if USING_CO2_SENSOR
 ////////////////////////////////////////////////////////////////////////////////////
 //CO2 sensor variables
-double multiplier = 4;// 1 for 2% =20000 PPM, 10 for 20% = 200,000 PPM
-uint8_t buffer[25];
-uint8_t ind =0;
-uint8_t index_ =0;
+double multiplier = 5;// 1 for 2% =20000 PPM, 10 for 20% = 200,000 PPM
 bool blinkCO2 = false;
 
 void setupCO2Sensor(){
     ///////////CO2 set-up
-    Serial2.begin(9600);
-    //Serial2.setTimeout(1);
+    Serial2.begin(9600); // Start serial communications with sensor
+    Serial2.setTimeout(3);
     Serial2.println("K 0");  // Set Command mode
-    Serial2.println("M 6"); // send Mode for Z and z outputs
-    // "Z xxxxx z xxxxx" (CO2 filtered and unfiltered)
-    Serial2.println("K 1");  // set streaming mode
+    Serial2.println("K 2");  // set polling mode
+    Serial2.readString(); 
     pinMode(RED_LED,OUTPUT);
 }
-void fill_buffer(void){
-  // Fill buffer with sensor ascii data
-  ind = 0;
-  while(buffer[ind-1] != 0x0A){// && Serial2.available() ){  // Read sensor and fill buffer up to 0XA = CR
-    if(Serial2.available()) {
-      buffer[ind] = Serial2.read();
-      ind++;
-      blinkCO2 = !blinkCO2;
-      digitalWrite(RED_LED,blinkCO2);
+
+void readCO2sensor(){
+  Serial2.println("Z");
+  //while(!Serial2.available())
+  if(Serial2.available()){
+    if(Serial2.read() == 'Z'){
+      Serial2.read();//read the white space
+      co2 = Serial2.readStringUntil('Z').toInt()*multiplier;
+      Serial2.readString(); 
     }
   }
-  // buffer() now filled with sensor ascii data
-  // ind contains the number of characters loaded into buffer up to 0xA =  CR
-  ind = ind -2; // decrement buffer to exactly match last numerical character
-}
-
-void format_output(){ // read buffer, extract 6 ASCII chars, convert to PPM and print
-  co2 = buffer[15-index_]-0x30;
-  co2 = co2+((buffer[14-index_]-0x30)*10);
-  co2 +=(buffer[13-index_]-0x30)*100;
-  co2 +=(buffer[12-index_]-0x30)*1000;
-  co2 +=(buffer[11-index_]-0x30)*10000;
-}
-void readCO2sensor(){
-  fill_buffer();  // function call that reads CO2 sensor and fills buffer
-  index_ = 8;  // In ASCII buffer, filtered value is offset from raw by 8 bytes
-  format_output();
-  co2 = co2*multiplier;
 }
 #endif
 
@@ -331,7 +327,6 @@ void updateData(){
     Serial.print(q.w);
     Serial.print("\t");
   #endif
-
   #if !USING_IMU
     Serial.print(0.0);//x
     Serial.print("\t");
@@ -342,7 +337,6 @@ void updateData(){
     Serial.print(1.0);//w
     Serial.print("\t");
   #endif
-
   Serial.print(co2);
   Serial.print("\t");
   Serial.print(gripper_pos);
@@ -378,9 +372,9 @@ void setup() {
 }
 
 void loop() {
-  readFromSerial();
+  //readFromSerial();
   
-  updateTime(); 
+  //updateTime(); 
   
   #if USING_DYNAMIXEL
     updateDynamixel();
@@ -397,11 +391,11 @@ void loop() {
       readCO2sensor();
     }
   #endif
-  pan.write(pan_angle);
-  tilt.write(tilt_angle);
+  pan.write(constrain(pan_angle,0,170));
+  tilt.write(constrain(tilt_angle,0,125));
   analogWrite(LED1_PIN,led1);
   analogWrite(LED2_PIN,led2);
-  updateData();//send data to computer  
-  //delay(5);
+  //updateData();//send data to computer  
+  delay(20);
   
 }

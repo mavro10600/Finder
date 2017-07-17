@@ -1,9 +1,25 @@
 #include <Messenger.h>
 #include <limits.h>
+#include <I2Cdev.h>
+#include <MPU6050_6Axis_MotionApps20.h>
+#include <Wire.h>
 #include <i2cmaster.h>
 #include "MLX90620_registers.h"
-#define PIN_LED 13
-bool blinkled = false;
+
+
+#define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
+#define LED_PIN 13
+
+#define USING_THERMAL_SENSOR false
+#define USING_IMU true 
+//#define OUTPUT_READABLE_YAWPITCHROLL
+#define OUTPUT_READABLE_QUATERNION
+
+#if !USING_IMU
+  #undef OUTPUT_READABLE_YAWPITCHROLL
+  #undef OUTPUT_READABLE_QUATERNION
+#endif
+
 
 unsigned long LastUpdateMicrosecs=0;
 unsigned long LastUpdateMillisecs=0;
@@ -12,7 +28,9 @@ unsigned long MicrosecsSinceLastUpdate=0;
 float SecondsSinceLastUpdate=0;
 unsigned long elapsedTimeMicros = 0;
 
+Messenger messengerHandler = Messenger();
 
+#if USING_THERMAL_SENSOR
 int refreshRate = 16; //Set this value to your desired refresh frequency
 
 int conta=0;
@@ -43,11 +61,147 @@ float alpha_ij[64] = {
 };
 
 byte loopCount = 0; //Used in main loop
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+void setupThermalSensor(){
+  i2c_init(); //Init the I2C pins
+  //PORTC = (1 << PORTC4) | (1 << PORTC5); //Enable pull-ups
+  delay(5); //Init procedure calls for a 5ms delay after power-on
+  read_EEPROM_MLX90620(); //Read the entire EEPROM
+  setConfiguration(refreshRate); //Configure the MLX sensor with the user's choice of refresh rate
+  calculate_TA(); //Calculate the current Tambient
+}
+void readThermalSensor(){
+  if(loopCount++ == 16) //Tambient changes more slowly than the pixel readings. Update TA only every 16 loops.
+  { 
+    calculate_TA(); //Calculate the new Tambient
+    if(checkConfig_MLX90620()){ //Every 16 readings check that the POR flag is not set
+      setConfiguration(refreshRate); //Re-write the configuration bytes to the MLX
+    }
+    loopCount = 0; //Reset count
+  }
+
+  readIR_MLX90620(); //Get the 64 bytes of raw pixel data into the irData array
+  calculate_TO(); //Run all the large calculations to get the temperature data for each pixel
+  conta++;
+  
+  if(conta>20){
+    //prettyPrintTemperatures(); //Print the array in a 4 x 16 pattern
+    conta=0;
+  }
+  
+  }
 
 
-//Begin Program code
-Messenger messengerHandler = Messenger();
+
+#endif
+
+
+
+#if USING_IMU
+MPU6050 mpu(0x68);
+// MPU control/status vars
+bool blinkState = false, dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
+
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float euler[3];         // [psi, theta, phi]    Euler angle container
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+
+// packet structure for InvenSense teapot demo
+uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
+volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+// ================================================================
+// ===           IMU INTERRUPT DETECTION ROUTINE                ===
+// ================================================================
+void dmpDataReady() {
+    mpuInterrupt = true;
+}
+void setupIMU(){
+    Wire.begin();
+    Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+    mpu.initialize();
+    pinMode(INTERRUPT_PIN, INPUT);
+    devStatus = mpu.dmpInitialize();
+    delay(1000);
+    /*
+    Your offsets:  -3301 -385  693 148 -33 -19
+    */
+    mpu.setXAccelOffset(-3301);
+    mpu.setYAccelOffset(-385);
+    mpu.setZAccelOffset(693);
+    mpu.setXGyroOffset(148);
+    mpu.setYGyroOffset(-33);
+    mpu.setZGyroOffset(-19);
+    // make sure it worked (returns 0 if so)
+    if (devStatus == 0) {
+      // turn on the DMP, now that it's ready
+      mpu.setDMPEnabled(true);
+      // enable Arduino interrupt detection
+      attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
+      //attachInterrupt(INTERRUPT_PIN, dmpDataReady, RISING);
+      mpuIntStatus = mpu.getIntStatus();
+      // set our DMP Ready flag so the main loop() function knows it's okay to use it
+      dmpReady = true;
+      // get expected DMP packet size for later comparison
+      packetSize = mpu.dmpGetFIFOPacketSize();
+      
+    }
+}
+
+void readIMU(){
+  // reset interrupt flag and get INT_STATUS bytes
+  mpuInterrupt = false;
+  mpuIntStatus = mpu.getIntStatus();
+  // get current FIFO count
+  fifoCount = mpu.getFIFOCount();
+  // check for overflow (this should never happen unless our code is too inefficient)
+  if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+    // reset so we can continue cleanly
+    mpu.resetFIFO();
+    // otherwise, check for DMP data ready interrupt (this should happen frequently)
+  } 
+  else 
+  if (mpuIntStatus & 0x02) {
+    // wait for correct available data length, should be a VERY short wait
+    while (fifoCount < packetSize){ 
+      fifoCount = mpu.getFIFOCount();
+
+    }
+      // read a packet from FIFO
+      mpu.getFIFOBytes(fifoBuffer, packetSize);
+      // track FIFO count here in case there is > 1 packet available
+      // (this lets us immediately read more without waiting for an interrupt)
+      fifoCount -= packetSize;
+
+      // update Euler angles in degrees
+      
+      mpu.dmpGetQuaternion(&q, fifoBuffer);
+
+      #ifdef OUTPUT_READABLE_YAWPITCHROLL
+        mpu.dmpGetGravity(&gravity, &q);
+        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+        
+        // update real acceleration, adjusted to remove gravity
+        mpu.dmpGetQuaternion(&q, fifoBuffer);
+        mpu.dmpGetAccel(&aa, fifoBuffer);
+        mpu.dmpGetGravity(&gravity, &q);
+        mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+      #endif
+      
+      // blink LED to indicate activity
+      blinkState = !blinkState;
+      digitalWrite(LED_PIN, blinkState); 
+    } 
+}
+#endif
 
 // ================================================================
 // ===               Serial Reading Function                    ===
@@ -56,14 +210,19 @@ void readFromSerial(){
    while(Serial.available() > 0){
        int data = Serial.read();
        messengerHandler.process(data);
+       messengerHandler.readLong();
+
     }  
 }
 
 void Reset(){
-  //digitalWrite(GREEN_LED,HIGH);
+  /*
+  digitalWrite(GREEN_LED,HIGH);
   delay(1000);
-  //digitalWrite(RESET_PIN,LOW);
-  //digitalWrite(GREEN_LED,LOW);
+  digitalWrite(RESET_PIN,LOW);
+  digitalWrite(GREEN_LED,LOW);
+  */
+  ;
 }
 
 // ================================================================
@@ -103,57 +262,68 @@ void onMessageCompleted(){
   }
 }
 void updateData(){
-  Serial.print('e');
-  for(int i=0;i<64;i++){
+    Serial.print('e');
     Serial.print("\t");
-    //Serial.print(temperatures[i]);
-    Serial.print(irData[i]);
-  }
+  #ifdef OUTPUT_READABLE_YAWPITCHROLL
+    Serial.print(ypr[2]);//roll
+    Serial.print("\t");
+    Serial.print(ypr[1]);//pitch
+    Serial.print("\t");
+    Serial.print(ypr[0]);//yaw
+
+  #endif
+  #ifdef OUTPUT_READABLE_QUATERNION
+    Serial.print(q.x);
+    Serial.print("\t");
+    Serial.print(q.y);
+    Serial.print("\t");
+    Serial.print(q.z);
+    Serial.print("\t");
+    Serial.print(q.w);
+
+  #endif
+  #if !USING_IMU
+    Serial.print(0.0);//x
+    Serial.print("\t");
+    Serial.print(0.0);//y
+    Serial.print("\t");//
+    Serial.print(0.0);//z
+    Serial.print("\t");
+    Serial.print(1.0);//w
+  #endif
+  
   Serial.print("\n");
 }
 
-void setup(){
-  Serial.begin(115200);
+
+void setup() {
+  Serial.begin(115200);//cuando se ve en el ide de arduino
+  pinMode(LED_PIN,OUTPUT);
   messengerHandler.attach(onMessageCompleted);
-  i2c_init(); //Init the I2C pins
-  PORTC = (1 << PORTC4) | (1 << PORTC5); //Enable pull-ups
-  delay(5); //Init procedure calls for a 5ms delay after power-on
-  read_EEPROM_MLX90620(); //Read the entire EEPROM
-  setConfiguration(refreshRate); //Configure the MLX sensor with the user's choice of refresh rate
-  calculate_TA(); //Calculate the current Tambient
-  pinMode(PIN_LED,OUTPUT);
+ 
+  #if USING_IMU
+    setupIMU();
+  #endif
+  #if USING_THERMAL_SENSOR
+    setupThermalSensor();
+  #endif
+  
 }
-
-void loop(){
+void loop() {
   readFromSerial();
-  updateTime();
-   
-  if(loopCount++ == 16) //Tambient changes more slowly than the pixel readings. Update TA only every 16 loops.
-  { 
-    calculate_TA(); //Calculate the new Tambient
-    if(checkConfig_MLX90620()){ //Every 16 readings check that the POR flag is not set
-      setConfiguration(refreshRate); //Re-write the configuration bytes to the MLX
-    }
-    loopCount = 0; //Reset count
-  }
-
-  readIR_MLX90620(); //Get the 64 bytes of raw pixel data into the irData array
-  calculate_TO(); //Run all the large calculations to get the temperature data for each pixel
-  conta++;
-  
-  if(conta>20){
-    //prettyPrintTemperatures(); //Print the array in a 4 x 16 pattern
-    conta=0;
-   
-    
-  }
+  updateTime(); 
+  #if USING_IMU
+    if( !(!mpuInterrupt && fifoCount < packetSize) )//imu ready-to-read condition
+      readIMU();
+  #endif
+  #if USING_THERMAL_SENSOR
+    readThermalSensor();
+  #endif
   updateData();//send data to computer  
-   blinkled = !blinkled;
-  digitalWrite(PIN_LED,blinkled);
-  delay(5);
-  
+
 }
 
+#if USING_THERMAL_SENSOR
 //From the 256 bytes of EEPROM data, initialize 
 void varInitialization(byte calibration_data[])
 {
@@ -242,7 +412,7 @@ void read_EEPROM_MLX90620()
   //Read all 256 bytes from the sensor's EEPROM
   for(int i = 0 ; i <= 255 ; i++){
     eepromData[i] = i2c_readAck();
-	}
+  }
   i2c_stop(); //We're done talking
 
   varInitialization(eepromData); //Calculate a bunch of constants from the EEPROM data
@@ -420,3 +590,5 @@ float convertToFahrenheit (float Tc)
 
   return(Tf);
 }
+#endif
+  

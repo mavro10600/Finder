@@ -83,14 +83,14 @@ void setup()
 
 void loop()
 {
-	/*
+	
   if(loopCount++ == 16) //Tambient changes more slowly than the pixel readings. Update TA only every 16 loops.
   { 
     calculate_TA(); //Calculate the new Tambient
 
     if(checkConfig_MLX90620()) //Every 16 readings check that the POR flag is not set
     {
-      Serial.println("POR Detected!");
+      //Serial.println("POR Detected!");
       setConfiguration(refreshRate); //Re-write the configuration bytes to the MLX
     }
 
@@ -98,15 +98,16 @@ void loop()
   }
 
   readIR_MLX90620(); //Get the 64 bytes of raw pixel data into the irData array
-
   calculate_TO(); //Run all the large calculations to get the temperature data for each pixel
-  
   conta++;
   if(conta>20){
     prettyPrintTemperatures(); //Print the array in a 4 x 16 pattern
     conta=0;
-  }*/
+  }
   //rawPrintTemperatures(); //Print the entire array so it can more easily be read by Processing app
+
+
+  
 }
 
 //From the 256 bytes of EEPROM data, initialize 
@@ -194,15 +195,16 @@ void read_EEPROM_MLX90620()
   i2c_start_wait(MLX90620_EEPROM_WRITE);
   i2c_write(0x00); //EEPROM info starts at location 0x00
   i2c_rep_start(MLX90620_EEPROM_READ);
-  Serial.println("EMPIEZO");
   //Read all 256 bytes from the sensor's EEPROM
   for(int i = 0 ; i <= 255 ; i++){
-    eepromData[i] = i2c_readAck();
+    //eepromData[i] = i2c_readAck();
+    if(i==255)
+      eepromData[i] = i2c_read(false);//i2c_readAck();
+    else
+      eepromData[i] = i2c_read(true);
     Serial.print(eepromData[i]);
     Serial.print("-");
 	}
-	Serial.print("\n");
-	Serial.print("TERMINO");
 	
 
   i2c_stop(); //We're done talking
@@ -245,8 +247,8 @@ unsigned int readPTAT_MLX90620()
   i2c_write(0x01); //Number of reads is 1
   i2c_rep_start(MLX90620_READ);
 
-  byte ptatLow = i2c_readAck(); //Grab the lower and higher PTAT bytes
-  byte ptatHigh = i2c_readAck();
+  byte ptatLow = i2c_read(false);//i2c_readAck(); //Grab the lower and higher PTAT bytes
+  byte ptatHigh = i2c_read(true);//i2c_readAck();
 
   i2c_stop();
   
@@ -292,8 +294,8 @@ void readIR_MLX90620()
 
   for(int i = 0 ; i < 64 ; i++)
   {
-    byte pixelDataLow = i2c_readAck();
-    byte pixelDataHigh = i2c_readAck();
+    byte pixelDataLow = i2c_read(false);//i2c_readAck();
+    byte pixelDataHigh = i2c_read(true);//i2c_readAck();
     irData[i] = (int)(pixelDataHigh << 8) | pixelDataLow;
   }
 
@@ -310,8 +312,8 @@ int readCPIX_MLX90620()
   i2c_write(0x01);
   i2c_rep_start(MLX90620_READ);
 
-  byte cpixLow = i2c_readAck(); //Grab the two bytes
-  byte cpixHigh = i2c_readAck();
+  byte cpixLow = i2c_read(false);//i2c_readAck(); //Grab the two bytes
+  byte cpixHigh = i2c_read(true);//i2c_readAck();
   i2c_stop();
 
   return ( (int)(cpixHigh << 8) | cpixLow);

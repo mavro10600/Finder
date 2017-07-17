@@ -67,7 +67,7 @@ class Launchpad_Class(object):
         self.gyro_measurement_range = 150.0 
         self.gyro_scale_correction = 1.35
         '''
-		self.imu_pub = rospy.Publisher("thumper_imu",Imu,queue_size=10);
+		#self.imu_pub = rospy.Publisher("thumper_imu",Imu,queue_size=10) #ahora esto lo hago en el otro script
 		self.co2_level_publisher = rospy.Publisher("/hardware/sensors/co2",Int32,queue_size=5)
 		self.gripper_pos_publisher = rospy.Publisher("hardware/gripper",Int32,queue_size=5)
 
@@ -117,13 +117,13 @@ class Launchpad_Class(object):
 					self.q_z = float(lineParts[3])
 					self.q_w = float(lineParts[4])
 
+					'''
 					imu_msg = Imu()
 					h = Header()
 					h.stamp = rospy.Time.now()
 					h.frame_id = self.frame_id
 
 					imu_msg.header = h
-
 					imu_msg.orientation_covariance = (-1., )*9	
 					imu_msg.angular_velocity_covariance = (-1., )*9
 					imu_msg.linear_acceleration_covariance = (-1., )*9
@@ -133,13 +133,12 @@ class Launchpad_Class(object):
 					imu_msg.orientation.z = self.q_z
 					imu_msg.orientation.w = self.q_w
 
-					'''
 					self._Imu_Qx_Publisher.publish(self.q_x)
 					self._Imu_Qy_Publisher.publish(self.q_y)
 					self._Imu_Qz_Publisher.publish(self.q_z)
 					self._Imu_Qw_Publisher.publish(self.q_w)
 					'''
-					self.imu_pub.publish(imu_msg)
+					#self.imu_pub.publish(imu_msg)#esto ya lo hago con el nodo serial_data_imu.py 
 
 					self.co2 = int(lineParts[5])
 					self.dynamixel_pos  = int(lineParts[6])
@@ -176,15 +175,15 @@ class Launchpad_Class(object):
 		
 #######################################################
 if __name__=='__main__':
-	rospy.init_node('servo_imu_dynamixel_node',anonymous=True)
+	rospy.init_node('dynamixel_node',anonymous=True)
 	#rate = rospy.Rate(10) # 10hz
 	launchpad = Launchpad_Class()
 	try:
 		rate = rospy.Rate(10) # 10hz
 		launchpad.Start()
-		print colored("Dynamixel and imu node successfully started",'green')
+		print colored("Dynamixel node successfully started",'green')
 
-		print colored("Topics:'\n- /thumper_imu', \n- '/co2/level',\n- /gripper_rotation/","blue")
+		print colored("Topics:'', \n- '/co2/level',\n- /gripper_rotation/","blue")
 		while not rospy.is_shutdown():
 			rate.sleep()
 		#rospy.spin()

@@ -20,8 +20,8 @@ int led1,led2;
 #define OUTPUT_READABLE_QUATERNION
 
 #define USING_IMU true 
-#define USING_CO2_SENSOR true
-#define USING_DYNAMIXEL true
+#define USING_CO2_SENSOR false
+#define USING_DYNAMIXEL false
 
 #if !USING_IMU
   #undef OUTPUT_READABLE_YAWPITCHROLL
@@ -77,11 +77,12 @@ void dmpDataReady() {
 void setupIMU(){
     Wire.begin();
     Wire.setModule(3);
-    Wire.setTimeout(1);
+    //Wire.setTimeout(3);
     //Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     mpu.initialize();
-    pinMode(INTERRUPT_PIN, INPUT);
+    pinMode(INTERRUPT_PIN, INPUT_PULLUP);
     devStatus = mpu.dmpInitialize();
+    delay(3000);
     /*
     Your offsets:  -3301 -385  693 148 -33 -19
     */
@@ -103,34 +104,51 @@ void setupIMU(){
       dmpReady = true;
       // get expected DMP packet size for later comparison
       packetSize = mpu.dmpGetFIFOPacketSize();
+      
     }
 }
 
 void readIMU(){
   // reset interrupt flag and get INT_STATUS bytes
   mpuInterrupt = false;
+  //Serial.print("OK1 ");
   mpuIntStatus = mpu.getIntStatus();
+  //Serial.print("OK2 ");
   // get current FIFO count
   fifoCount = mpu.getFIFOCount();
+  //Serial.print("OK3");
   // check for overflow (this should never happen unless our code is too inefficient)
   if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
     // reset so we can continue cleanly
+    //Serial.print("OK4 ");
     mpu.resetFIFO();
+   //Serial.println("OK5");
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
   } 
   else 
   if (mpuIntStatus & 0x02) {
     // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    int i = 0;
+    while (fifoCount < packetSize){ 
+      i++;
+      Serial.print("OK6 ");
+      fifoCount = mpu.getFIFOCount();
+      Serial.println("OK7");
+      setupIMU();
+      return;
+    }
       // read a packet from FIFO
+      Serial.print("OK8 ");
       mpu.getFIFOBytes(fifoBuffer, packetSize);
-        
+      Serial.println("OK9");
       // track FIFO count here in case there is > 1 packet available
       // (this lets us immediately read more without waiting for an interrupt)
       fifoCount -= packetSize;
 
-    // update Euler angles in degrees
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
+      // update Euler angles in degrees
+      
+      mpu.dmpGetQuaternion(&q, fifoBuffer);
+      Serial.println("OK10");
     #ifdef OUTPUT_READABLE_YAWPITCHROLL
         mpu.dmpGetGravity(&gravity, &q);
         mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
@@ -354,9 +372,9 @@ void setup() {
 }
 
 void loop() {
-  readFromSerial();
+  //readFromSerial();
   
-  updateTime(); 
+  //updateTime(); 
   
   #if USING_DYNAMIXEL
     updateDynamixel();
@@ -373,11 +391,11 @@ void loop() {
       readCO2sensor();
     }
   #endif
-  pan.write(pan_angle);
-  tilt.write(tilt_angle);
+  pan.write(constrain(pan_angle,0,170));
+  tilt.write(constrain(tilt_angle,0,125));
   analogWrite(LED1_PIN,led1);
   analogWrite(LED2_PIN,led2);
-  updateData();//send data to computer  
-  //delay(5);
+  //updateData();//send data to computer  
+  delay(20);
   
 }

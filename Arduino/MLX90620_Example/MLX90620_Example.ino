@@ -1,17 +1,33 @@
-#include <Messenger.h>
-#include <limits.h>
+/*
+ 2-16-2013
+ Spark Fun Electronics
+ Nathan Seidle
+ 
+ This code is heavily based on maxbot's and IlBaboomba's code: http://arduino.cc/forum/index.php?topic=126244
+ They didn't have a license on it so I'm hoping it's public domain.
+ 
+ This example shows how to read and calculate the 64 temperatures for the 64 pixels of the MLX90620 thermopile sensor.
+ 
+ alpha_ij array is specific to every sensor and needs to be calculated separately. Please see the 
+ 'MLX90620_alphaCalculator' sketch to get these values. If you choose not to calculate these values
+ this sketch will still work but the temperatures shown will be very inaccurate.
+ 
+ Don't get confused by the bottom view of the device! The GND pin is connected to the housing.
+ 
+ To get this code to work, attached a MLX90620 to an Arduino Uno using the following pins:
+ A5 to 330 ohm to SCL
+ A4 to 330 ohm to SDA
+ 3.3V to VDD
+ GND to VSS
+ 
+ I used the internal pull-ups on the SDA/SCL lines. Normally you should use ~4.7k pull-ups for I2C.
+
+ */
+
 #include <i2cmaster.h>
+//i2cmaster comes from here: http://www.cheap-thermocam.bplaced.net/software/I2Cmaster.rar
+
 #include "MLX90620_registers.h"
-#define PIN_LED 13
-bool blinkled = false;
-
-unsigned long LastUpdateMicrosecs=0;
-unsigned long LastUpdateMillisecs=0;
-unsigned long CurrentMicrosecs=0;
-unsigned long MicrosecsSinceLastUpdate=0;
-float SecondsSinceLastUpdate=0;
-unsigned long elapsedTimeMicros = 0;
-
 
 int refreshRate = 16; //Set this value to your desired refresh frequency
 
@@ -32,14 +48,14 @@ int a_ij[64], b_ij[64];
 //These values are calculated using equation 7.3.3.2
 //They are constants and can be calculated using the MLX90620_alphaCalculator sketch
 float alpha_ij[64] = {
-  1.75315E-8, 1.85210E-8, 1.86956E-8, 1.69494E-8, 1.95105E-8, 2.14314E-8, 2.12568E-8, 1.91031E-8, 
-  2.14314E-8, 2.37597E-8, 2.37597E-8, 2.16060E-8, 2.33522E-8, 2.55059E-8, 2.59134E-8, 2.39343E-8, 
-  2.51567E-8, 2.72521E-8, 2.74850E-8, 2.49238E-8, 2.60880E-8, 2.86491E-8, 2.82417E-8, 2.63208E-8, 
-  2.66701E-8, 2.90566E-8, 2.92312E-8, 2.70775E-8, 2.64954E-8, 2.98133E-8, 2.98133E-8, 2.72521E-8, 
-  2.72521E-8, 3.02207E-8, 2.98133E-8, 2.74850E-8, 2.69029E-8, 2.98133E-8, 2.99879E-8, 2.72521E-8, 
-  2.60880E-8, 2.94058E-8, 2.94058E-8, 2.78342E-8, 2.63208E-8, 2.86491E-8, 2.86491E-8, 2.72521E-8, 
-  2.51567E-8, 2.80671E-8, 2.78342E-8, 2.63208E-8, 2.33522E-8, 2.69029E-8, 2.66701E-8, 2.57387E-8, 
-  2.24209E-8, 2.53313E-8, 2.55059E-8, 2.35851E-8, 2.04418E-8, 2.33522E-8, 2.33522E-8, 2.21881E-8,
+  1.67684E-8, 1.85146E-8, 1.87474E-8, 1.67684E-8, 1.87474E-8, 2.04936E-8, 2.04936E-8, 1.79325E-8, 
+  2.00862E-8, 2.20653E-8, 2.16578E-8, 1.93295E-8, 2.10757E-8, 2.32294E-8, 2.28220E-8, 2.04936E-8, 
+  2.18324E-8, 2.43936E-8, 2.41607E-8, 2.16578E-8, 2.28220E-8, 2.49756E-8, 2.49756E-8, 2.26473E-8, 
+  2.32294E-8, 2.53249E-8, 2.57323E-8, 2.34040E-8, 2.32294E-8, 2.61398E-8, 2.59070E-8, 2.38115E-8, 
+  2.32294E-8, 2.59070E-8, 2.61398E-8, 2.39861E-8, 2.29966E-8, 2.57323E-8, 2.61398E-8, 2.38115E-8, 
+  2.28220E-8, 2.57323E-8, 2.57323E-8, 2.38115E-8, 2.26473E-8, 2.53249E-8, 2.53249E-8, 2.34040E-8, 
+  2.12503E-8, 2.43936E-8, 2.51503E-8, 2.29966E-8, 2.00862E-8, 2.28220E-8, 2.32294E-8, 2.20070E-8, 
+  1.81653E-8, 2.08429E-8, 2.22399E-8, 2.04936E-8, 1.61863E-8, 1.95041E-8, 1.99116E-8, 1.85146E-8, 
 };
 
 byte loopCount = 0; //Used in main loop
@@ -47,110 +63,50 @@ byte loopCount = 0; //Used in main loop
 
 
 //Begin Program code
-Messenger messengerHandler = Messenger();
 
-// ================================================================
-// ===               Serial Reading Function                    ===
-// ================================================================
-void readFromSerial(){
-   while(Serial.available() > 0){
-       int data = Serial.read();
-       messengerHandler.process(data);
-    }  
-}
-
-void Reset(){
-  //digitalWrite(GREEN_LED,HIGH);
-  delay(1000);
-  //digitalWrite(RESET_PIN,LOW);
-  //digitalWrite(GREEN_LED,LOW);
-}
-
-// ================================================================
-// ===               TIME UPDATE FUNCTION                       ===
-// ================================================================
-void updateTime(){
-  CurrentMicrosecs = micros();
-  LastUpdateMillisecs = millis();
-  MicrosecsSinceLastUpdate = CurrentMicrosecs - LastUpdateMicrosecs;
-  if (MicrosecsSinceLastUpdate < 0)
-    {
-    MicrosecsSinceLastUpdate = INT_MIN - LastUpdateMicrosecs + CurrentMicrosecs;
-    }
-  LastUpdateMicrosecs = CurrentMicrosecs;
-  SecondsSinceLastUpdate = MicrosecsSinceLastUpdate / 1000000.0;
-
-  Serial.print("t");
-  Serial.print("\t");
-  Serial.print(LastUpdateMicrosecs);
-  Serial.print("\t");
-  Serial.print(SecondsSinceLastUpdate);
-  Serial.print("\n");
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//OnMssg Complete function definition
-void onMessageCompleted(){ 
-  char reset[] = "r";
-  char set_speed[] = "s";
-  if(messengerHandler.checkString(reset)){
-     Serial.println("Reset Done"); 
-     Reset();
-  }
-  if(messengerHandler.checkString(set_speed)){
-     //This will set the servos angle
-  }
-}
-void updateData(){
-  Serial.print('e');
-  for(int i=0;i<64;i++){
-    Serial.print("\t");
-    //Serial.print(temperatures[i]);
-    Serial.print(irData[i]);
-  }
-  Serial.print("\n");
-}
-
-void setup(){
+void setup()
+{
   Serial.begin(115200);
-  messengerHandler.attach(onMessageCompleted);
+  Serial.println("MLX90620 Example");
+
   i2c_init(); //Init the I2C pins
   PORTC = (1 << PORTC4) | (1 << PORTC5); //Enable pull-ups
+
   delay(5); //Init procedure calls for a 5ms delay after power-on
+
   read_EEPROM_MLX90620(); //Read the entire EEPROM
+
   setConfiguration(refreshRate); //Configure the MLX sensor with the user's choice of refresh rate
+
   calculate_TA(); //Calculate the current Tambient
-  pinMode(PIN_LED,OUTPUT);
 }
 
-void loop(){
-  readFromSerial();
-  updateTime();
-   
+void loop()
+{
+	
   if(loopCount++ == 16) //Tambient changes more slowly than the pixel readings. Update TA only every 16 loops.
   { 
     calculate_TA(); //Calculate the new Tambient
-    if(checkConfig_MLX90620()){ //Every 16 readings check that the POR flag is not set
+
+    if(checkConfig_MLX90620()) //Every 16 readings check that the POR flag is not set
+    {
+      //Serial.println("POR Detected!");
       setConfiguration(refreshRate); //Re-write the configuration bytes to the MLX
     }
+
     loopCount = 0; //Reset count
   }
 
   readIR_MLX90620(); //Get the 64 bytes of raw pixel data into the irData array
   calculate_TO(); //Run all the large calculations to get the temperature data for each pixel
   conta++;
-  
   if(conta>20){
-    //prettyPrintTemperatures(); //Print the array in a 4 x 16 pattern
+    prettyPrintTemperatures(); //Print the array in a 4 x 16 pattern
     conta=0;
-   
-    
   }
-  updateData();//send data to computer  
-   blinkled = !blinkled;
-  digitalWrite(PIN_LED,blinkled);
-  delay(5);
+  //rawPrintTemperatures(); //Print the entire array so it can more easily be read by Processing app
+
+
   
 }
 
@@ -242,7 +198,11 @@ void read_EEPROM_MLX90620()
   //Read all 256 bytes from the sensor's EEPROM
   for(int i = 0 ; i <= 255 ; i++){
     eepromData[i] = i2c_readAck();
+    Serial.print(eepromData[i]);
+    Serial.print("-");
 	}
+	
+
   i2c_stop(); //We're done talking
 
   varInitialization(eepromData); //Calculate a bunch of constants from the EEPROM data

@@ -20,9 +20,9 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
-from vision_msjs.msg import cPatternDetect
-from vision_msjs.srv import imgCpattern
-from vision_msjs.srv import imgCpatternResponse
+from avision_msjs.msg import cPatternDetect
+from avision_msjs.srv import imgCpattern
+from avision_msjs.srv import imgCpatternResponse
 
 
 # Perfil de color negro mapeado en el espacio de colores YCrCb
@@ -305,12 +305,12 @@ def callback(data):
               '''
               # Deteccion de la apertura y calculo del angulo en donde se encuentra
               (ang, imgRes) = recAber(imgSrc.copy() ,fg1, mask, mind, (i[0],i[1]))
-              cv2.imshow('Gap_C_Detection', imgRes)
+              #cv2.imshow('Gap_C_Detection', imgRes)
               
               sendFlag.cPatternFlag = True
               flagC.publish(sendFlag)
 
-  cv2.imshow('Video_search',imgSrc)
+  #cv2.imshow('Video_search',imgSrc)
   cv2.waitKey(1)
 
 

@@ -9,9 +9,9 @@ import numpy as np
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-from vision_msjs.msg import labelDetect
-from vision_msjs.srv import imgLabels
-from vision_msjs.srv import imgLabelsResponse
+from avision_msjs.msg import labelDetect
+from avision_msjs.srv import imgLabels
+from avision_msjs.srv import imgLabelsResponse
 
 #umbrales del detector de bordes
 thhc = 110
@@ -263,20 +263,20 @@ def plotSubRois(centers, imgPlot, color):
   if( (aux == 1) and (centers[0][0] == 1) ):
     cv2.rectangle(imgPlot,(centers[0][3], centers[0][4]),(centers[0][3]+centers[0][5],centers[0][4]+centers[0][6]),color,2)
     #cv2.putText(imgSrc,"Dangerous when wet",(blueCenters[0][3]-5, blueCenters[0][4]-5),cv2.FONT_HERSHEY_SIMPLEX,0.43,(255,0,0),2)
-    cv2.imshow("Label Founded", imgPlot)
+    #cv2.imshow("Label Founded", imgPlot)
     nLabels = 1
 
   elif( (aux == 2) and (centers[1][0] == 1) ):
     cv2.rectangle(imgPlot,(centers[0][3], centers[0][4]),(centers[0][3]+centers[0][5],centers[0][4]+centers[0][6]),color,2)
     cv2.rectangle(imgPlot,(centers[1][3], centers[1][4]),(centers[1][3]+centers[1][5],centers[1][4]+centers[1][6]),color,1)
-    cv2.imshow("Label Founded", imgPlot)
+    #cv2.imshow("Label Founded", imgPlot)
     nLabels = 2
 
   elif( (aux == 3) and (centers[2][0] == 1) ):
     cv2.rectangle(imgPlot,(centers[0][3], centers[0][4]),(centers[0][3]+centers[0][5],centers[0][4]+centers[0][6]),color,3)
     cv2.rectangle(imgPlot,(centers[1][3], centers[1][4]),(centers[1][3]+centers[1][5],centers[1][4]+centers[1][6]),color,2)
     cv2.rectangle(imgPlot,(centers[2][3], centers[2][4]),(centers[2][3]+centers[2][5],centers[2][4]+centers[2][6]),color,1)
-    cv2.imshow("Label Founded", imgPlot)
+    #cv2.imshow("Label Founded", imgPlot)
     nLabels = 3
 
   return nLabels
@@ -591,9 +591,9 @@ def callback(data):
     # Metodo de identificacion de etiquetas
     labelDetector( roi.copy(), cent[0][7] )
 
-    cv2.imshow('Roi', roi)
+    #cv2.imshow('Roi', roi)
 
-  cv2.imshow('Video search', imgSrc)
+  #cv2.imshow('Video search', imgSrc)
   cv2.waitKey(1)
 
 

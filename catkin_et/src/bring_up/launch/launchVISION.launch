@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<launch>
+	<node name="qr_detector" pkg="zbar_detector" type="barcode_detector" output="screen" />
+	<node name="labels_detector" pkg="labels_hazmate_detector" type="hazLabelDetector.py" output="screen"/>
+	<node name="cpatern_detector" pkg="c_pattern_detector" type="cPattern_detector.py" output="screen"/>
+</launch>

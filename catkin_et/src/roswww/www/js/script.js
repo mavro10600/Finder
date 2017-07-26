@@ -1,6 +1,6 @@
 $(document).ready(principal);
-var ip = '192.168.100.1';
-//var ip = 'localhost';
+//var ip = '192.168.100.1';
+var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
 var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';
 var cam3 = 'usb_cam3', quality3 = '20', width3 = '640', height3 = '480';
@@ -15,6 +15,16 @@ var cam5Alive = false;
 
 var t0CPattern = 0;
 var t0Labels = 0;
+var t0QR = 0;
+
+var cPatternDetected = false;
+var labelDetected = false
+var qrDetected = false;
+
+var currentTimeCPattern = 0 ;
+var currentTimeLabel = 0 ;
+var currentTimeQR = 0;
+
 
 var DRUM_TEXTURE = "https://keithclark.co.uk/labs/css-fps/drum2.png";
 var led1Publish;
@@ -218,7 +228,7 @@ function principal(){
 	var qrListener = new ROSLIB.Topic({
 		ros : ros,
 		name : '/markers',
-		messageType : 'zbar_detector/Marker'
+		messageType : 'avision_msjs/Marker'
 	});
 
 	var imageQRListener = new ROSLIB.Topic({
@@ -267,13 +277,13 @@ function principal(){
 	var flagLabelsHazmateListener = new ROSLIB.Topic({
 		ros : ros,
 		name: '/flag_labels_hazmate',
-		messageType : 'vision_msjs/labelDetect'
+		messageType : 'avision_msjs/labelDetect'
 	});
 
 	var flagCPaternListener = new ROSLIB.Topic({
 		ros : ros,
 		name: '/flag_c_pattern',
-		messageType : 'vision_msjs/cPatternDetect'
+		messageType : 'avision_msjs/cPatternDetect'
 	});
 
 
@@ -461,7 +471,7 @@ function principal(){
 	var imgLabelsResultClient = new ROSLIB.Service({
 		ros : ros,
 		name : '/img_labels_result',
-		serviceType : 'vision_msjs/imgLabels'
+		serviceType : 'avision_msjs/imgLabels'
 	});
 
 	var requestImgLabel = new ROSLIB.ServiceRequest({
@@ -471,7 +481,7 @@ function principal(){
 	var imgCPatternResultClient = new ROSLIB.Service({
 		ros : ros,
 		name : '/img_cpattern_result',
-		serviceType : 'vision_msjs/imgCpattern'
+		serviceType : 'avision_msjs/imgCpattern'
 	});
 
 	var requestImgCPattern = new ROSLIB.ServiceRequest({
@@ -566,18 +576,10 @@ function principal(){
 		$('#TERM').html(cadena);
 	});
 
-	qrListener.subscribe(function(message){
-		var qrData = message.data;
-		console.log("markers:"+qrData);
-
-		var cadena = qrData;
-
-
-		$('#statusQR').html(cadena);
-	});
+	
 
 	imageQRListener.subscribe(function(message){
-		console.log("hay imagen");
+	//	console.log("hay imagen");
 		var ImageData1="data:image/jpeg;base64,"+message.data;
 		displayImage = document.getElementById("imageDetected");
 		displayImage.setAttribute('src', ImageData1);
@@ -607,6 +609,20 @@ function principal(){
 		$('#victimStatus').html(message.data);
 	});
 
+	qrListener.subscribe(function(message){
+		var qrData = message.data;
+	//	console.log("markers:"+qrData);
+
+		var cadena = qrData;
+
+		$('#statusQR').html(cadena);
+
+		qrDetected = true;
+		t0QR = new Date().getTime();
+
+
+	});
+
 	flagLabelsHazmateListener.subscribe(function(message){
 		
 		imgLabelsResultClient.callService(requestImgLabel,function(result){
@@ -629,15 +645,22 @@ function principal(){
 			displayImage = document.getElementById("imageDetected");
 			displayImage.setAttribute('src',"/roswww/img/labelDetected"+result.label1+result.label2+result.label3+result.label4+".jpg");
 
-			if ((new Date().getTime() - t0Labels) > 2000){
+//			if ((new Date().getTime() - t0Labels) > 2000){
+//				
+//				t0Labels = new Date().getTime();
+//			}
+			
+			if(labelDetected == false){
 				var res = "Labels: " + labels;
 				tagsPublish.publish(
 					new ROSLIB.Message({
 						data : res
 					})
 				);
-				t0Labels = new Date().getTime();
 			}
+
+			labelDetected = true;
+			t0Labels = new Date().getTime();
 
 		});
 	});
@@ -645,13 +668,14 @@ function principal(){
 	flagCPaternListener.subscribe(function(message){
 
 		imgCPatternResultClient.callService(requestImgCPattern,function(result){
-			$('#signalStatus').html("Gap angle: "+result.gap_angle+" rad");
+			var angle = Math.round(result.gap_angle*180/3.1416);
+			$('#signalStatus').html("Gap angle: "+angle+"°");
 			displayImage = document.getElementById("imageDetected");
 			displayImage.setAttribute('src',"/roswww/img/cPatternDetected"+result.gap_angle+".jpg");
 			
 
 			if ((new Date().getTime() - t0CPattern) > 2000){
-				var res = "angle " + result.gap_angle+" rad";
+				var res = "angle " + angle +"°";
 				tagsPublish.publish(
 					new ROSLIB.Message({
 						data : res
@@ -925,10 +949,36 @@ function principal(){
 			$('.img-responsive').eq(4).attr('src', "img/camera.jpg");
     	var i = 0;
     	while ( 1 ) {
+
+
+
+    		if(qrDetected == true){
+    			currentTimeQR = Math.round( new Date().getTime() - t0QR );
+    		}
+    		if(labelDetected == true){
+    			currentTimeLabel = Math.round( new Date().getTime() - t0Labels );
+    		}
     		
-    		$('#victimStatus').html("Count: "+i);
-       		i++;
-       		sleep(1000);
+
+    		if(currentTimeQR > 5000 ){
+    			console.log("currentTimeQR: "+currentTimeQR);
+    			$('#statusQR').html(" ");
+    			qrDetected = false;
+    			currentTimeQR = 0;
+    			$('.img-responsive').eq(5).attr('src', "img/camera.jpg");
+    		}
+
+    		if(currentTimeLabel > 5000){
+    			console.log("currentTimeLabel: "+currentTimeLabel);
+    			$('#signalStatus').html(" ");
+    			labelDetected = false;
+    			currentTimeLabel = 0;
+    			$('.img-responsive').eq(5).attr('src',"img/camera.jpg");
+    		}
+
+    		//$('#victimStatus').html("Count: "+i);
+       		//i++;
+       		//sleep(1000);
 
     	}
 	});

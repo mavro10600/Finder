@@ -1,2 +1,0 @@
-bool qrflag
-bool cflag

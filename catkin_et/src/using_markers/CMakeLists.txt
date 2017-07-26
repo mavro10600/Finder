@@ -10,6 +10,7 @@ project(using_markers)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   visualization_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -134,6 +135,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(basic_shapes src/basic_shapes.cpp)
 add_executable(shape_pose_publisher src/basic_shape_publisher.cpp)
+add_executable(map_marker_publisher src/map_marker_publisher.cpp)
 
 
 ## Rename C++ executable without prefix
@@ -146,12 +148,16 @@ add_executable(shape_pose_publisher src/basic_shape_publisher.cpp)
 ## same as for the library above
 add_dependencies(basic_shapes ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(shape_pose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(map_marker_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(basic_shapes
    ${catkin_LIBRARIES}
  )
  target_link_libraries(shape_pose_publisher
+   ${catkin_LIBRARIES}
+ )
+target_link_libraries(map_marker_publisher
    ${catkin_LIBRARIES}
  )
 

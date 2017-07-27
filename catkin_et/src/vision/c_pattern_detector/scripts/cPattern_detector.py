@@ -27,9 +27,9 @@ from avision_msjs.srv import imgCpatternResponse
 
 # Perfil de color negro mapeado en el espacio de colores YCrCb
 # Dichos valores cambian ligeramente acorde a las condiciones de trabajo
-yl =66
-crl =37
-cbl =53
+yl = 54
+crl = 55
+cbl = 55
 
 yh =255
 crh =255
@@ -41,7 +41,7 @@ cbh = 250
 # bordes
 def prevFilter(img):
 	# Ventana para aplicar la el filtro de dilatcion y erosion
-	wKernel = np.ones((5,5),np.uint8)
+	wKernel = np.ones((3,3),np.uint8)
 	# Aplicacion del filtros morfologicos, Dilate y posteriormente erosiona
 	fImg = cv2.morphologyEx(img, cv2.MORPH_CLOSE, wKernel)
 	# Filtro mediana de suavizamiento de imagen
@@ -59,9 +59,9 @@ def maskf( img ):
 	mask = cv2.inRange(img, lowLimits, highLimits)
 	# Ajuste de mascara
 	# Se define la ventana a utilizar en el filtro morfologico
-	wKernel = np.ones((3,3),np.uint8)
+	#wKernel = np.ones((3,3),np.uint8)
 	# Filtro de dilatacion y erosion a la mascara
-	mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, wKernel)
+	#mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, wKernel)
 
 	return mask
 
@@ -159,38 +159,38 @@ def recAber(colororig, original, imagen, mind, (x0,y0)):
       if x1<x0:
         argum=sy/sx
         angulo=math.atan(argum)
-        texto=str(angulo)
+        texto=str(angulo*180/math.pi)
 
         if y1<y0:
           angulo=math.pi-angulo
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
         elif y1>y0:
           angulo=math.pi+angulo
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
         elif y1==y0:
           angulo=math.pi
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
 
       elif x1>x0:
         argum=sy/sx
         angulo=math.atan(argum)
-        texto=str(angulo)
+        texto=str(angulo*180/math.pi)
 
         if y1>y0:
           angulo=2*math.pi-angulo
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
 
       elif x1==x0:
         if y1<y0:
           angulo=(math.pi)/2
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
 
         if y1>y0:
           angulo=(math.pi/2)
-          texto=str(angulo)
+          texto=str(angulo*180/math.pi)
 
-        else:
-          texto='c'
+        #else:
+          #texto='c'
       
       font = cv2.FONT_HERSHEY_SIMPLEX
       #coloca el texto en la imagen original
@@ -234,10 +234,10 @@ def callback(data):
   yuvImg = cv2.cvtColor(imgSrc.copy(), cv2.COLOR_BGR2YCR_CB)
   
   # Ecualizacion de la imagen en el espacio de color YCrCb
-  clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-  yuvImg[:,:,0] = clahe.apply( yuvImg[:,:,0] )
-  yuvImg[:,:,1] = clahe.apply( yuvImg[:,:,1] )
-  yuvImg[:,:,2] = clahe.apply( yuvImg[:,:,2] )
+  #clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+  #yuvImg[:,:,0] = clahe.apply( yuvImg[:,:,0] )
+  #yuvImg[:,:,1] = clahe.apply( yuvImg[:,:,1] )
+  #yuvImg[:,:,2] = clahe.apply( yuvImg[:,:,2] )
 
   # filtrado inicial, dilata y erosiona
   fImg = prevFilter(yuvImg)

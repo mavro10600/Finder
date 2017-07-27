@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<launch>
+  
+  <node name="usb_cam1" pkg="video_web" type="usbCam1" args="1" output="screen" >
+  </node>
+  <node name="usb_cam2" pkg="video_web" type="usbCam2" args="2" output="screen" >
+  </node>
+  <node name="usb_cam3" pkg="video_web" type="usbCam3" args="3" output="screen" >
+  </node>
+  <node name="usb_cam4" pkg="video_web" type="usbCam4" args="4" output="screen" >
+  </node>
+  <node name="usb_cam5" pkg="video_web" type="usbCam5" args="5" output="screen" >
+  </node>
+
+
+  
+
+
+  
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+  <node name="video_server" pkg="web_video_server" type="web_video_server" output="screen" />
+  <include file="$(find roswww)/launch/roswww.launch"/>
+</launch>

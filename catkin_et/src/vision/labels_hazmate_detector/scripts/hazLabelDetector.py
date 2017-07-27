@@ -28,24 +28,29 @@ areaRoiRef = 1000
 # Representacion vectorial de cada uno de los colores de interes en el espacio
 # de color YCrCb
 # naranja [yl, yh, Crl, Crh, Cbl, Cbh]
-orang = np.array([100, 253, 151, 203, 0, 112])
+#orang = np.array([100, 253, 151, 203, 0, 112])
+orang = np.array([0, 135, 0, 189, 0, 105])
 
 # rojo [yl, yh, Crl, Crh, Cbl, Cbh]
-red = np.array([7, 162, 163, 255, 111, 255])
+#red = np.array([7, 162, 163, 255, 111, 255])
+red = np.array([0, 255, 148, 255, 0, 255])
 
 # amarillo [yl, yh, Crl, Crh, Cbl, Cbh]
-yellow = np.array([126, 255, 0, 255, 0, 118])
+yellow = np.array([120, 255, 0, 170, 0, 115])
 
 # verde [yl, yh, Crl, Crh, Cbl, Cbh]
-green = np.array([41, 130, 0, 125, 0, 160])
+#green = np.array([41, 130, 0, 125, 0, 160])
+green = np.array([0, 154, 0, 125, 0, 161])
 
 # azul [yl, yh, Crl, Crh, Cbl, Cbh]
-blue = np.array([0, 255, 0, 158, 158, 255])
+#blue = np.array([0, 255, 0, 158, 158, 255])
+blue = np.array([0, 255, 0, 157, 156, 255])
 
 # negro [yl, yh, Crl, Crh, Cbl, Cbh]
 #black = np.array([0, 57, 0, 143, 0, 164])
 #black = np.array([0, 72, 0, 255, 113, 128])
-black = np.array([0, 72, 117, 138, 118, 140])
+#black = np.array([0, 72, 117, 138, 118, 140])
+black = np.array([0, 72, 117, 138, 118, 145])
 
 # Listas de etiquetas patrones, acorde a su color
 #Etiquetas unicas
@@ -66,7 +71,7 @@ bLabelNames = ['Dangerous_when_wet']
 gLabelNames = ['Non-flammable_gas']
 oLabelNames = ['Explosive']
 
-rLabelNames = ['Flammable_liquids','Spontaneously_combustible','Flammable_solid','Organic_peroxid']
+rLabelNames = ['Flammable_gas','Spontaneously_combustible','Flammable_solid','Organic_peroxid']
 yLabelNames = ['Oxidizer', 'Radioactive', 'Organic_peroxid']
 blLabelNames = ['Corrosive', 'Inhalation_hazard', 'Infectious_substance']
 

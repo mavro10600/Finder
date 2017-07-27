@@ -19,9 +19,9 @@ int led1,led2;
 //#define OUTPUT_READABLE_YAWPITCHROLL
 #define OUTPUT_READABLE_QUATERNION
 
-#define USING_IMU true 
-#define USING_CO2_SENSOR false
-#define USING_DYNAMIXEL false
+#define USING_IMU false
+#define USING_CO2_SENSOR true
+#define USING_DYNAMIXEL true
 
 #if !USING_IMU
   #undef OUTPUT_READABLE_YAWPITCHROLL
@@ -368,13 +368,13 @@ void setup() {
   pan.attach(PAN_PIN);
   tilt.attach(TILT_PIN);
 
-  //Serial3.setTimeout(1);
+  Serial3.setTimeout(1);
 }
 
 void loop() {
-  //readFromSerial();
+  readFromSerial();
   
-  //updateTime(); 
+  updateTime(); 
   
   #if USING_DYNAMIXEL
     updateDynamixel();
@@ -395,7 +395,7 @@ void loop() {
   tilt.write(constrain(tilt_angle,0,125));
   analogWrite(LED1_PIN,led1);
   analogWrite(LED2_PIN,led2);
-  //updateData();//send data to computer  
-  delay(20);
+  updateData();//send data to computer  
+  delay(5);
   
 }

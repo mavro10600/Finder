@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<launch>
+	<include file="$(find bring_up)/launch/launchWEB.launch"/>
+	<include file="$(find bring_up)/launch/launchVISION.launch"/>
+	<!--include file="$(find bring_up)/launch/launchSLAM.launch"/-->
+</launch>

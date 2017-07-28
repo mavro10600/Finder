@@ -368,11 +368,11 @@ float tsens=0.2;
 		else
 		{
 //			base_out.data += scale * round(joy->axes[0]); 
-			if(LBbutton && !RBbutton  && LAHstick>tsens) 
+			if(LBbutton && !RBbutton  && LAHstick>0.3) 
 			base_out.data=round(1700+scale*LAHstick);
-			if(LBbutton && !RBbutton && LAHstick<-tsens) 
+			if(LBbutton && !RBbutton && LAHstick<-0.3) 
 			base_out.data=round(1300+scale*LAHstick);
-			if(LBbutton && !RBbutton && LAHstick<= tsens && LAHstick >= -tsens) 
+			if(LBbutton && !RBbutton && LAHstick<= 0.3 && LAHstick >= -0.3) 
 			base_out.data=1500;
 			//else
 			//base_out.data=1500;
@@ -422,9 +422,9 @@ float tsens=0.2;
 		else
 			{
 			if(LBbutton && !RBbutton && RAHstick>tsens) 
-			roll_out.data=round(64+20*RAHstick);
+			roll_out.data=round(64+10*RAHstick);
 			if(LBbutton && !RBbutton && RAHstick<-tsens) 
-			roll_out.data=round(64+20*RAHstick);
+			roll_out.data=round(64+10*RAHstick);
 			if(LBbutton && !RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			roll_out.data=64;
 			}
@@ -437,11 +437,11 @@ float tsens=0.2;
 			pitch_out.data = 30;
 		else
 			{
-			if(!LBbutton && RBbutton && RAHstick>tsens) 
-			pitch_out.data=round(64+20*RAHstick);
-			if(!LBbutton && RBbutton && RAHstick<-tsens) 
-			pitch_out.data=round(64+20*RAHstick);
-			if(!LBbutton && RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
+			if(!LBbutton && RBbutton && RAVstick>tsens) 
+			pitch_out.data=round(64+15*RAVstick);
+			if(!LBbutton && RBbutton && RAVstick<-tsens) 
+			pitch_out.data=round(64+2*RAVstick);
+			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			pitch_out.data=64;
 			}
 		}			
@@ -453,11 +453,11 @@ float tsens=0.2;
 			yaw_out.data = 30;
 		else
 			{
-			if(!LBbutton && RBbutton && RAVstick>tsens) 
-			yaw_out.data=round(64+20*RAVstick);
-			if(!LBbutton && RBbutton && RAVstick<-tsens) 
-			yaw_out.data=round(64+20*RAVstick);
-			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
+			if(!LBbutton && RBbutton && RAHstick>tsens) 
+			yaw_out.data=round(64+20*RAHstick);
+			if(!LBbutton && RBbutton && RAHstick<-tsens) 
+			yaw_out.data=round(64+20*RAHstick);
+			if(!LBbutton && RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			yaw_out.data=64;
 			}
 		}
@@ -530,7 +530,7 @@ cout<<"sentido"<<endl;
 }
 else
 {
-	sentido.push_back(0);
+	sentido.push_back(1);
 	sentido.push_back(0);
 	sentido.push_back(0);
 	sentido.push_back(0);

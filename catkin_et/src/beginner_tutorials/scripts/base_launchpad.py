@@ -92,38 +92,38 @@ class Launchpad_Class(object):
 		
 	def _Update_Left_Speed(self,left_speed):
 		self._left_wheel_speed=left_speed.data
-		rospy.loginfo(left_speed.data)
+		#rospy.loginfo(left_speed.data)
 		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Right_Speed(self,right_speed):
 		self._right_wheel_speed=right_speed.data
-		rospy.loginfo(right_speed.data)
+		#rospy.loginfo(right_speed.data)
 		speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))	
 		self._WriteSerial(speed_message)
 		
 
 	def _Update_Flipper1_Speed(self,flipper1_speed):
                 self._flipper1_wheel_speed=flipper1_speed.data
-                rospy.loginfo(flipper1_speed.data)
+                #rospy.loginfo(flipper1_speed.data)
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper2_Speed(self,flipper2_speed):
                 self._flipper2_wheel_speed=flipper2_speed.data
-                rospy.loginfo(flipper2_speed.data)
+                #rospy.loginfo(flipper2_speed.data)
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper3_Speed(self,flipper3_speed):
                 self._flipper3_wheel_speed=flipper3_speed.data
-                rospy.loginfo(flipper3_speed.data)
+                #rospy.loginfo(flipper3_speed.data)
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 
 	def _Update_Flipper4_Speed(self,flipper4_speed):
                 self._flipper4_wheel_speed=flipper4_speed.data
-                rospy.loginfo(flipper4_speed.data)
+                #rospy.loginfo(flipper4_speed.data)
                 speed_message='s %d %d %d %d %d %d\r' %(int(self._left_wheel_speed),int(self._right_wheel_speed),int(self._flipper1_wheel_speed),int(self._flipper2_wheel_speed),int(self._flipper3_wheel_speed),int(self._flipper4_wheel_speed))
                 self._WriteSerial(speed_message)
 

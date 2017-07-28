@@ -81,27 +81,27 @@ class Launchpad_Class(object):
 	def _Update_Dynamixel(self,dynamixel_out):
 		self.gripper_pos=dynamixel_out.data
 		message='s %d %d %d %d %d \r' %(int(self.gripper_pos),int(self.pan),int(self.tilt),int(self.led1),int(self.led2))
-		print colored(message,"green")
+		#print colored(message,"green")
 		self._WriteSerial(message)		
 	def _Update_Pan_Camera(self,pan_angle):
 		self.pan = pan_angle.data;
 		message='s %d %d %d %d %d \r' %(int(self.gripper_pos),int(self.pan),int(self.tilt),int(self.led1),int(self.led2))
 		self._WriteSerial(message)
-		print colored(message,"green")
+		#print colored(message,"green")
 	def _Update_Tilt_Camera(self,tilt_angle):
 		self.tilt = tilt_angle.data;
 		message='s %d %d %d %d %d \r' %(int(self.gripper_pos),int(self.pan),int(self.tilt),int(self.led1),int(self.led2))
 		self._WriteSerial(message)
-		print colored(message,"green")
+		#print colored(message,"green")
 	def _Update_Led1(self,led_intensity1):
 		self.led1=led_intensity1.data
 		message='s %d %d %d %d %d \r' %(int(self.gripper_pos),int(self.pan),int(self.tilt),int(self.led1),int(self.led2))
-		print colored(message,"green")
+		#print colored(message,"green")
 		self._WriteSerial(message)
 	def _Update_Led2(self,led_intensity2):
 		self.led2=led_intensity2.data
 		message='s %d %d %d %d %d \r' %(int(self.gripper_pos),int(self.pan),int(self.tilt),int(self.led1),int(self.led2))
-		print colored(message,"green")
+		#print colored(message,"green")
 		self._WriteSerial(message)
 
 ################################################################################

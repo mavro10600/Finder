@@ -115,43 +115,43 @@ class Launchpad_Class(object):
 
 	def _Update_Base(self,base_out):
 		self.base_pos=base_out.data
-		rospy.loginfo(base_out.data)
+		#rospy.loginfo(base_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Shoulder(self,shoulder_out):
 		self.shoulder_pos=shoulder_out.data
-		rospy.loginfo(shoulder_out.data)
+		#rospy.loginfo(shoulder_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Elbow(self,elbow_out):
 		self.elbow_pos=elbow_out.data
-		rospy.loginfo(elbow_out.data)
+		#rospy.loginfo(elbow_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Roll(self,roll_out):
 		self.roll_pos=roll_out.data
-		rospy.loginfo(roll_out.data)
+		#rospy.loginfo(roll_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Pitch(self,pitch_out):
 		self.pitch_pos=pitch_out.data
-		rospy.loginfo(pitch_out.data)
+		#rospy.loginfo(pitch_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 		
 	def _Update_Yaw(self,yaw_out):
 		self.yaw_pos=yaw_out.data
-		rospy.loginfo(yaw_out.data)
+		#rospy.loginfo(yaw_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 	
 	def _Update_Gripper(self,gripper_out):
 		self.gripper_pos=gripper_out.data
-		rospy.loginfo(gripper_out.data)
+		#rospy.loginfo(gripper_out.data)
 		speed_message='s %d %d %d %d %d %d \r' %(int(self.base_pos),int(self.shoulder_pos),int(self.elbow_pos),int(self.roll_pos),int(self.pitch_pos),int(self.yaw_pos))	
 		self._WriteSerial(speed_message)
 	

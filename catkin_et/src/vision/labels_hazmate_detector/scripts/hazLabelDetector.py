@@ -23,7 +23,7 @@ perDifh = 38
 perDifv = 36
 
 # Area de referencia para validar deteccion de ROI
-areaRoiRef = 1000
+areaRoiRef = 10
 
 # Representacion vectorial de cada uno de los colores de interes en el espacio
 # de color YCrCb
@@ -36,7 +36,8 @@ orang = np.array([0, 135, 0, 189, 0, 105])
 red = np.array([0, 255, 148, 255, 0, 255])
 
 # amarillo [yl, yh, Crl, Crh, Cbl, Cbh]
-yellow = np.array([120, 255, 0, 170, 0, 115])
+#yellow = np.array([120, 255, 0, 170, 0, 115])
+yellow = np.array([120, 190, 0, 170, 0, 115])
 
 # verde [yl, yh, Crl, Crh, Cbl, Cbh]
 #green = np.array([41, 130, 0, 125, 0, 160])
@@ -207,6 +208,21 @@ def getMask(img, pfColor):
   return mask
 
 
+
+def getMaskDilate(img, pfColor):
+  # Define el conjunto de valores para obtener la mascara binaria
+  lowLimits = (pfColor[0],pfColor[2],pfColor[4])
+  highLimits = (pfColor[1],pfColor[3],pfColor[5])
+  
+  # Calculo de la mascara binaria, en funcion de los limites definidos
+  mask = cv2.inRange(img, lowLimits, highLimits)
+
+  # Ajuste de mascara
+  # Se define la ventana a utilizar en el filtro morfologico
+  wKernel = np.ones((15,15),np.uint8)
+  # Filtro de dilatacion y erosion a la mascara
+  mask = cv2.dilate(mask, wKernel, iterations = 1)
+  return mask
 
 # Calculo de centrodes de las regiones de imagen obtenidas por el filtro
 # de color. La funcion recibe la imagen binaria "img", el area de la roi, para tener una
@@ -478,17 +494,17 @@ def labelDetector(imgSrc, roiArea):
 
   # Imagenes binarias que corresponden a mas de una hazmate label
   # Obtencion de la mascara para el color rojo
-  redMask = getMask(yuvImg.copy(), red)
+  redMask = getMaskDilate(yuvImg.copy(), red)
   #cv2.imshow("Label mask", redMask)
   redCenters = getColorCenters(redMask, roiArea, 3)  
   #cv2.imshow("Label mask", redMask)
 
   # Obtencion de la mascara para el color amarillo
-  yellowMask = getMask(yuvImg.copy(), yellow)
+  yellowMask = getMaskDilate(yuvImg.copy(), yellow)
   yellowCenters = getColorCenters(yellowMask, roiArea, 3)
   
   # Obtencion de la mascara para el color negro
-  blackMask = getMask(yuvImg.copy(), black)
+  blackMask = getMaskDilate(yuvImg.copy(), black)
   blackCenters = getColorCenters(blackMask, roiArea, 3)
 
   ## Busqueda de etiquetas mediante comportamientos pictograficos aplicando el algoritmo SURF

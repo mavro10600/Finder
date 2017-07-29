@@ -13,10 +13,6 @@
 	
 	<node pkg="beginner_tutorials" type="left_node.py" name="left_node" respawn="true"/>
 	
-	<node pkg="sensors_dynamixel" type="serial_data_sensors.py" name="servo_imu_dynamixel_node" respawn="true"/>
 	
-	<node pkg="audio_robot" type="audio_capture_robot" name="audio_capture_robot" respawn="true"/>
-	
-	<node pkg="audio_robot" type="audio_robot_play" name="audio_robot_play" respawn="true"/>
 
 </launch>

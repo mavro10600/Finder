@@ -1,6 +1,6 @@
 $(document).ready(principal);
-var ip = '192.168.100.51';
-//var ip = 'localhost';
+//var ip = '192.168.100.51';
+var ip = 'localhost';
 var cam1 = 'usb_cam1', quality1 = '20', width1 = '640', height1 = '480';
 var cam2 = 'usb_cam2', quality2 = '20', width2 = '640', height2 = '480';
 var cam3 = 'usb_cam3', quality3 = '20', width3 = '640', height3 = '480';
@@ -513,7 +513,7 @@ function principal(){
 	});
 
 	co2Listener.subscribe(function(message){
-		var levelCo2 = (message.data/10)-80;
+		var levelCo2 = (message.data/10);
 		//console.log("CO2:"+levelCo2);
 		if($('.progress-bar').eq(2).hasClass('progress-bar-success')){
 		  $('.progress-bar').eq(2).toggleClass('progress-bar-success');

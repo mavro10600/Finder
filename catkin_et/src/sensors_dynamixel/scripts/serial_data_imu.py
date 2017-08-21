@@ -24,8 +24,8 @@ class Launchpad_Class(object):
 		self.lastUpdate=0.0
 ###############################################################################
 #Asignamos valores del puerto y baudios de la stellaris
-		port=rospy.get_param("~port","/dev/arduino-imu")
-		#port=rospy.get_param("~port","/dev/ttyUSB0")
+		#port=rospy.get_param("~port","/dev/arduino-imu")
+		port=rospy.get_param("~port","/dev/ttyUSB1")
 		baudRate=int(rospy.get_param("~baudRate",115200))
 
 ###############################################################################

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+
+ <node name="camaras" pkg="beginner_tutorials" type="script_cam.bash"  output="screen" >
+  </node>
+
+  
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+  <node name="video_server" pkg="web_video_server" type="web_video_server" output="screen" />
+  <include file="$(find roswww)/launch/roswww.launch"/>
+</launch>

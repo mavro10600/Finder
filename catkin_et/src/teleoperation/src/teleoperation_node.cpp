@@ -438,9 +438,9 @@ float tsens=0.2;
 		else
 			{
 			if(!LBbutton && RBbutton && RAVstick>tsens) 
-			pitch_out.data=round(64+15*RAVstick);
+			pitch_out.data=round(64+10*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<-tsens) 
-			pitch_out.data=round(64+2*RAVstick);
+			pitch_out.data=round(64+10*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			pitch_out.data=64;
 			}

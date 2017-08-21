@@ -2,7 +2,7 @@
 	
 	 <node name="base_launchpad_node" pkg="beginner_tutorials" type="base_launchpad.py" output="screen" respawn="true"/>
 		
-<node name="launchpad_node_brazo" pkg="beginner_tutorials" type="launchpad_node_brazo.py" output="screen" respawn="true"/>
+<!--node name="launchpad_node_brazo" pkg="beginner_tutorials" type="launchpad_node_brazo.py" output="screen" respawn="true"/-->
 
 
 	<node pkg="teleoperation" type="teleoperation_node" name="teleoperation_node" respawn="true" />	
@@ -13,10 +13,6 @@
 	
 	<node pkg="beginner_tutorials" type="left_node.py" name="left_node" respawn="true"/>
 	
-	<node pkg="sensors_dynamixel" type="serial_data_sensors.py" name="servo_imu_dynamixel_node" respawn="true"/>
 	
-	<node pkg="audio_robot" type="audio_capture_robot" name="audio_capture_robot" respawn="true"/>
-	
-	<node pkg="audio_robot" type="audio_robot_play" name="audio_robot_play" respawn="true"/>
 
 </launch>

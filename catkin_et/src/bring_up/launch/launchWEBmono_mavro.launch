@@ -9,4 +9,25 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
   <node name="video_server" pkg="web_video_server" type="web_video_server" output="screen" />
   <include file="$(find roswww)/launch/roswww.launch"/>
+
+
+<node name="base_launchpad_node" pkg="beginner_tutorials" type="base_launchpad.py" output="screen" respawn="true"/>
+		
+<node name="launchpad_node_brazo" pkg="beginner_tutorials" type="launchpad_node_brazo.py" output="screen" respawn="true"/>
+
+<node pkg="sensors_dynamixel" name="serial_data_sensors" type="serial_data_sensors.py" output="screen" respawn="true"/>
+
+	<node pkg="teleoperation" type="teleoperation_node" name="teleoperation_node" respawn="true" />	
+	
+	<!--node pkg="joy" type="joy_node" name="joy_node" respawn="true"/-->
+		
+	<node pkg="beginner_tutorials" type="right_node.py" name="right_node" respawn="true" />
+	
+	<node pkg="beginner_tutorials" type="left_node.py" name="left_node" respawn="true"/>
+ 
+ 
+ 
+
+  			
+
 </launch>

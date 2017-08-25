@@ -517,22 +517,22 @@ if(flagEndstopBase1==false && flagEndstopBase2==false)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-if (flagEndstopShoulder1==true && flagEndstopShoulder2==false)
-{
-if(shoulder_stat==false)
-{if(shoulder_out<64){roboclaw.ForwardBackwardM1(address,64);}else {roboclaw.ForwardBackwardM1(address,shoulder_out);}}
-
-if(shoulder_stat==true) //base
-{if(shoulder_out>64){roboclaw.ForwardBackwardM1(address,shoulder_out);}else {roboclaw.ForwardBackwardM1(address,64);}}
-}
-
-if(flagEndstopShoulder2==true && flagEndstopShoulder1==false)
+if (flagEndstopShoulder1==true)
 {
 if(shoulder_stat==false)
 {if(shoulder_out<64){roboclaw.ForwardBackwardM1(address,shoulder_out);}else {roboclaw.ForwardBackwardM1(address,64);}}
 
-if(shoulder_stat==true)
+if(shoulder_stat==true) //base
 {if(shoulder_out>64){roboclaw.ForwardBackwardM1(address,64);}else {roboclaw.ForwardBackwardM1(address,shoulder_out);}}
+}
+
+if(flagEndstopShoulder2==true)
+{
+if(shoulder_stat==false)
+{if(shoulder_out<64){roboclaw.ForwardBackwardM1(address,64);}else {roboclaw.ForwardBackwardM1(address,shoulder_out);}}
+
+if(shoulder_stat==true)
+{if(shoulder_out>64){roboclaw.ForwardBackwardM1(address,shoulder_out);}else {roboclaw.ForwardBackwardM1(address,64); }}
 }
 //roboclaw.ForwardBackwardM1(address,shoulder_out);
 if(flagEndstopShoulder1==false && flagEndstopShoulder2==false )
@@ -750,25 +750,25 @@ void Update_Endstops()
   int endBasetemp1,endBasetemp2,endShouldertemp1,endShouldertemp2,endElbowtemp1,endElbowtemp2;
   int endRolltemp1,endRolltemp2,endPitchtemp1,endPitchtemp2,endYawtemp1,endYawtemp2;
 
-  if(flagEndstopBase1){
+  if(flagEndstopBase1==true){
     endBasetemp1=1;
   }else{
     endBasetemp1=0;
   }
 
-  if(flagEndstopBase2){
+  if(flagEndstopBase2==true){
     endBasetemp2=1;
   }else{
     endBasetemp2=0;
   }
 
-  if(flagEndstopShoulder1){
+  if(flagEndstopShoulder1==true){
     endShouldertemp1=1;
   }else{
     endShouldertemp1=0;
   }
 
-  if(flagEndstopShoulder2){
+  if(flagEndstopShoulder2==true){
     endShouldertemp2=1;
   }else{
     endShouldertemp2=0;
@@ -856,78 +856,78 @@ void Update_Endstops()
 
 void ISRendBase1()
 {
-  if(digitalRead(pinendstopBase1)==LOW && flagEndstopBase1prev==flagEndstopBase1)
-  { delay (1);if(digitalRead(pinendstopBase1)==LOW && flagEndstopBase1prev==flagEndstopBase1)
-    {flagEndstopBase1=true; flagEndstopBase1prev=!flagEndstopBase1prev;}
+  if(digitalRead(pinendstopBase1)==LOW)
+  { delay (1); flagEndstopBase1prev==LOW;if(digitalRead(pinendstopBase1)==LOW && flagEndstopBase1prev==LOW)
+    {flagEndstopBase1=true;}
   }
-  if(digitalRead(pinendstopBase1)==HIGH && flagEndstopBase1prev==!flagEndstopBase1)
-  { delay (1);if(digitalRead(pinendstopBase1)==HIGH && flagEndstopBase1prev==!flagEndstopBase1)
-  {flagEndstopBase1=false; flagEndstopBase1prev=!flagEndstopBase1prev;}
+  if(digitalRead(pinendstopBase1)==HIGH)
+  { delay (1); if(digitalRead(pinendstopBase1)==HIGH && flagEndstopBase1prev==LOW)
+  {flagEndstopBase1=false;}
     }
 }
 
 void ISRendBase2()
 {
 
-  if(digitalRead(pinendstopBase2)==LOW && flagEndstopBase2prev==flagEndstopBase2)
-  { delay (1);if(digitalRead(pinendstopBase2)==LOW && flagEndstopBase2prev==flagEndstopBase2)
-    {flagEndstopBase2=true; flagEndstopBase2prev=!flagEndstopBase2prev;}
+  if(digitalRead(pinendstopBase2)==LOW)
+  { delay (1);if(digitalRead(pinendstopBase2)==LOW )
+    {flagEndstopBase2=true;}
   }
-  if(digitalRead(pinendstopBase2)==HIGH && flagEndstopBase2prev==!flagEndstopBase2)
-  { delay (1);if(digitalRead(pinendstopBase2)==HIGH && flagEndstopBase2prev==!flagEndstopBase2)
-  {flagEndstopBase2=false; flagEndstopBase2prev=!flagEndstopBase2prev;}
+  if(digitalRead(pinendstopBase2)==HIGH )
+  { delay (1);if(digitalRead(pinendstopBase2)==HIGH)
+  {flagEndstopBase2=false;}
     }
 }
 
 void ISRendShoulder1()
 {
   
-  if(digitalRead(pinendstopShoulder1)==LOW && flagEndstopShoulder1prev==flagEndstopShoulder1)
-  { delay (1);if(digitalRead(pinendstopShoulder1)==LOW && flagEndstopShoulder1prev==flagEndstopShoulder1)
-    {flagEndstopShoulder1=true; flagEndstopShoulder1prev=!flagEndstopShoulder1prev;}
+  if(digitalRead(pinendstopShoulder1)==LOW)
+  { delay (1);if(digitalRead(pinendstopShoulder1)==LOW)
+    {flagEndstopShoulder1=true;}
   }
-  if(digitalRead(pinendstopShoulder1)==HIGH && flagEndstopShoulder1prev==!flagEndstopShoulder1)
-  { delay (1);if(digitalRead(pinendstopShoulder1)==HIGH && flagEndstopShoulder1prev==!flagEndstopShoulder1)
-  {flagEndstopShoulder1=false; flagEndstopShoulder1prev=!flagEndstopShoulder1prev;}
+  if(digitalRead(pinendstopShoulder1)==HIGH )
+  { delay (1);if(digitalRead(pinendstopShoulder1)==HIGH)
+  {flagEndstopShoulder1=false;}
     }
 }
 
 void ISRendShoulder2()
 {
   
-  if(digitalRead(pinendstopShoulder2)==LOW && flagEndstopShoulder2prev==flagEndstopShoulder2)
-  { delay (1);if(digitalRead(pinendstopShoulder2)==LOW && flagEndstopShoulder2prev==flagEndstopShoulder2)
-    {flagEndstopShoulder2=true; flagEndstopShoulder2prev=!flagEndstopShoulder2prev;}
+  if(digitalRead(pinendstopShoulder2)==LOW)
+  { delay (1);if(digitalRead(pinendstopShoulder2)==LOW)
+    {flagEndstopShoulder2=true;}
   }
-  if(digitalRead(pinendstopShoulder2)==HIGH && flagEndstopShoulder2prev==!flagEndstopShoulder2)
-  { delay (1);if(digitalRead(pinendstopShoulder2)==HIGH && flagEndstopShoulder2prev==!flagEndstopShoulder2)
-  {flagEndstopShoulder2=false; flagEndstopShoulder2prev=!flagEndstopShoulder2prev;}
+  if(digitalRead(pinendstopShoulder2)==HIGH)
+  { delay (1);if(digitalRead(pinendstopShoulder2)==HIGH)
+  {flagEndstopShoulder2=false;}
     }
 }
 
 void ISRendElbow1()
 {
  
-  if(digitalRead(pinendstopElbow1)==LOW && flagEndstopElbow1prev==flagEndstopElbow1)
-  { delay (1);if(digitalRead(pinendstopElbow1)==LOW && flagEndstopElbow1prev==flagEndstopElbow1)
-    {flagEndstopElbow1=true; flagEndstopElbow1prev=!flagEndstopElbow1prev;}
+  if(digitalRead(pinendstopElbow1)==LOW)
+  { delay (1);if(digitalRead(pinendstopElbow1)==LOW)
+    {flagEndstopElbow1=true;}
   }
-  if(digitalRead(pinendstopElbow1)==HIGH && flagEndstopElbow1prev==!flagEndstopElbow1)
-  { delay (1);if(digitalRead(pinendstopElbow1)==HIGH && flagEndstopElbow1prev==!flagEndstopElbow1)
-  {flagEndstopElbow1=false; flagEndstopElbow1prev=!flagEndstopElbow1prev;}
+  if(digitalRead(pinendstopElbow1)==HIGH )
+  { delay (1);if(digitalRead(pinendstopElbow1)==HIGH)
+  {flagEndstopElbow1=false;}
     }
 }
 
 void ISRendElbow2()
 {
   
-  if(digitalRead(pinendstopElbow2)==LOW && flagEndstopElbow2prev==flagEndstopElbow2)
-  { delay (1);if(digitalRead(pinendstopElbow2)==LOW && flagEndstopElbow2prev==flagEndstopElbow2)
-    {flagEndstopElbow2=true; flagEndstopElbow2prev=!flagEndstopElbow2prev;}
+  if(digitalRead(pinendstopElbow2)==LOW )
+  { delay (1);if(digitalRead(pinendstopElbow2)==LOW)
+    {flagEndstopElbow2=true;}
   }
-  if(digitalRead(pinendstopElbow2)==HIGH && flagEndstopElbow2prev==!flagEndstopElbow2)
-  { delay (1);if(digitalRead(pinendstopElbow2)==HIGH && flagEndstopElbow2prev==!flagEndstopElbow2)
-  {flagEndstopElbow2=false; flagEndstopElbow2prev=!flagEndstopElbow2prev;}
+  if(digitalRead(pinendstopElbow2)==HIGH)
+  { delay (1);if(digitalRead(pinendstopElbow2)==HIGH )
+  {flagEndstopElbow2=false;}
     }
 }
 

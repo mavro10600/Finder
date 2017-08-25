@@ -530,7 +530,7 @@ cout<<"sentido"<<endl;
 }
 else
 {
-	sentido.push_back(1);
+	sentido.push_back(0);
 	sentido.push_back(0);
 	sentido.push_back(0);
 	sentido.push_back(0);

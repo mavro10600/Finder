@@ -296,8 +296,8 @@ class Left_node:
 
     def update(self):
 
-        #self.leftOutPub.publish(self.left_des)
-        self.leftOutPub.publish(self.left_out)
+        self.leftOutPub.publish(self.left_des)
+        #self.leftOutPub.publish(self.left_out)
         self.leftAngPub.publish(self.left_ang)
         self.leftVelPub.publish(self.left_vel)
 

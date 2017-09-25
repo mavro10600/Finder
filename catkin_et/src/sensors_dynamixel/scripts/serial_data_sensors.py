@@ -32,7 +32,7 @@ class Launchpad_Class(object):
 #Asignamos valores del puerto y baudios de la stellaris
 		port=rospy.get_param("~port","/dev/arduino-sensores")
 		#port=rospy.get_param("~port","/dev/ttyACM0")
-		baudRate=int(rospy.get_param("~baudRate",115200))
+		baudRate=int(rospy.get_param("~baudRate",57600))
 
 ###############################################################################
 		rospy.loginfo("starting with serialport:"+port+" baudrate: "+str(baudRate))

@@ -934,51 +934,51 @@ void ISRendElbow2()
 void ISRendRoll1()
 {
 
-  if(digitalRead(pinendstopRoll1)==LOW && flagEndstopRoll1prev==flagEndstopRoll1)
-  { if(digitalRead(pinendstopRoll1)==LOW && flagEndstopRoll1prev==flagEndstopRoll1)
-    {flagEndstopRoll1=true; flagEndstopRoll1prev=!flagEndstopRoll1prev;}
+  if(digitalRead(pinendstopRoll1)==LOW)
+  {delay (1); if(digitalRead(pinendstopRoll1)==LOW)
+    {flagEndstopRoll1=true;}
   }
-  if(digitalRead(pinendstopRoll1)==HIGH && flagEndstopRoll1prev==!flagEndstopRoll1)
-  { if(digitalRead(pinendstopRoll1)==HIGH && flagEndstopRoll1prev==!flagEndstopRoll1)
-  {flagEndstopRoll1=false; flagEndstopRoll1prev=!flagEndstopRoll1prev;}
+  if(digitalRead(pinendstopRoll1)==HIGH)
+  {delay (1); if(digitalRead(pinendstopRoll1)==HIGH)
+  {flagEndstopRoll1=false;}
     }
 }
 
 void ISRendRoll2()
 {
 
-  if(digitalRead(pinendstopRoll2)==LOW && flagEndstopRoll2prev==flagEndstopRoll2)
-  { delay (1);if(digitalRead(pinendstopRoll2)==LOW && flagEndstopRoll2prev==flagEndstopRoll2)
-    {flagEndstopRoll2=true; flagEndstopRoll2prev=!flagEndstopRoll2prev;}
+  if(digitalRead(pinendstopRoll2)==LOW)
+  { delay (1);if(digitalRead(pinendstopRoll2)==LOW)
+    {flagEndstopRoll2=true;}
   }
-  if(digitalRead(pinendstopRoll2)==HIGH && flagEndstopRoll2prev==!flagEndstopRoll2)
-  { delay (1);if(digitalRead(pinendstopRoll2)==HIGH && flagEndstopRoll2prev==!flagEndstopRoll2)
-  {flagEndstopRoll2=false; flagEndstopRoll2prev=!flagEndstopRoll2prev;}
+  if(digitalRead(pinendstopRoll2)==HIGH)
+  { delay (1);if(digitalRead(pinendstopRoll2)==HIGH)
+  {flagEndstopRoll2=false; }
     }
 }
 
 void ISRendPitch1()
 {
 
-  if(digitalRead(pinendstopPitch1)==LOW && flagEndstopPitch1prev==flagEndstopPitch1)
-  { delay (1);if(digitalRead(pinendstopPitch1)==LOW && flagEndstopPitch1prev==flagEndstopPitch1)
-    {flagEndstopPitch1=true; flagEndstopPitch1prev=!flagEndstopPitch1prev;}
+  if(digitalRead(pinendstopPitch1)==LOW )
+  { delay (1);if(digitalRead(pinendstopPitch1)==LOW)
+    {flagEndstopPitch1=true;}
   }
-  if(digitalRead(pinendstopPitch1)==HIGH && flagEndstopPitch1prev==!flagEndstopPitch1)
-  { delay (1);if(digitalRead(pinendstopPitch1)==HIGH && flagEndstopPitch1prev==!flagEndstopPitch1)
-  {flagEndstopPitch1=false; flagEndstopPitch1prev=!flagEndstopPitch1prev;}
+  if(digitalRead(pinendstopPitch1)==HIGH )
+  { delay (1);if(digitalRead(pinendstopPitch1)==HIGH)
+  {flagEndstopPitch1=false;}
     }
 }
 
 void ISRendPitch2()
 {
-  if(digitalRead(pinendstopPitch2)==LOW && flagEndstopPitch2prev==flagEndstopPitch2)
-  { delay (1);if(digitalRead(pinendstopPitch2)==LOW && flagEndstopPitch2prev==flagEndstopPitch2)
-    {flagEndstopPitch2=true; flagEndstopPitch2prev=!flagEndstopPitch2prev;}
+  if(digitalRead(pinendstopPitch2)==LOW )
+  { delay (1);if(digitalRead(pinendstopPitch2)==LOW )
+    {flagEndstopPitch2=true; }
   }
-  if(digitalRead(pinendstopPitch2)==HIGH && flagEndstopPitch2prev==!flagEndstopPitch2)
-  { delay (1);if(digitalRead(pinendstopPitch2)==HIGH && flagEndstopPitch2prev==!flagEndstopPitch2)
-  {flagEndstopPitch2=false; flagEndstopPitch2prev=!flagEndstopPitch2prev;}
+  if(digitalRead(pinendstopPitch2)==HIGH )
+  { delay (1);if(digitalRead(pinendstopPitch2)==HIGH )
+  {flagEndstopPitch2=false; }
     }
   
 }

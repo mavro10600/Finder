@@ -405,15 +405,15 @@ float tsens=0.2;
 		else
 			{
 			if(LBbutton && !RBbutton && RAVstick>tsens) 
-			elbow_out.data=round(64+20*RAVstick);
+			elbow_out.data=round(64+30*RAVstick);
 			if(LBbutton && !RBbutton && RAVstick<-tsens) 
-			elbow_out.data=round(64+20*RAVstick);
+			elbow_out.data=round(64+30*RAVstick);
 			if(LBbutton && !RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			elbow_out.data=64;
 			}
 		}
 	
-	
+	/*
 		if(roll_out.data > 100)
 		roll_out.data = 100;
 	else{
@@ -429,7 +429,7 @@ float tsens=0.2;
 			roll_out.data=64;
 			}
 		}
-
+*/
 		if(pitch_out.data > 100)
 		pitch_out.data = 100;
 	else{
@@ -438,14 +438,14 @@ float tsens=0.2;
 		else
 			{
 			if(!LBbutton && RBbutton && RAVstick>tsens) 
-			pitch_out.data=round(64+10*RAVstick);
+			pitch_out.data=round(64+30*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<-tsens) 
-			pitch_out.data=round(64+10*RAVstick);
+			pitch_out.data=round(64+3*RAVstick);
 			if(!LBbutton && RBbutton && RAVstick<=tsens && RAVstick>=-tsens) 
 			pitch_out.data=64;
 			}
 		}			
-			
+	/*		
 		if(yaw_out.data > 100)
 		yaw_out.data = 100;
 	else{
@@ -454,14 +454,14 @@ float tsens=0.2;
 		else
 			{
 			if(!LBbutton && RBbutton && RAHstick>tsens) 
-			yaw_out.data=round(64+20*RAHstick);
+			yaw_out.data=round(64+10*RAHstick);
 			if(!LBbutton && RBbutton && RAHstick<-tsens) 
-			yaw_out.data=round(64+20*RAHstick);
+			yaw_out.data=round(64+10*RAHstick);
 			if(!LBbutton && RBbutton && RAHstick<=tsens && RAHstick>=-tsens) 
 			yaw_out.data=64;
 			}
 		}
-
+*/
 		//yaw_out.data=64;
 	//agregado recien
 	if(Xbutton == 1)

@@ -467,8 +467,8 @@ if (endstp3==true)
 //rc.ForwardBackwardM1(address,64);
 {
   //roboclaw.ForwardBackwardM1(address,64);
-  if(fl3_stat==true){if(flipper3_out<64){rc.ForwardBackwardM1(address,flipper3_out);}else {rc.ForwardBackwardM1(address,64);}}
-  if(fl3_stat==false){if(flipper3_out>64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,flipper3_out);}}
+  if(fl3_stat==true){if(flipper3_out>64){rc.ForwardBackwardM1(address,flipper3_out);}else {rc.ForwardBackwardM1(address,64);}}
+  if(fl3_stat==false){if(flipper3_out<64){rc.ForwardBackwardM1(address,64);}else {rc.ForwardBackwardM1(address,flipper3_out);}}
 }
 
 if (endstp3==false)
@@ -480,8 +480,8 @@ if (endstp4==true)
 //rc.ForwardBackwardM2(address,64);
 {
   //roboclaw.ForwardBackwardM1(address,64);
-  if(fl4_stat==true){if(flipper4_out<64){rc.ForwardBackwardM2(address,flipper4_out);}else {rc.ForwardBackwardM2(address,64);}}
-  if(fl4_stat==false){if(flipper4_out>64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM2(address,flipper4_out);}}
+  if(fl4_stat==true){if(flipper4_out>64){rc.ForwardBackwardM2(address,flipper4_out);}else {rc.ForwardBackwardM2(address,64);}}
+  if(fl4_stat==false){if(flipper4_out<64){rc.ForwardBackwardM2(address,64);}else {rc.ForwardBackwardM2(address,flipper4_out);}}
 }
 
 if (endstp4==false)
@@ -621,64 +621,65 @@ void Update_Endstops()
 
 void end1()
 {
-  if(digitalRead(endstop1)==LOW && endstp1prev==endstp1)
+  if(digitalRead(endstop1)==LOW)
   {delay (1);
-    if(digitalRead(endstop1)==LOW && endstp1prev==endstp1)
+    if(digitalRead(endstop1)==LOW)
   {endstp1=true;  endstp1prev=!endstp1prev;}}
 
-  if (digitalRead(endstop1)==HIGH && endstp1prev==!endstp1){
-    
+  if (digitalRead(endstop1)==HIGH ){
   delay (1);
-  if (digitalRead(endstop1)==HIGH && endstp1prev==!endstp1)
-  {endstp1=false; endstp1prev=!endstp1prev; }
+  if (digitalRead(endstop1)==HIGH)
+  {endstp1=false;}
   }//else {endstp1=false; endstp1prev=false;}
 }
 
 void end2()
 {
-  if(digitalRead(endstop2)==LOW && endstp2prev==endstp2)
+  if(digitalRead(endstop2)==LOW)
   {delay (1);
-  if(digitalRead(endstop2)==LOW && endstp2prev==endstp2)
-  {endstp2=true;
-  endstp2prev=!endstp2prev;}}
-  if (digitalRead(endstop2)==HIGH && endstp2prev==!endstp2){
+  if(digitalRead(endstop2)==LOW)
+  {endstp2=true;}
+  }
+  if (digitalRead(endstop2)==HIGH)
+  {
     delay (1);
-  if (digitalRead(endstop2)==HIGH && endstp2prev==!endstp2)
-  {endstp2=false; endstp2prev=!endstp2prev; }}
+  if (digitalRead(endstop2)==HIGH)
+  {endstp2=false; }
+  }
   
   //else {endstp1=false; endstp1prev=false;}
 }
 
 void end3()
 {
-  if(digitalRead(endstop3)==LOW && endstp3prev==endstp3)
+  if(digitalRead(endstop3)==LOW)
   {delay (1);
-  if(digitalRead(endstop3)==LOW && endstp3prev==endstp3)
+  if(digitalRead(endstop3)==LOW )
   {
   endstp3=true;
-  endstp3prev=!endstp3prev;}}
+  }}
   
-  if (digitalRead(endstop3)==HIGH && endstp3prev==!endstp3)
+  if (digitalRead(endstop3)==HIGH )
   {delay (1);
-  if (digitalRead(endstop3)==HIGH && endstp3prev==!endstp3)
-  {endstp3=false; endstp3prev=!endstp3prev; }
+  if (digitalRead(endstop3)==HIGH )
+  {endstp3=false;}
   }//else {endstp1=false; endstp1prev=false;}
 
 }
 
 void end4()
 {
-   if(digitalRead(endstop4)==LOW && endstp4prev==endstp4)
+   if(digitalRead(endstop4)==LOW )
    {delay (1);
-   if(digitalRead(endstop4)==LOW && endstp4prev==endstp4)
-  {endstp4=true;
-  endstp4prev=!endstp4prev;}}
+   if(digitalRead(endstop4)==LOW )
+  {endstp4=true;}
+  }
 
-  if (digitalRead(endstop4)==HIGH && endstp4prev==!endstp4)
+  if (digitalRead(endstop4)==HIGH )
   {
     delay (1);
-  if (digitalRead(endstop4)==HIGH && endstp4prev==!endstp4)
-  {endstp4=false; endstp4prev=!endstp4prev; }}
+  if (digitalRead(endstop4)==HIGH )
+  {endstp4=false; }}
   
   //else {endstp1=false; endstp1prev=false;}
 }

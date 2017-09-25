@@ -296,8 +296,8 @@ class Right_node:
 
     def update(self):
 
-        #self.rightOutPub.publish(self.right_des)
-        self.rightOutPub.publish(self.right_out)
+        self.rightOutPub.publish(self.right_des)
+        #self.rightOutPub.publish(self.right_out)
         self.rightAngPub.publish(self.right_ang)
         self.rightVelPub.publish(self.right_vel)
 
